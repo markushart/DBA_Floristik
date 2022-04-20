@@ -1,0 +1,5 @@
+model\UserRole.class
+model\ProductBean.class
+model\User.class
+com\dba_floristik\JAXRSConfiguration.class
+com\dba_floristik\resources\JavaEE8Resource.class
