@@ -15,22 +15,45 @@ import javax.enterprise.context.Dependent;
 @Dependent
 public class User {
     
-    private static final String[] salString = {"Herr", "Frau"};
-    
-    private String firstName = "";
+    private String firstName;
 
-    private String lastName = "";
+    private String lastName;
 
-    private String email = "";
+    private String email;
     
+    private String username;
+
     private int password;
 
     private boolean loggedIn = false;
 
-    private UserRole role;
+    private UserRole role = UserRole.NOBODY;
     
-    private boolean salutation;
-
+    private String salutation;
+    
+    /**
+     * Creates a new instance of user
+     */
+    public User() {
+    }
+    
+    /**
+     * diese Konstruktoren dienen zur veranschaulichung in Login- und RegisterBean
+     */
+    public User(String firstName, String lastName, String email, String username, int password, String salutation, UserRole role) {
+        this(firstName, lastName, email, username, password, salutation);
+        this.role = role;
+    }
+    
+    public User(String firstName, String lastName, String email, String username, int password, String salutation) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.salutation = salutation;
+    }
+    
     /**
      * Get the value of role
      *
@@ -55,7 +78,7 @@ public class User {
      * @return the value of salString depending on salutation
      */
     public String getSalutation() {
-        if (salutation) return salString[0]; else return salString[1];
+        return salutation;
     }
 
     /**
@@ -63,7 +86,7 @@ public class User {
      *
      * @param salutation new value of salutation
      */
-    public void setSalutation(boolean salutation) {
+    public void setSalutation(String salutation) {
         this.salutation = salutation;
     }
 
@@ -157,22 +180,31 @@ public class User {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+    
+        /**
+     * Get the value of username
+     *
+     * @return the value of username
+     */
+    public String getUsername() {
+        return username;
+    }
 
     /**
-     * Creates a new instance of user
+     * Set the value of username
+     *
+     * @param username new value of username
      */
-    // public User(String firstName, String lastName, String email, Address address, String password) {
-    // }
-    
-    /**
-     * Creates a new instance of user
-     */
-    public User() {
+    public void setUsername(String username) {
+        this.username = username;
     }
     
-    public void login(String email, String password){
+    public boolean login(String password){
         if (this.password == password.hashCode()) {
             setLoggedIn(true);
+            return true;
+        } else {
+            return false;
         }
     }
 }

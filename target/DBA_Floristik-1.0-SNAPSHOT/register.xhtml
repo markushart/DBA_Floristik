@@ -2,12 +2,123 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
     <h:body>
         <ui:composition template="template/master.xhtml">
             <ui:define name="content">
-                register
+                <h:form id="registerForm" prependId="false">
+                    <p:panel id="registerPanel" header="Registrieren">
+                        <h:panelGrid id="registerPanelGrid" columns="3">
+
+                            <h:outputText value="Anrede"/>
+                            <p:selectOneRadio id="greetingMenu" value="#{registerBean.greeting}" required="true" label="Anrede">
+                                <f:selectItems value="#{registerBean.greetings}"/>
+                            </p:selectOneRadio>
+                            <div/>
+
+                            <h:outputText value="Nachname*"/>
+                            <p:inputText id="lastname" 
+                                         value="#{registerBean.lname}" 
+                                         label="lastname"
+                                         required="true">
+                                <f:validateLength maximum="30"/>
+                                <f:ajax render="lnamemsg"
+                                        event="keyup"/>
+                            </p:inputText>
+                            <h:message id="lnamemsg"
+                                       for="lastname"
+                                       showSummary="true"
+                                       showDetail="false"
+                                       infoStyle="color:green"
+                                       warnStyle="color:yellow" 
+                                       errorStyle="color:red"/>
+
+                            <h:outputText value="Vorname*"/>
+                            <p:inputText id="firstname" 
+                                         value="#{registerBean.fname}" 
+                                         label="firstname"
+                                         required="true">
+                                <f:validateLength maximum="30"/>
+                                <f:ajax render="fnamemsg"
+                                        event="keyup"/>
+                            </p:inputText>
+                            <h:message
+                                id="fnamemsg"
+                                for="firstname"
+                                showSummary="true"
+                                showDetail="false"
+                                infoStyle="color:green"
+                                warnStyle="color:yellow" 
+                                errorStyle="color:red"/>
+
+                            <h:outputText value="email-Adresse"/>
+                            <p:inputText id="email" 
+                                         value="#{registerBean.email}"
+                                         label="email-adresse">
+                            </p:inputText>
+                            <h:message
+                                id="emailmsg"
+                                for="email"
+                                showSummary="true"
+                                showDetail="false"
+                                infoStyle="color: green"
+                                warnStyle="color: yellow" 
+                                errorStyle="color:red"/>
+
+                            <h:outputText value="Username*"/>
+                            <p:inputText id="uname" 
+                                         value="#{registerBean.uname}"
+                                         label="username"
+                                         required="true">
+                            </p:inputText>
+                            <h:message
+                                id="unamemsg"
+                                for="uname"
+                                showSummary="true"
+                                showDetail="false"
+                                infoStyle="color: green"
+                                warnStyle="color: yellow" 
+                                errorStyle="color:red"/>
+
+                            <h:outputText value="Passwort*"/>
+                            <h:inputSecret id="regpwd"
+                                           value="#{registerBean.password}"
+                                           redisplay="false">
+                                <f:validateRequired/>
+                                <f:validateRegex pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$"/>
+                                <f:ajax render="pwdmsg" 
+                                        event="keyup"
+                                        listener="#{registerBean.pwdAjaxListener}"/>
+                            </h:inputSecret>
+                            <h:message id="pwdmsg"
+                                       for="regpwd"
+                                       showSummary="true"
+                                       showDetail="false"
+                                       infoStyle="color:green"
+                                       warnStyle="color:yellow" 
+                                       errorStyle="color:red"/>
+
+                        </h:panelGrid>
+                        <h:panelGrid columns="2">
+                            <h:commandButton id="registerButton" 
+                                             action="#{registerBean.process}" 
+                                             value="Registrieren" 
+                                             type="submit"/>
+                            <h:messages globalOnly="true"
+                                        showSummary="true"
+                                        showDetail="true"
+                                        infoStyle="color:green"
+                                        warnStyle="color:yellow"
+                                        errorStyle="color:red"/>
+                        </h:panelGrid>
+                    </p:panel>
+                    <p:blockUI block="registerPanelGrid" trigger="registerButton">
+                        <p:graphicImage library="img" name="loader.gif"/>
+                    </p:blockUI>
+                </h:form>
             </ui:define>
         </ui:composition>
     </h:body>

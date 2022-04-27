@@ -8,31 +8,22 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <h:outputStylesheet name="default.css" library="css"/>
         <h:outputStylesheet name="cssLayout.css" library="css"/>
-        <h:outputStylesheet name="primefaces.css" library="primefaces"/>
-        <h:outputStylesheet name="theme.css" library="primefaces-bootstrap"/>
         <title>Franks Floristik</title>
     </h:head>
 
     <h:body>
-
 
         <div id="top" class="top">
             <ui:insert name="top">
                 <ui:include src="banner.xhtml"/>
             </ui:insert>
         </div>
-        <div>
-            <div id="left">
-                <ui:insert name="left">
-                    <ui:include src="menu.xhtml"/>
-                </ui:insert>
-            </div>
-            <div id="content" class="left_content">
-                <ui:insert name="content">
-                    Content
-                </ui:insert>
-            </div>
+        <div id="content" class="center-content">
+            <ui:insert name="content">
+                content
+            </ui:insert>
         </div>
+
     </h:body>
 
 </html>

@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="template/master.xhtml">
+        <ui:define name="content">
+            <style>
+                .logo{
+                    width: 30%;
+                }
+                .name{
+                    width: 30%;
+                }
+                .spinner{
+                    width: 20%;
+                }
+                .price{
+                    width: 5%;
+                }
+                .button{
+                    width: 10%;
+                }
+            </style>
+            <h:form id="cartForm">
+                <p:dataList value="#{shoppingCartBean.items}" var="cartItem" type="definition">
+                    <f:facet name="header"> Einkaufswagen </f:facet>
+                    <h:panelGrid columns="6" width="100%" columnClasses="logo,name,spinner,price,price,button">
+                        <p:graphicImage value="#{cartItem.product.image}"/>
+                        <h:outputText value="#{cartItem.product.name}"/>
+                        <p:spinner value="#{cartItem.number}" 
+                                   stepFactor="1" min="1">
+                            <f:ajax execute="cartForm"
+                                    event="valueChange"
+                                    listener="#{cartItem.setWholePrice()}"
+                                    render="itemWholePrice"/>
+                        </p:spinner>
+                        <h:outputText value="#{cartItem.product.price}€"/>
+                        <h:outputText id="itemWholePrice" 
+                                      value="#{cartItem.wholePrice}€"/>
+                        <h:commandButton value="Löschen" 
+                                         action="#{shoppingCartBean.removeItem(cartItem)}"/>
+                    </h:panelGrid>
+                </p:dataList>
+                
+                <h:panelGrid columns="6" width="100%" columnClasses="logo,name,spinner,price,price,button">
+                    <div/>
+                    <div/>
+                    <div/>
+                    <h:outputText value="Gesamtpreis:"/>
+                    <div/>
+                    <h:outputText id="overallPrice" value="#{shoppingCartBean.overallPrice}€"/>
+                </h:panelGrid>
+                
+                <p:commandButton value="Bestellen" action="login.xhtml"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
+
