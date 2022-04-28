@@ -33,10 +33,7 @@ public class ProductsBean implements Serializable {
     private ArrayList<ShoppingCartItem> items;
 
     @Inject
-    private DataBean db;
-
-    @Inject
-    private ShoppingCartBean cartBean;
+    private UserBean ubean;
 
     /**
      * Creates a new instance of ProductsBean
@@ -51,7 +48,7 @@ public class ProductsBean implements Serializable {
                 = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         LOGGER.log(Level.INFO, "Products: Session ID: {0}", session.getId());
 
-        db = new DataBean();
+        DataBean db = new DataBean();
         items = new ArrayList<>();
         db.generateTestProducts();
         ArrayList<Product> products = db.getProductList();
@@ -89,12 +86,20 @@ public class ProductsBean implements Serializable {
         this.items = items;
     }
 
-    public ShoppingCartBean getCartBean() {
-        return cartBean;
+    /**
+     * 
+     * @return 
+     */
+    public UserBean getUbean() {
+        return ubean;
     }
 
-    public void setCartBean(ShoppingCartBean cartBean) {
-        this.cartBean = cartBean;
+    /**
+     * 
+     * @param ubean 
+     */
+    public void setCartBean(UserBean ubean) {
+        this.ubean = ubean;
     }
 
 }

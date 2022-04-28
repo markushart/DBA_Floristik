@@ -5,34 +5,33 @@
 package controller;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
-import model.User;
-import util.DataBean;
 
 /**
  *
  * @author marku
  */
 @Named(value = "loginBean")
-@SessionScoped
-public class LoginBean implements Serializable{
+@ViewScoped
+public class LoginBean implements Serializable {
 
-    private static final Logger LOGGER = 
-            Logger.getLogger(RegisterBean.class.getName());
+    private static final Logger LOGGER
+            = Logger.getLogger(RegisterBean.class.getName());
     private HttpSession session;
     private String uname;
     private String password;
-    private ArrayList<User> knownUsers;
     private FacesContext context;
-    
+
+    @Inject
+    private UserBean ubean;
 
     /**
      * Creates a new instance of LoginBean
@@ -45,55 +44,32 @@ public class LoginBean implements Serializable{
     public void init() {
         LOGGER.info("new LoginBean");
         context = FacesContext.getCurrentInstance();
-        
-        session= (HttpSession) context.getExternalContext().getSession(false);
+
+        session = (HttpSession) context.getExternalContext().getSession(false);
         LOGGER.log(Level.INFO, "Login: Session ID: {0}", session.getId());
-        
-        DataBean db = new DataBean();
-        db.generateTestUsers();
-        knownUsers = db.getUserList();
+
     }
-    
-    public void login(){
-        boolean loggedIn = false;
+
+    /**
+     * get known users and compare their usernames to username try to log in
+     * matched username and report success / failure
+     */
+    public void login() {
         FacesMessage fm;
-        
-        for (User u:knownUsers){
-            if (u.getUsername().equals(this.uname)) {
-                loggedIn = u.login(this.password);
-                break;
-            }
-        }
-        
+        LOGGER.log(Level.INFO, "Login: uname: {0} password: {1}", new Object[]{uname, password});
+        boolean loggedIn = ubean.loginUser(uname, password);
+
         context = FacesContext.getCurrentInstance();
-        if (loggedIn){
-            fm = new FacesMessage(FacesMessage.SEVERITY_INFO, 
+        if (loggedIn) {
+            fm = new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "Erfolg", ": Login erfolgreich!");
             context.addMessage(null, fm);
         } else {
-            fm = new FacesMessage(FacesMessage.SEVERITY_WARN, 
+            fm = new FacesMessage(FacesMessage.SEVERITY_WARN,
                     "Fehlschlag", ": Username oder Passwort falsch!");
             context.addMessage(null, fm);
         }
 
-    }
-
-    /**
-     * Get the value of knownUsers
-     *
-     * @return the value of knownUsers
-     */
-    public ArrayList<User> getKnownUsers() {
-        return knownUsers;
-    }
-
-    /**
-     * Set the value of knownUsers
-     *
-     * @param knownUsers new value of knownUsers
-     */
-    public void setKnownUsers(ArrayList<User> knownUsers) {
-        this.knownUsers = knownUsers;
     }
 
     /**
@@ -149,22 +125,44 @@ public class LoginBean implements Serializable{
     public void setContext(FacesContext context) {
         this.context = context;
     }
-    
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public HttpSession getSession() {
         return session;
     }
 
     /**
-     * 
-     * @param session 
+     *
+     * @param session
      */
     public void setSession(HttpSession session) {
         this.session = session;
     }
-    
-    
+
+    /**
+     * Get the value of ubean
+     *
+     * @return the value of ubean
+     */
+    public UserBean getUbean() {
+        return ubean;
+    }
+
+    /**
+     * Set the value of ubean
+     *
+     * @param ubean new value of ubean
+     */
+    public void setUbean(UserBean ubean) {
+        if (ubean == null) {
+            LOGGER.log(Level.WARNING, "ubean was null!");
+        } else {
+            LOGGER.info("Login: ubean was set successfully!");
+            this.ubean = ubean;
+        }
+    }
+
 }

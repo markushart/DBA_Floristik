@@ -39,6 +39,8 @@
                                          value="Einloggen" 
                                          update="loginForm" 
                                          ajax="true">
+                            <f:setPropertyActionListener value="#{userBean}" 
+                                                         target="#{loginBean.ubean}"/>
                         </p:commandButton>
                         <h:messages globalOnly="true"
                                     showSummary="true"

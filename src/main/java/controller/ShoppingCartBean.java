@@ -5,14 +5,16 @@
 package controller;
 
 import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import model.Product;
 import model.ShoppingCartItem;
@@ -22,25 +24,30 @@ import model.ShoppingCartItem;
  * @author marku
  */
 @Named(value = "shoppingCartBean")
-@SessionScoped
+@RequestScoped
 public class ShoppingCartBean implements Serializable {
 
-    private static final Logger LOGGER = 
-            Logger.getLogger(ShoppingCartBean.class.getName());
-    private ArrayList<ShoppingCartItem> items;
-    private float overallPrice;
+    private static final Logger LOGGER
+            = Logger.getLogger(ShoppingCartBean.class.getName());
     private FacesContext context;
 
     private ShoppingCartItem lastAddedItem;
+    private ArrayList<ShoppingCartItem> items;
+    private float overallPrice;
+
+    @Inject
+    private UserBean ubean;
 
     @PostConstruct
     public void init() {
 
         context = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) context.getExternalContext().getSession(false);
-        LOGGER.log(Level.INFO, "Products: Session ID: {0}", session.getId());
+        LOGGER.log(Level.INFO, "ShoppingCart: Session ID: {0}", session.getId());
 
         items = new ArrayList<>();
+        // init ubean somehow!
+        // setItems();
     }
 
     /**
@@ -49,52 +56,45 @@ public class ShoppingCartBean implements Serializable {
     public ShoppingCartBean() {
     }
 
-    public String order(){
-        if (true) {
-            return "login.xhtml";
-        } else {
+    /**
+     *
+     * @return the next side where the user can either log in or pay
+     */
+    public String order() {
+        if (ubean.getUser().isLoggedIn()) {
             return "pay.xhtml";
+        } else {
+            return "login.xhtml";
         }
 
     }
-    
-    /**
-     * adds a shoppingCartItem with number n and product p, 
-     * if product with the same Id is
-     * allready in Cart, add n to its ShoppingCartItem number
-     *
+
+     /**
      * @param n number of Product
      * @param p the product in the shopping Cart
      */
     public void addItem(int n, Product p) {
-        ShoppingCartItem shi = new ShoppingCartItem();
-        shi.setNumber(n);
-        shi.setProduct(p);
-        boolean isInCart = false;
-        for (ShoppingCartItem i : items) {
-            if (i.getProduct().getId() == p.getId()) {
-                isInCart = true;
-                i.setNumber(i.getNumber() + n);
-                break;
-            }
-        }
-        if (!isInCart) {
-            this.items.add(shi);
-        }
+        ShoppingCartItem shi = new ShoppingCartItem(p, n);
+        addItem(shi);
+    }
+    
+    /**
+     * adds a shoppingCartItem with number n and product p
+     *
+     * @param shi ShoppingCartItem
+     */
+    public void addItem(ShoppingCartItem shi) {
+        ubean.getUser().putInCart(shi);
         setOverallPrice();
     }
 
-    public void addItem(ShoppingCartItem shi) {
-        addItem(shi.getNumber(), shi.getProduct());
-    }
-
     public void removeItem(int i) {
-        this.items.remove(i);
+        this.ubean.getUser().removeFromCart(i);
         setOverallPrice();
     }
 
     public void removeItem(ShoppingCartItem item) {
-        this.items.remove(item);
+        this.ubean.getUser().removeFromCart(item);
         setOverallPrice();
     }
 
@@ -114,6 +114,11 @@ public class ShoppingCartBean implements Serializable {
      */
     public void setLastAddedItem(ShoppingCartItem lastAddedItem) {
         addItem(lastAddedItem);
+        FacesMessage fm = new FacesMessage(FacesMessage.SEVERITY_INFO, "Zu Einkaufskorb hinzugefügt", ": " + lastAddedItem.getNumber() 
+                + " x " + lastAddedItem.getProduct().getName());
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, fm);
+        
         this.lastAddedItem = lastAddedItem;
     }
 
@@ -122,7 +127,7 @@ public class ShoppingCartBean implements Serializable {
      * @param ev
      */
     public void spinnerAjaxListener(AjaxBehaviorEvent ev) {
-        for (ShoppingCartItem i : items) {
+        for (ShoppingCartItem i : getItems()) {
             i.getWholePrice();
         }
     }
@@ -137,12 +142,11 @@ public class ShoppingCartBean implements Serializable {
     }
 
     /**
-     * Set the value of items
+     * Set the value of items with the shopping cart of user
      *
-     * @param items new value of items
      */
-    public void setItems(ArrayList<ShoppingCartItem> items) {
-        this.items = items;
+    public void setItems() {
+        this.items = ubean.getUser().getShoppingCart();
     }
 
     /**
@@ -159,10 +163,29 @@ public class ShoppingCartBean implements Serializable {
      */
     public void setOverallPrice() {
         float sum = 0;
-        for (ShoppingCartItem i : items) {
+        for (ShoppingCartItem i : getItems()) {
             i.setWholePrice();
             sum += i.getWholePrice();
         }
         this.overallPrice = sum;
+    }
+
+    /**
+     * Get the value of ubean
+     *
+     * @return the value of ubean
+     */
+    public UserBean getUbean() {
+        return ubean;
+    }
+
+    /**
+     * Set the value of ubean
+     *
+     * @param ubean new value of ubean
+     */
+    public void setUbean(UserBean ubean) {
+        LOGGER.info("ubean was added");
+        this.ubean = ubean;
     }
 }

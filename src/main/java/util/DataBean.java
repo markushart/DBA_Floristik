@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.RequestScoped;
 import model.Product;
 import model.User;
 import model.UserRole;
@@ -19,7 +19,7 @@ import model.UserRole;
  * @author marku
  */
 @Named(value = "dataBean")
-@SessionScoped
+@RequestScoped
 public class DataBean implements Serializable {
 
     static final Logger LOGGER = Logger.getLogger(DataBean.class.getName());
@@ -29,7 +29,8 @@ public class DataBean implements Serializable {
 
     @PostConstruct
     public void init() {
-
+        generateTestUsers();
+        generateTestProducts();
     }
 
     /**

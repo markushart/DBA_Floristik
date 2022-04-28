@@ -4,18 +4,20 @@
  */
 package model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author marku
  */
 public class User {
-    
+
     private String firstName;
 
     private String lastName;
 
     private String email;
-    
+
     private String username;
 
     private int password;
@@ -23,30 +25,32 @@ public class User {
     private boolean loggedIn = false;
 
     private UserRole role = UserRole.NOBODY;
-    
+
     private String salutation;
-    
+
+    private ArrayList<ShoppingCartItem> shoppingCart;
+
     /**
      * Creates a new instance of user
      */
     public User() {
     }
-    
+
     /**
-     * 
+     *
      * @param firstName
      * @param lastName
      * @param email
      * @param username
      * @param password
      * @param salutation
-     * @param role 
+     * @param role
      */
     public User(String firstName, String lastName, String email, String username, int password, String salutation, UserRole role) {
         this(firstName, lastName, email, username, password, salutation);
         this.role = role;
     }
-    
+
     public User(String firstName, String lastName, String email, String username, int password, String salutation) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -54,8 +58,45 @@ public class User {
         this.email = email;
         this.password = password;
         this.salutation = salutation;
+        this.shoppingCart = new ArrayList<>();
+    }
+
+    public boolean login(String password) {
+        if (this.password == password.hashCode()) {
+            setLoggedIn(true);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * f product with the same Id is allready in Cart, add n to its ShoppingCartItem number
+     * @param shi ShoppingCartItem
+     */
+    public void putInCart(ShoppingCartItem shi) {
+        boolean isInCart = false;
+        for (ShoppingCartItem i : shoppingCart) {
+            if (i.getProduct().getId() == shi.getProduct().getId()) {
+                isInCart = true;
+                i.setNumber(i.getNumber() + shi.getNumber());
+                break;
+            }
+        }
+        if (!isInCart) {
+            shoppingCart.add(shi);
+        }
     }
     
+    
+    public void removeFromCart(int i){
+        this.shoppingCart.remove(i);
+    }
+    
+    public void removeFromCart(ShoppingCartItem item){
+        this.shoppingCart.remove(item);
+    }
+
     /**
      * Get the value of role
      *
@@ -128,7 +169,6 @@ public class User {
         this.password = password.hashCode();
     }
 
-
     /**
      * Get the value of email
      *
@@ -182,8 +222,8 @@ public class User {
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
-    
-        /**
+
+    /**
      * Get the value of username
      *
      * @return the value of username
@@ -200,13 +240,22 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
-    
-    public boolean login(String password){
-        if (this.password == password.hashCode()) {
-            setLoggedIn(true);
-            return true;
-        } else {
-            return false;
-        }
+
+    /**
+     * Get the value of shoppingCart
+     *
+     * @return the value of shoppingCart
+     */
+    public ArrayList<ShoppingCartItem> getShoppingCart() {
+        return shoppingCart;
+    }
+
+    /**
+     * Set the value of shoppingCart
+     *
+     * @param shoppingCart new value of shoppingCart
+     */
+    public void setShoppingCart(ArrayList<ShoppingCartItem> shoppingCart) {
+        this.shoppingCart = shoppingCart;
     }
 }

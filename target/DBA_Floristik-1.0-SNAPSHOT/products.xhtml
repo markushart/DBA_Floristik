@@ -27,6 +27,7 @@
             </style>
                 <h2>Produktübersicht</h2>
             <h:form id="productForm">
+                <p:growl globalOnly="true"/>
                 <p:dataList value="#{productsBean.items}" var="prodItem" type="definition">
                     <f:facet name="header">
                     <h:panelGrid columns="6" width="100%" columnClasses="logo,name,spinner,price,price,button">
@@ -54,8 +55,9 @@
                         <h:outputText id="itemWholePrice" 
                                       value="#{prodItem.wholePrice}"
                                       converter="#{euroConverter}"/>
-                        <h:commandButton value="Zu Einkaufswagen hinzu" 
-                                         action="shoppingcart.xhtml">
+                        <h:commandButton value="Zu Einkaufswagen hinzu">
+                            <f:setPropertyActionListener value="#{userBean}" 
+                                                         target="#{shoppingCartBean.ubean}"/>
                             <f:setPropertyActionListener value="#{prodItem}" 
                                                          target="#{shoppingCartBean.lastAddedItem}"/>
                         </h:commandButton>
