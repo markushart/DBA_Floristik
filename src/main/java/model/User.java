@@ -4,15 +4,10 @@
  */
 package model;
 
-import javax.inject.Named;
-import javax.enterprise.context.Dependent;
-
 /**
  *
  * @author marku
  */
-@Named(value = "user")
-@Dependent
 public class User {
     
     private String firstName;
@@ -38,7 +33,14 @@ public class User {
     }
     
     /**
-     * diese Konstruktoren dienen zur veranschaulichung in Login- und RegisterBean
+     * 
+     * @param firstName
+     * @param lastName
+     * @param email
+     * @param username
+     * @param password
+     * @param salutation
+     * @param role 
      */
     public User(String firstName, String lastName, String email, String username, int password, String salutation, UserRole role) {
         this(firstName, lastName, email, username, password, salutation);

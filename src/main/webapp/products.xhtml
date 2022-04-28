@@ -1,9 +1,69 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-    <h:body>
-        Hello from Facelets
-    </h:body>
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+    <ui:composition template="template/master.xhtml">
+        <ui:define name="content">
+            <style>
+                .logo{
+                    width: 30%;
+                }
+                .name{
+                    width: 30%;
+                }
+                .spinner{
+                    width: 10%;
+                }
+                .price{
+                    width: 10%;
+                }
+                .button{
+                    width: 10%;
+                }
+            </style>
+                <h2>Produktübersicht</h2>
+            <h:form id="productForm">
+                <p:dataList value="#{productsBean.items}" var="prodItem" type="definition">
+                    <f:facet name="header">
+                    <h:panelGrid columns="6" width="100%" columnClasses="logo,name,spinner,price,price,button">
+                        <h:outputText value="Logo"/>
+                        <h:outputText value="Produktbezeichnung"/>
+                        <h:outputText value="Menge"/>
+                        <h:outputText value="Stückpreis"/>
+                        <h:outputText value="Gesamtpreis"/>
+                        <h:outputText value="kaufen"/>
+                    </h:panelGrid>
+                        </f:facet>
+                    <h:panelGrid columns="6" width="100%" 
+                                 columnClasses="logo,name,spinner,price,price,button" >
+                        <p:graphicImage value="#{prodItem.product.image}"/>
+                        <h:outputText value="#{prodItem.product.name}"/>
+                        <p:spinner value="#{prodItem.number}" 
+                                   stepFactor="1" min="1">
+                            <f:ajax listener="#{productsBean.spinnerAjaxListener}"
+                                    event="valueChange"
+                                    render="itemWholePrice"/>
+                        </p:spinner>
+                        <h:outputText value="#{prodItem.product.price}"
+                                      converter="#{euroConverter}">
+                        </h:outputText>
+                        <h:outputText id="itemWholePrice" 
+                                      value="#{prodItem.wholePrice}"
+                                      converter="#{euroConverter}"/>
+                        <h:commandButton value="Zu Einkaufswagen hinzu" 
+                                         action="shoppingcart.xhtml">
+                            <f:setPropertyActionListener value="#{prodItem}" 
+                                                         target="#{shoppingCartBean.lastAddedItem}"/>
+                        </h:commandButton>
+                    </h:panelGrid>
+                </p:dataList>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
 </html>
 

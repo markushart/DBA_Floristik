@@ -4,37 +4,37 @@
  */
 package model;
 
-import javax.inject.Named;
-import javax.enterprise.context.Dependent;
 import java.io.Serializable;
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 
 /**
  *
  * @author marku
  */
-@Named(value = "shoppingCardItem")
-@Dependent
 public class ShoppingCartItem implements Serializable {
 
-    @Inject private ProductBean product;
+    private Product product;
     private int number;
     private float wholePrice;
-    
-    @PostConstruct
-    public void init(){
-        this.product = null;
-        this.number=0;
-        wholePrice=0.0f;
-    }
 
     /**
      * Creates a new instance of ShoppingCardItem
      */
     public ShoppingCartItem() {
+        this(new Product(), 0);
     }
 
+    public ShoppingCartItem(Product product, int number) {
+        this.product = product;
+        this.number = number;
+        if (product == null) {
+            wholePrice = 0.0f;
+        } else {
+            wholePrice=product.getPrice() * number;
+        }
+    }
+
+    
+    
     /**
      * Get the value of number
      *
@@ -58,7 +58,7 @@ public class ShoppingCartItem implements Serializable {
      *
      * @return the value of product
      */
-    public ProductBean getProduct() {
+    public Product getProduct() {
         return product;
     }
 
@@ -67,7 +67,7 @@ public class ShoppingCartItem implements Serializable {
      *
      * @param product new value of product
      */
-    public void setProduct(ProductBean product) {
+    public void setProduct(Product product) {
         this.product = product;
     }
     

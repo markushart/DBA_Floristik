@@ -1,9 +1,12 @@
+converter\EuroConverter.class
 controller\LoginBean.class
 controller\LogoutBean.class
 controller\RegisterBean.class
-model\ProductBean.class
-controller\Password.class
+converter\PasswordConverter.class
+util\DataBean.class
 controller\ShoppingCartBean.class
+model\Product.class
+controller\ProductsBean.class
 model\UserRole.class
 model\ShoppingCartItem.class
 model\User.class

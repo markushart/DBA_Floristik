@@ -30,11 +30,12 @@
                         </p:inputText>
                         <h:outputText value="Passwort"/>
                         <p:password value="#{loginBean.password}" 
-                                    feedback="false"></p:password>
+                                    feedback="false" >
+                        </p:password>
                     </h:panelGrid>
                     <h:panelGrid columns="2">
                         <p:commandButton id="loginButton" 
-                                         action="#{loginBean.login}" 
+                                         action="#{loginBean.login()}" 
                                          value="Einloggen" 
                                          update="loginForm" 
                                          ajax="true">
