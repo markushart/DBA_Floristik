@@ -5,62 +5,54 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-    
+
     <ui:composition template="template/master.xhtml">
         <ui:define name="content">
-            <style>
-                .logo{
-                    width: 30%;
-                }
-                .name{
-                    width: 30%;
-                }
-                .spinner{
-                    width: 10%;
-                }
-                .price{
-                    width: 10%;
-                }
-                .button{
-                    width: 10%;
-                }
-            </style>
-                <h2>Produktübersicht</h2>
+            <h2>Produktübersicht</h2>
             <h:form id="productForm">
-                <p:dataList value="#{productsBean.items}" var="prodItem" type="definition">
-                    <f:facet name="header">
-                    <h:panelGrid columns="6" width="100%" columnClasses="logo,name,spinner,price,price,button">
-                        <h:outputText value="Logo"/>
-                        <h:outputText value="Produktbezeichnung"/>
-                        <h:outputText value="Menge"/>
-                        <h:outputText value="Stückpreis"/>
-                        <h:outputText value="Gesamtpreis"/>
-                        <h:outputText value="kaufen"/>
-                    </h:panelGrid>
-                        </f:facet>
-                    <h:panelGrid columns="6" width="100%" 
-                                 columnClasses="logo,name,spinner,price,price,button" >
+                <p:toolbar rendered="#{loginBean.user.isAdmin()}">
+                    <f:facet name="addNew">
+                        
+                    </f:facet>
+                </p:toolbar>
+                <p:dataTable value="#{productsBean.items}" var="prodItem">
+
+                    <p:column headerText="Logo">
                         <p:graphicImage value="#{prodItem.product.image}"/>
-                        <h:outputText value="#{prodItem.product.name}"/>
+                    </p:column>
+
+                    <p:column headerText="Produktbezeichnung">
+                        <h:outputLabel value="#{prodItem.product.name}"/>
+                    </p:column>
+
+                    <p:column headerText="Menge">
                         <p:spinner value="#{prodItem.number}" 
                                    stepFactor="1" min="1">
                             <f:ajax listener="#{productsBean.spinnerAjaxListener}"
                                     event="valueChange"
                                     render="itemWholePrice"/>
                         </p:spinner>
-                        <h:outputText value="#{prodItem.product.price}"
-                                      converter="#{euroConverter}">
-                        </h:outputText>
-                        <h:outputText id="itemWholePrice" 
-                                      value="#{prodItem.wholePrice}"
-                                      converter="#{euroConverter}"/>
+                    </p:column>
+
+                    <p:column headerText="Stückpreis">
+                        <h:outputLabel value="#{prodItem.product.price}"
+                                       converter="#{euroConverter}"/>
+                    </p:column>
+
+                    <p:column headerText="Gesamtpreis">
+                        <h:outputLabel id="itemWholePrice" 
+                                       value="#{prodItem.wholePrice}"
+                                       converter="#{euroConverter}"/>
+                    </p:column>
+
+                    <p:column>
                         <h:commandButton value="Zu Einkaufswagen hinzu" 
                                          action="shoppingcart.xhtml">
                             <f:setPropertyActionListener value="#{prodItem}" 
                                                          target="#{shoppingCartBean.lastAddedItem}"/>
                         </h:commandButton>
-                    </h:panelGrid>
-                </p:dataList>
+                    </p:column>
+                </p:dataTable>
 
             </h:form>
         </ui:define>

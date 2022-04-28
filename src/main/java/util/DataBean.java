@@ -29,7 +29,8 @@ public class DataBean implements Serializable {
 
     @PostConstruct
     public void init() {
-
+        generateTestUsers();
+        generateTestProducts();
     }
 
     /**

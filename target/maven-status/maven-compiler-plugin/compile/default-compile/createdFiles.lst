@@ -1,6 +1,7 @@
 converter\EuroConverter.class
 controller\LoginBean.class
 controller\LogoutBean.class
+controller\UserBean.class
 controller\RegisterBean.class
 converter\PasswordConverter.class
 util\DataBean.class

@@ -4,6 +4,7 @@
  */
 package converter;
 
+import static java.lang.Math.round;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.component.UIComponent;
@@ -26,11 +27,13 @@ public class EuroConverter implements Converter {
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, Object o) {
-        String s = o.toString();
+        float x = (float) o;
+        String s = String.valueOf(x);
         if (s == null) {
-            s = "0,00";
+            s = "0,00€";
+        } else {
+            s = String.format("%.2f€", x).replace(".", ",");
         }
-        s = s.replace(".", ",") + "€";
         return s;
     }
 

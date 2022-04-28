@@ -25,23 +25,20 @@
                     width: 10%;
                 }
             </style>
-                <h2>Einkaufswagen</h2>
-            <h:form id="productForm">
-                <p:dataList value="#{shoppingCartBean.items}" var="cartItem" type="definition">
-                    <f:facet name="header">
-                    <h:panelGrid columns="6" width="100%" columnClasses="logo,name,spinner,price,price,button">
-                        <div/>
-                        <h:outputText value="Produktbezeichnung"/>
-                        <h:outputText value="Menge"/>
-                        <h:outputText value="Stückpreis"/>
-                        <h:outputText value="Gesamtpreis"/>
-                        <div/>
-                    </h:panelGrid>
-                        </f:facet>
-                    <h:panelGrid columns="6" width="100%" 
-                                 columnClasses="logo,name,spinner,price,price,button" >
+            <h2>Einkaufswagen</h2>
+            <h:form id="cartForm">
+                <p:dataTable id="table" value="#{shoppingCartBean.items}" var="cartItem" rowIndexVar="rowIdx">
+
+
+                    <p:column>
                         <p:graphicImage value="#{cartItem.product.image}"/>
-                        <h:outputText value="#{cartItem.product.name}"/>
+                    </p:column>
+
+                    <p:column>
+                        <h:outputLabel value="#{cartItem.product.name}"/>
+                    </p:column>
+
+                    <p:column>
                         <p:spinner value="#{cartItem.number}" 
                                    stepFactor="1" min="1">
                             <f:ajax event="valueChange"
@@ -49,30 +46,69 @@
                             <f:ajax listener="#{shoppingCartBean.setOverallPrice()}"
                                     render="cartForm:overallPrice"/>
                         </p:spinner>
-                        <h:outputText value="#{cartItem.product.price}" 
-                                      converter="#{euroConverter}">
-                            
-                        </h:outputText>
-                        <h:outputText id="itemWholePrice" 
-                                      value="#{cartItem.wholePrice}"
-                                      converter="#{euroConverter}"/>
+                    </p:column>
+
+                    <p:column>
+                        <h:outputLabel value="#{cartItem.product.price}" 
+                                       converter="#{euroConverter}"/>
+                    </p:column>
+
+                    <p:column>
+                        <h:outputLabel id="itemWholePrice" 
+                                       value="#{cartItem.wholePrice}"
+                                       converter="#{euroConverter}"/>
+                    </p:column>
+
+                    <p:column>
                         <h:commandButton value="Löschen" 
-                                         action="#{shoppingCartBean.removeItem(cartItem)}"/>
-                    </h:panelGrid>
-                </p:dataList>
+                                         action="#{shoppingCartBean.removeItem(rowIdx)}"/>
+                    </p:column>
+                </p:dataTable>
 
                 <h:panelGrid id="pg2" columns="6" width="100%" columnClasses="logo,name,spinner,price,price,button">
                     <div/>
                     <div/>
                     <div/>
-                    <h:outputText value="Gesamtpreis:"/>
+                    <h:outputLabel value="Gesamtpreis:"/>
                     <div/>
-                    <h:outputText id="overallPrice" 
-                                  value="#{shoppingCartBean.overallPrice}"
-                                  converter="#{euroConverter}"/>
+                    <h:outputLabel id="overallPrice" 
+                                   value="#{shoppingCartBean.overallPrice}"
+                                   converter="#{euroConverter}"/>
                 </h:panelGrid>
+            </h:form>
 
-                <p:commandButton value="Bestellen" action="login.xhtml"/>
+            <h:form id="orderForm">
+                <p:growl id="growl" showDetail="true"/>
+                <p:panelGrid columns="3">
+                    <p:outputLabel value="Lieferdatum:"/>
+                    <p:datePicker id="datePicker" 
+                                  value="#{shoppingCartBean.testDate}"  
+                                  required="true"
+                                  requiredMessage="Bitte Lieferdatum angeben!"
+                                  validatorMessage="Lieferdatum muss in der Zukunft liegen!">
+                    </p:datePicker>
+                    <h:commandButton id="orderButton"
+                                     value="Bestellen" 
+                                     type="submit"
+                                     action="#{shoppingCartBean.order}">
+                        <f:setPropertyActionListener value="#{loginBean}" 
+                                                     target="#{shoppingCartBean.lbean}"/>
+                        <f:ajax render="orderForm:orderMessage"/>
+                        <f:ajax render="cartForm:table"/>
+                    </h:commandButton>
+
+                    <p:outputLabel value="Uhrzeit:"/>
+                    <p:selectOneMenu id="timePicker" value="#{shoppingCartBean.deliveryTime}">
+                        <f:selectItems value="#{shoppingCartBean.deliveryTimeOptions}"/>
+                    </p:selectOneMenu>                    
+                    <h:message id="orderMessage"
+                               for="orderForm:orderButton"
+                               showSummary="true"
+                               showDetail="true"
+                               infoStyle="color:green"
+                               warnStyle="color:yellow"
+                               errorStyle="color:red"/>
+                </p:panelGrid>
             </h:form>
         </ui:define>
     </ui:composition>

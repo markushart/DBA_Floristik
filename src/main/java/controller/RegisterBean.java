@@ -8,6 +8,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
@@ -16,11 +18,12 @@ import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.inject.Inject;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import model.User;
-import model.UserRole;
+import util.DataBean;
 
 /**
  *
@@ -30,6 +33,8 @@ import model.UserRole;
 @RequestScoped
 public class RegisterBean implements Serializable {
 
+    private static final Logger LOGGER
+            = Logger.getLogger(RegisterBean.class.getName());
     private static final String NAMEREGEX = "^[a-zA-Z]+$";
     private static final String NAMEMSG
             = "Es sind nur Klein- und Großbuchstaben von a-z erlaubt.";
@@ -51,9 +56,11 @@ public class RegisterBean implements Serializable {
     private String email;
     private boolean registered;
     private FacesContext context;
+    @Inject
+    private DataBean dbean;
 
-    // for demonstration purpose
     private ArrayList<User> users;
+
 
     @PostConstruct
     public void init() {
@@ -66,26 +73,29 @@ public class RegisterBean implements Serializable {
 
         registered = false;
 
-        users = new ArrayList<>();
-        users.add(new User("Markus", "Hartlage", "markus.hartlage@fh-bielefeld.de",
-                "hartmark", "Hallo1234".hashCode(), "Herr"));
-        users.add(new User("Bianca", "Beispiel", "biancab@yahoo.com",
-                "bibibsp", "GanzGeheim123".hashCode(), "Frau"));
-        users.add(new User("Frank", "Floristiker", "frank@floristik.de",
-                "flowerfrank", "L0tusBlume".hashCode(), "Herr", UserRole.ADMIN));
-
-        // test ob @regexp serverseitig funktioniert...
-        // setFname("Kevin187");
+        users = dbean.getUserList();
+        
+        LOGGER.log(Level.INFO, "new registerBean {0}", users);
     }
 
-    public void process() {
+    public String process() {
         FacesMessage fm;
         registered = true;
         // username is allready taken
-        for (User u : users) {
-            if (u.getUsername().equals(this.uname)
-                    || (u.getEmail().equals(this.email) && !this.email.isEmpty())) {
-                registered = false;
+        try {
+            for (User u : users) {
+                try{
+                if (u.getUsername().equals(this.uname)
+                        || (u.getEmail().equals(this.email) && !this.email.isEmpty())) {
+                    registered = false;
+                }
+                } catch(NullPointerException e) {
+                    LOGGER.log(Level.WARNING, "users was not null!");
+                }
+            }
+        } catch (NullPointerException e) {
+            if (users == null){
+            LOGGER.log(Level.WARNING, "users was null!");
             }
         }
 
@@ -93,20 +103,23 @@ public class RegisterBean implements Serializable {
             fm = new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlschlag",
                     ": Username oder Email bereits vergeben.");
             context.addMessage(null, fm);
+            return null;
         } else if (!password.matches(PWDREGEX)) { // Kontrolle auf zulaessiges Passwort
             fm = new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlschlag",
                     ": Passwort nicht sicher.");
             context.addMessage(null, fm);
+            return null;
         } else {
             fm = new FacesMessage(FacesMessage.SEVERITY_INFO, "Erfolg",
                     ": Registrieren erfolgreich!");
             context.addMessage(null, fm);
+            return "login.xhtml";
         }
     }
 
     /**
-     * 
-     * @param ev 
+     *
+     * @param ev
      */
     public void pwdAjaxListener(AjaxBehaviorEvent ev) {
         FacesMessage fm;
@@ -254,5 +267,21 @@ public class RegisterBean implements Serializable {
     public Map<String, String> getGreetings() {
         return greetings;
     }
+    /**
+     * Get the value of dbean
+     *
+     * @return the value of dbean
+     */
+    public DataBean getDbean() {
+        return dbean;
+    }
 
+    /**
+     * Set the value of dbean
+     *
+     * @param dbean new value of dbean
+     */
+    public void setDbean(DataBean dbean) {
+        this.dbean = dbean;
+    }
 }

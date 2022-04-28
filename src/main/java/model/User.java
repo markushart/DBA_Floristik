@@ -4,11 +4,16 @@
  */
 package model;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author marku
  */
 public class User {
+    
+    private static final Logger LOGGER = Logger.getLogger(User.class.getName());
     
     private String firstName;
 
@@ -20,8 +25,6 @@ public class User {
 
     private int password;
 
-    private boolean loggedIn = false;
-
     private UserRole role = UserRole.NOBODY;
     
     private String salutation;
@@ -30,6 +33,7 @@ public class User {
      * Creates a new instance of user
      */
     public User() {
+        this("","","","",0,"");
     }
     
     /**
@@ -90,24 +94,6 @@ public class User {
      */
     public void setSalutation(String salutation) {
         this.salutation = salutation;
-    }
-
-    /**
-     * Get the value of loggedIn
-     *
-     * @return the value of loggedIn
-     */
-    public boolean isLoggedIn() {
-        return loggedIn;
-    }
-
-    /**
-     * Set the value of loggedIn
-     *
-     * @param signedIn new value of loggedIn
-     */
-    public void setLoggedIn(boolean signedIn) {
-        this.loggedIn = signedIn;
     }
 
     /**
@@ -202,11 +188,16 @@ public class User {
     }
     
     public boolean login(String password){
-        if (this.password == password.hashCode()) {
-            setLoggedIn(true);
-            return true;
-        } else {
-            return false;
-        }
+        return this.password == password.hashCode();
+           
+    }
+    
+    /**
+     * 
+     * @return tell if the user is an admin or not
+     */
+    public boolean isAdmin(){
+        LOGGER.log(Level.INFO, "Die Rolle von {0} ist {1}", new Object[]{username, role});
+        return this.role == UserRole.ADMIN;
     }
 }

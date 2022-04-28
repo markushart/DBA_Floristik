@@ -23,16 +23,18 @@ import util.DataBean;
  */
 @Named(value = "loginBean")
 @SessionScoped
-public class LoginBean implements Serializable{
+public class LoginBean implements Serializable {
 
-    private static final Logger LOGGER = 
-            Logger.getLogger(RegisterBean.class.getName());
+    private static final Logger LOGGER
+            = Logger.getLogger(RegisterBean.class.getName());
     private HttpSession session;
     private String uname;
     private String password;
     private ArrayList<User> knownUsers;
     private FacesContext context;
-    
+    private User user;
+
+    private boolean loggedIn = false;
 
     /**
      * Creates a new instance of LoginBean
@@ -45,33 +47,34 @@ public class LoginBean implements Serializable{
     public void init() {
         LOGGER.info("new LoginBean");
         context = FacesContext.getCurrentInstance();
-        
-        session= (HttpSession) context.getExternalContext().getSession(false);
+
+        session = (HttpSession) context.getExternalContext().getSession(false);
         LOGGER.log(Level.INFO, "Login: Session ID: {0}", session.getId());
-        
+
         DataBean db = new DataBean();
         db.generateTestUsers();
         knownUsers = db.getUserList();
+        user = new User();
     }
-    
-    public void login(){
-        boolean loggedIn = false;
+
+    public void login() {
         FacesMessage fm;
-        
-        for (User u:knownUsers){
+
+        for (User u : knownUsers) {
             if (u.getUsername().equals(this.uname)) {
                 loggedIn = u.login(this.password);
+                this.user = u;
                 break;
             }
         }
-        
+
         context = FacesContext.getCurrentInstance();
-        if (loggedIn){
-            fm = new FacesMessage(FacesMessage.SEVERITY_INFO, 
+        if (loggedIn) {
+            fm = new FacesMessage(FacesMessage.SEVERITY_INFO,
                     "Erfolg", ": Login erfolgreich!");
             context.addMessage(null, fm);
         } else {
-            fm = new FacesMessage(FacesMessage.SEVERITY_WARN, 
+            fm = new FacesMessage(FacesMessage.SEVERITY_WARN,
                     "Fehlschlag", ": Username oder Passwort falsch!");
             context.addMessage(null, fm);
         }
@@ -149,22 +152,58 @@ public class LoginBean implements Serializable{
     public void setContext(FacesContext context) {
         this.context = context;
     }
-    
+
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public HttpSession getSession() {
         return session;
     }
 
     /**
-     * 
-     * @param session 
+     *
+     * @param session
      */
     public void setSession(HttpSession session) {
         this.session = session;
     }
-    
-    
+
+    /**
+     * Get the value of user
+     *
+     * @return the value of user
+     */
+    public User getUser() {
+        LOGGER.log(Level.INFO, "delivering user{0}", user.getUsername());
+        return user;
+    }
+
+    /**
+     * Set the value of user
+     *
+     * @param user new value of user
+     */
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    /**
+     * Get the value of loggedIn
+     *
+     * @return the value of loggedIn
+     */
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+
+    /**
+     * Set the value of loggedIn
+     *
+     * @param loggedIn new value of loggedIn
+     */
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
+    }
+
 }
