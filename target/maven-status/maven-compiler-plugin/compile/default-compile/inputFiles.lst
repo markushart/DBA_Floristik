@@ -1,11 +1,13 @@
 C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\model\ShoppingCartItem.java
 C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\util\DataBean.java
 C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\controller\ShoppingCartBean.java
+C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\model\Service.java
 C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\controller\LogoutBean.java
 C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\model\User.java
 C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\com\dba_floristik\JAXRSConfiguration.java
 C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\com\dba_floristik\resources\JavaEE8Resource.java
 C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\model\UserRole.java
+C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\controller\ServicesBean.java
 C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\converter\PasswordConverter.java
 C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\controller\LoginBean.java
 C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\converter\EuroConverter.java
@@ -13,3 +15,4 @@ C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\controller
 C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\model\Product.java
 C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\controller\UserBean.java
 C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\controller\RegisterBean.java
+C:\Users\marku\Documents\NetBeansProjects\DBA_Floristik\src\main\java\model\Buyable.java

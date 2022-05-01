@@ -9,24 +9,30 @@
     <ui:composition template="template/master.xhtml">
         <ui:define name="content">
             <h2>Produktübersicht</h2>
-            <h:form id="productForm">
+            <h:form>
                 <p:toolbar rendered="#{loginBean.user.isAdmin()}">
-                    <f:facet name="addNew">
-                        
-                    </f:facet>
+                    <p:toolbarGroup>
+                        <p:outputLabel value="Neue Produktbezeichnung"/>
+                        <p:inputText/>
+                        <p:outputLabel value="Preis"/>
+                        <p:inputNumber/>
+                        <p:commandButton type="button" value="Anlegen"/>                        
+                    </p:toolbarGroup>
                 </p:toolbar>
-                <p:dataTable value="#{productsBean.items}" var="prodItem">
+            </h:form>
+            <h:form id="productForm">
+                <p:dataTable value="#{productsBean.products}" var="product">
 
                     <p:column headerText="Logo">
-                        <p:graphicImage value="#{prodItem.product.image}"/>
+                        <p:graphicImage value="#{product.image}"/>
                     </p:column>
 
                     <p:column headerText="Produktbezeichnung">
-                        <h:outputLabel value="#{prodItem.product.name}"/>
+                        <h:outputLabel value="#{product.name}"/>
                     </p:column>
 
                     <p:column headerText="Menge">
-                        <p:spinner value="#{prodItem.number}" 
+                        <p:spinner value="#{product.number}" 
                                    stepFactor="1" min="1">
                             <f:ajax listener="#{productsBean.spinnerAjaxListener}"
                                     event="valueChange"
@@ -35,21 +41,21 @@
                     </p:column>
 
                     <p:column headerText="Stückpreis">
-                        <h:outputLabel value="#{prodItem.product.price}"
+                        <h:outputLabel value="#{product.price}"
                                        converter="#{euroConverter}"/>
                     </p:column>
 
                     <p:column headerText="Gesamtpreis">
                         <h:outputLabel id="itemWholePrice" 
-                                       value="#{prodItem.wholePrice}"
+                                       value="#{product.wholePrice}"
                                        converter="#{euroConverter}"/>
                     </p:column>
 
                     <p:column>
                         <h:commandButton value="Zu Einkaufswagen hinzu" 
                                          action="shoppingcart.xhtml">
-                            <f:setPropertyActionListener value="#{prodItem}" 
-                                                         target="#{shoppingCartBean.lastAddedItem}"/>
+                            <f:setPropertyActionListener value="#{product}" 
+                                                         target="#{shoppingCartBean.lastAddedProduct}"/>
                         </h:commandButton>
                     </p:column>
                 </p:dataTable>

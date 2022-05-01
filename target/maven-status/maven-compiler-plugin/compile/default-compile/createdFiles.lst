@@ -2,14 +2,17 @@ converter\EuroConverter.class
 controller\LoginBean.class
 controller\LogoutBean.class
 controller\UserBean.class
+controller\ServicesBean.class
 controller\RegisterBean.class
 converter\PasswordConverter.class
 util\DataBean.class
+model\Service.class
 controller\ShoppingCartBean.class
 model\Product.class
 controller\ProductsBean.class
 model\UserRole.class
 model\ShoppingCartItem.class
+model\Buyable.class
 model\User.class
 com\dba_floristik\JAXRSConfiguration.class
 com\dba_floristik\resources\JavaEE8Resource.class

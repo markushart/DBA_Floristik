@@ -27,19 +27,19 @@
             </style>
             <h2>Einkaufswagen</h2>
             <h:form id="cartForm">
-                <p:dataTable id="table" value="#{shoppingCartBean.items}" var="cartItem" rowIndexVar="rowIdx">
+                <h3>Produkte</h3>
+                <p:dataTable id="productTable" value="#{shoppingCartBean.products}" var="product" rowIndexVar="rowIdx">
 
-
-                    <p:column>
-                        <p:graphicImage value="#{cartItem.product.image}"/>
+                    <p:column headerText="">
+                        <p:graphicImage value="#{product.image}"/>
                     </p:column>
 
-                    <p:column>
-                        <h:outputLabel value="#{cartItem.product.name}"/>
+                    <p:column headerText="Produktbezeichnung">
+                        <h:outputLabel value="#{product.name}"/>
                     </p:column>
 
-                    <p:column>
-                        <p:spinner value="#{cartItem.number}" 
+                    <p:column headerText="Menge">
+                        <p:spinner value="#{product.number}" 
                                    stepFactor="1" min="1">
                             <f:ajax event="valueChange"
                                     render="itemWholePrice"/>
@@ -48,20 +48,49 @@
                         </p:spinner>
                     </p:column>
 
-                    <p:column>
-                        <h:outputLabel value="#{cartItem.product.price}" 
+                    <p:column headerText="Stückpreis">
+                        <h:outputLabel value="#{product.price}" 
                                        converter="#{euroConverter}"/>
                     </p:column>
 
-                    <p:column>
+                    <p:column headerText="Gesamtpreis">
                         <h:outputLabel id="itemWholePrice" 
-                                       value="#{cartItem.wholePrice}"
+                                       value="#{product.wholePrice}"
                                        converter="#{euroConverter}"/>
                     </p:column>
 
-                    <p:column>
+                    <p:column headerText="">
                         <h:commandButton value="Löschen" 
-                                         action="#{shoppingCartBean.removeItem(rowIdx)}"/>
+                                         action="#{shoppingCartBean.removeProduct(rowIdx)}"/>
+                    </p:column>
+                </p:dataTable>
+
+                <h3>Services</h3>
+                <p:dataTable id="serviceTable" value="#{shoppingCartBean.services}" var="service" rowIndexVar="rowIdx">
+
+                    <p:column headerText="">
+                        <p:graphicImage value="#{service.image}"/>
+                    </p:column>
+
+                    <p:column headerText="Servicebezeichnung">
+                        <h:outputLabel value="#{service.name}"/>
+                    </p:column>
+
+                    <p:column headerText="Datum">
+
+                        <p:datePicker value="#{service.serviceDate}">
+
+                        </p:datePicker>
+                    </p:column>
+
+                    <p:column headerText="Preis">
+                        <h:outputLabel value="#{service.price}" 
+                                       converter="#{euroConverter}"/>
+                    </p:column>
+
+                    <p:column headerText="">
+                        <h:commandButton value="Löschen" 
+                                         action="#{shoppingCartBean.removeService(rowIdx)}"/>
                     </p:column>
                 </p:dataTable>
 
@@ -82,7 +111,7 @@
                 <p:panelGrid columns="3">
                     <p:outputLabel value="Lieferdatum:"/>
                     <p:datePicker id="datePicker" 
-                                  value="#{shoppingCartBean.testDate}"  
+                                  value="#{shoppingCartBean.deliveryDate}"  
                                   required="true"
                                   requiredMessage="Bitte Lieferdatum angeben!"
                                   validatorMessage="Lieferdatum muss in der Zukunft liegen!">
@@ -94,7 +123,7 @@
                         <f:setPropertyActionListener value="#{loginBean}" 
                                                      target="#{shoppingCartBean.lbean}"/>
                         <f:ajax render="orderForm:orderMessage"/>
-                        <f:ajax render="cartForm:table"/>
+                        <f:ajax render="cartForm"/>
                     </h:commandButton>
 
                     <p:outputLabel value="Uhrzeit:"/>

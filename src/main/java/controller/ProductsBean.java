@@ -16,12 +16,14 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import model.Product;
-import model.ShoppingCartItem;
 import util.DataBean;
 
 /**
- *
- * @author marku
+ * Name:            ProductBean
+ * Aufgabe:         Klasse für interaktion mit Produktwebsite
+ * Version:         1.0
+ * Letzte Änderung: 01.05.2022
+ * Realisierung     Markus Hartlage
  */
 @Named(value = "productsBean")
 @RequestScoped
@@ -30,7 +32,7 @@ public class ProductsBean implements Serializable {
     private static final Logger LOGGER
             = Logger.getLogger(ProductsBean.class.getName());
 
-    private ArrayList<ShoppingCartItem> items;
+    private ArrayList<Product> products;
 
     @Inject
     private DataBean db;
@@ -52,13 +54,9 @@ public class ProductsBean implements Serializable {
         LOGGER.log(Level.INFO, "Products: Session ID: {0}", session.getId());
 
         db = new DataBean();
-        items = new ArrayList<>();
+        products = new ArrayList<>();
         db.generateTestProducts();
-        ArrayList<Product> products = db.getProductList();
-        for (Product p : products) {
-            items.add(new ShoppingCartItem(p, 1));
-            LOGGER.log(Level.INFO, "adding product: {0}", p.getName());
-        }
+        this.products = db.getProductList();
     }
 
     /**
@@ -66,8 +64,8 @@ public class ProductsBean implements Serializable {
      * @param ev
      */
     public void spinnerAjaxListener(AjaxBehaviorEvent ev) {
-        for (ShoppingCartItem i : items) {
-            i.setWholePrice();
+        for (Product p : products) {
+            p.setWholePrice();
         }
     }
 
@@ -76,17 +74,17 @@ public class ProductsBean implements Serializable {
      *
      * @return the value of items
      */
-    public ArrayList<ShoppingCartItem> getItems() {
-        return items;
+    public ArrayList<Product> getProducts() {
+        return products;
     }
 
     /**
      * Set the value of items
      *
-     * @param items new value of items
+     * @param products new value of products
      */
-    public void setItems(ArrayList<ShoppingCartItem> items) {
-        this.items = items;
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
     }
 
     public ShoppingCartBean getCartBean() {

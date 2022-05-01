@@ -11,12 +11,16 @@ import javax.annotation.PostConstruct;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import model.Product;
+import model.Service;
 import model.User;
 import model.UserRole;
 
 /**
- *
- * @author marku
+ * Name:            DataBean    
+ * Aufgabe:         Klasse für Interaktion mit Datenbank / dummy Daten
+ * Version:         1.0
+ * Letzte Änderung: 01.05.2022
+ * Realisierung     Markus Hartlage
  */
 @Named(value = "dataBean")
 @SessionScoped
@@ -26,6 +30,8 @@ public class DataBean implements Serializable {
     private ArrayList<User> userList;
 
     private ArrayList<Product> productList;
+
+    private ArrayList<Service> serviceList;
 
     @PostConstruct
     public void init() {
@@ -49,19 +55,30 @@ public class DataBean implements Serializable {
                 "flowerfrank", "L0tusBlume".hashCode(), "Herr", UserRole.ADMIN));
     }
 
+    /**
+     *
+     */
     public void generateTestProducts() {
         productList = new ArrayList<>();
-        Product flieder = new Product("flieder", 0 ,0.5f);
+        Product flieder = new Product("flieder", 0, 0.5f, 1);
         productList.add(flieder);
 
-        Product rose = new Product("rose", 1, 1.15f);
+        Product rose = new Product("rose", 1, 1.15f, 1);
         productList.add(rose);
 
-        Product daisy = new Product("Gänseblümchen", 2, 0.33f);
+        Product daisy = new Product("Gänseblümchen", 2, 0.33f, 1);
         productList.add(daisy);
-        
-        Product mowLawn = new Product("Rasenmähen", 3, 15.99f);
-        productList.add(mowLawn);
+    }
+
+    /**
+     *
+     */
+    public void generateTestServices() {
+        serviceList = new ArrayList<>();
+        Service decoration = new Service("Dekoration", 3, 15.99f);
+        serviceList.add(decoration);
+        Service greening = new Service("Begrünung", 4, 7.85f);
+        serviceList.add(greening);
     }
 
     /**
@@ -100,4 +117,21 @@ public class DataBean implements Serializable {
         this.productList = productList;
     }
 
+    /**
+     * Get the value of serviceList
+     *
+     * @return the value of serviceList
+     */
+    public ArrayList<Service> getServiceList() {
+        return serviceList;
+    }
+
+    /**
+     * Set the value of serviceList
+     *
+     * @param serviceList new value of serviceList
+     */
+    public void setServiceList(ArrayList<Service> serviceList) {
+        this.serviceList = serviceList;
+    }
 }
