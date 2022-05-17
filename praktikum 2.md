@@ -159,7 +159,7 @@ insert into costumer(CFIRSTNAME,CLASTNAME,CSALUTATION ,CEMAIL,CPHONE,CBIRTHDATE,
       ('Emilia',    'Schmidt',  'Fr.', 'emiliaschmidt@verizon.net', 0521545245, '1972-08-13',2),
       ('Leni',      'Schneider','Fr.', 'lenischneider@verizon.net', 052156464,  '1975-08-25',3),
       ('Mira',      'Fischer',  'Fr.', 'mirafischer@aol.com',       0521685745, '1975-09-01',4),
-      ('Sophia',    'Weber ',   'Fr.', 'sophiaweber@icloud.com',    0521654821, '1982-08-06',5),
+      ('Sophia',    'Weber',   'Fr.', 'sophiaweber@icloud.com',    0521654821, '1982-08-06',5),
       ('Adam',      'Meyer',    'Hr.', 'adammeyer@msn.com',         0521654826, '1986-08-17',6),
       ('Noah',      'Wagner',   'Hr.', 'noahwagner@icloud.com',     0521729287, '1987-07-28',7),
       ('Felix',     'Becker',   'Hr.', 'felixbecker@outlook.com',   0521569654, '1993-09-21',8),
@@ -181,10 +181,12 @@ insert into adress(FK_CID,ASTREET,ACITY,AFEDSTATE,ACITYCODE,ACOUNTRY)values
 
 insert into order1(odelivdate, ostatus, fk_cid, bcomment ) value
     ('2022-06-30','Offen',1,'Bitte morgens liefern!'),
-    ('2022-07-04','Offen',2,''),
+    ('2022-07-04','Offen',1,''),
     ('2022-09-14','Erledigt',3,''),
     ('2022-10-11','Erledigt',4,''),
-    ('2022-11-29','In Bearbeitung',5,'');
+    ('2022-11-29','In Bearbeitung',5,''),
+    ('2022-11-30','Erledigt',6,''),
+    ('2022-11-30','In Bearbeitung',6,'');
 
 
 
@@ -239,7 +241,9 @@ insert into orderdetail(odamount, fk_oid, fk_prid, fk_servid) value
     (5,1,2,3),
     (4,5,1,2),
     (3,4,5,1),
-    (2,3,4,5)
+    (2,3,4,5),
+    (4,6,3,2),
+    (4,7,6,2)
 ;
 
 insert into employee(efirstname, elastname, esalutation, esalary) value
@@ -266,3 +270,124 @@ insert into invoice(FK_OID, INVDATE) value
     (5,'2022-11-29');
 ```
 
+## Aufgabe 2
+
+1. Führen Sie über das SQL-Kommando SELECT die folgenden SQL-Abfragen in der Tabelle product durch:
+
+   1. Sortieren Sie die Datensätze mit einer SELECT-Anweisung nach Namen und Typ (ORDER BY - Klausel)!
+
+      ```sql
+      select * from product order by PRNAME,FK_PCATID ; # Wenn zuerst nach Name und dann nach Typ (macht weniger Sinn)
+      select * from product order by FK_PCATID,PRNAME ; # Zuerst Typ und dann nach Namen sortiert
+      ```
+
+      
+
+   2. ==Selektieren Sie nacheinander (!) die Namen der Produkte (Alias: Produktname) und Einzelpreis mit einem Einzelpreis zwischen Preis 1 bis Preis 2 (WHERE - Klausel mit logischer AND-Verknüpfung) und den Produktnummern zwischen unterer und oberer Grenze!==???
+
+      ```sql
+      select PRID,PRNAME as Produktname, PPRICENETTO from product where PPRICENETTO between 3.5 and 6.5;
+      ```
+
+      
+
+      
+
+2. Führen Sie die folgenden SQL-Abfragen als Verbundabfrage über die Tabellen order und customer durch:
+
+   1. Ermitteln Sie Anzahl der Bestellungen eines Kunden (Alias: Anzahl Bestellungen für einen Kunden) (COUNT - Funktion) und geben Sie diese und den Namen des Kunden (Alias: Kunde) aus!
+
+      ```sql
+      select count(FK_CID) as Anzahl , concat(CLASTNAME,', ',CFIRSTNAME) as Kunde from order1,costumer where CID=3 and FK_CID=CID;
+      ```
+
+      
+
+   2. Ermitteln Sie die Namen aller Kunden (Alias: Kundenname) und die Anzahl der Bestellungen für jeden Kunden (Alias: Anzahl) und Gruppieren Sie die Ergebnisse nach der Anzahl (COUNT und GROUP BY - Klausel)!
+
+      ```sql
+      select concat(CLASTNAME,', ',CFIRSTNAME) as Kunde, count(FK_CID) as Anzahl from order1,costumer where FK_CID=CID group by FK_CID;
+      ```
+
+      
+
+   3. Ermitteln Sie den Kundennamen (Alias: Kunde) und 
+
+      die Anzahl der Bestellungen für ein konkretes Produkt (via FK_PRID) für diesen Kunden (Alias: Anzahl) (COUNT und GROUP BY, INNER JOIN - Klausel)!
+   
+      ```sql
+      select concat(CLASTNAME,', ',CFIRSTNAME) as Kunde,
+             count(FK_CID)  as Anzahl
+              from order1
+          inner join costumer on order1.FK_CID = costumer.CID
+          inner join orderdetail o on order1.OID = o.FK_OID
+          where FK_PRID=3
+          group by FK_CID;
+      ```
+   
+      
+
+3. Führen Sie die folgenden SQL-Abfragen ggf. als Verbundabfrage über die Tabellen order, customer, orderdetail und product durch:
+
+   1. Ermitteln Sie die Produktnamen (Alias: Produkt) für alle Produkttypen (Alias: Produkttyp) aller Einträge in der Tabelle product.
+
+      ```sql
+      select PRNAME as Produkt from product;
+      ```
+
+      
+
+   2. Ermitteln Sie die Summe aller Produkte in der Tabelle product.
+
+      ```sql
+      select count(PRNAME)  from product;
+      ```
+
+      
+
+   3. Ermitteln Sie den Kundennamen (Alias: Kunde), 
+
+      die bestellten Produkte (Alias: Produktname), 
+
+      das Lieferdatum und 
+
+      den jeweiligen Bestellpreis für einen bestimmten Kunden über alle Bestellungseinträge.
+
+      ```sql
+      select CLASTNAME as Kunde,
+             PRNAME as Produkt,
+             ODELIVDATE as Lieferdatum,
+              PPRICENETTO as Preis
+             from order1
+             inner join costumer c on order1.FK_CID = c.CID
+             inner join orderdetail o on order1.OID = o.FK_OID
+             inner join product p on o.FK_PRID = p.PRID
+             where cid=6
+      ```
+
+      
+
+   4. Welche Produkte wurden noch nicht bestellt?
+
+      ```sql
+      select PRNAME as Produkt
+             from order1
+             inner join orderdetail o on order1.OID = o.FK_OID
+             right join product p on o.FK_PRID = p.PRID
+              where OID is null;
+      ```
+
+      
+
+   5. Ermitteln Sie die Anzahl an Bestellungen für jedes Produkt!
+
+      ```sql
+      select  PRNAME as Produkt,
+              count(FK_PRID) as Anzahl
+              #count(FK_PRID)*ODAMOUNT as Anzahl??
+             from product
+              inner join orderdetail o on product.PRID = o.FK_PRID
+      group by FK_PRID;
+      ```
+
+      
