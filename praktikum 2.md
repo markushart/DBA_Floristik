@@ -8,7 +8,7 @@ Erstellen Sie eine relationale Datenbank mit mindestens 12 Tabellen und füllen 
 drop database floristik;
 create database floristik;
 use floristik;
-# account
+# 1. account
     create table account
 (
     ACCID   int auto_increment				primary key,
@@ -16,7 +16,7 @@ use floristik;
     ACCPWD  varchar(255) 					not null,
     ACCTYPE int          					not null
 );
-# costumer
+# 2. costumer
 create table costumer(
     CID         int      auto_increment       primary key,
     CFIRSTNAME  varchar(40)                 not null,
@@ -29,7 +29,7 @@ create table costumer(
     foreign key (FK_ACCID) references account(accid)
     );
 
-# adress
+# 3. adress
     create table adress
 (
     ADRID     int     						auto_increment primary key,
@@ -42,7 +42,7 @@ create table costumer(
     ADATE     timestamp default current_timestamp()	not null,
     foreign key (FK_CID) references costumer(cid)
 );
-# order
+# 4. order
     CREATE TABLE order1 (
         OID int not null  auto_increment primary key  ,
         ODELIVDATE date ,
@@ -53,7 +53,7 @@ create table costumer(
         foreign key (FK_CID) references costumer(CID)
         );
 
- # productcategory
+ # 5. productcategory
     create table productcategory
 (
     PCATID     int     auto_increment	primary key,
@@ -61,7 +61,7 @@ create table costumer(
     PCATORIGIN enum('Selbst gezüchtet', 'Zukauf')
 
 );
-#Lieferant
+ # 6. suplier
 
 create table supplier
 (
@@ -72,7 +72,7 @@ create table supplier
     SUPEMAIL   VARCHAR(255)          not null,
     SUPWWW   VARCHAR(255)          not null
 );
- # product
+ # 7. product
     create table product
 (
     PRID     int     auto_increment	primary key,
@@ -89,7 +89,7 @@ create table supplier
 
 
 
- # service
+ # 8. service
     create table SERVICE
 (
     SERVID     int     auto_increment	primary key,
@@ -98,7 +98,7 @@ create table supplier
 
 );
 
-# orderdetails
+# 9. orderdetails
     create table orderdetail
 (
     ODID     int     auto_increment  primary key,
@@ -112,8 +112,8 @@ create table supplier
     foreign key (FK_SERVID) references service(SERVID)
 );
 
-#Mitarbeiter
-# employee
+
+# 10. employee
 create table employee(
     EID         int auto_increment       primary key,
     EFIRSTNAME  varchar(40)                 not null,
@@ -122,7 +122,7 @@ create table employee(
     ESALARY     FLOAT                       not null
     );
 
-#MitarbeiterService
+# 11. MitarbeiterService
 create table employeeService
 (
     ESID     int     auto_increment  primary key,
@@ -132,7 +132,7 @@ create table employeeService
     foreign key (FK_SERVID) references service(SERVID)
 );
 
-#Rechnung
+# 12. Rechnung
 create table invoice
 (
     INVID     int     auto_increment  primary key,
@@ -379,7 +379,7 @@ insert into invoice(FK_OID, INVDATE) value
 
       
 
-   5. Ermitteln Sie die Anzahl an Bestellungen für jedes Produkt!
+   5. ==Ermitteln Sie die Anzahl an Bestellungen für jedes Produkt!== es wird noch nicht die anzahl in einer bestellung berücksichtigt
 
       ```sql
       select  PRNAME as Produkt,
