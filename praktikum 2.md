@@ -283,10 +283,10 @@ insert into invoice(FK_OID, INVDATE) value
 
       
 
-   2. ==Selektieren Sie nacheinander (!) die Namen der Produkte (Alias: Produktname) und Einzelpreis mit einem Einzelpreis zwischen Preis 1 bis Preis 2 (WHERE - Klausel mit logischer AND-Verknüpfung) und den Produktnummern zwischen unterer und oberer Grenze!==???
+   2. Selektieren Sie ==nacheinander==? (!) die Namen der Produkte (Alias: Produktname) und Einzelpreis mit einem Einzelpreis zwischen Preis 1 bis Preis 2 (WHERE - Klausel mit logischer AND-Verknüpfung) und den Produktnummern zwischen unterer und oberer Grenze!
 
       ```sql
-      select PRID,PRNAME as Produktname, PPRICENETTO from product where PPRICENETTO between 3.5 and 6.5;
+      select PRNAME as Produktname, PPRICENETTO from product where PPRICENETTO between 3.5 and 6.5;
       ```
 
       
@@ -379,15 +379,13 @@ insert into invoice(FK_OID, INVDATE) value
 
       
 
-   5. ==Ermitteln Sie die Anzahl an Bestellungen für jedes Produkt!== es wird noch nicht die anzahl in einer bestellung berücksichtigt
+   5. Ermitteln Sie die Anzahl an Bestellungen für jedes Produkt!
 
       ```sql
       select  PRNAME as Produkt,
-              count(FK_PRID) as Anzahl
-              #count(FK_PRID)*ODAMOUNT as Anzahl??
+              sum(ODAMOUNT) as Anzahl
              from product
-              inner join orderdetail o on product.PRID = o.FK_PRID
-      group by FK_PRID;
+              left join orderdetail o on product.PRID = o.FK_PRID
+              group by Prid;
       ```
-
       
