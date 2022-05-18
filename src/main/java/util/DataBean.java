@@ -5,7 +5,16 @@
 package util;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.inject.Named;
@@ -30,8 +39,11 @@ public class DataBean implements Serializable {
     private ArrayList<User> userList;
 
     private ArrayList<Product> productList;
+    
+    private List<User> custommerobjectlist;
 
     private ArrayList<Service> serviceList;
+    private Connection conn=null;//neu in seminar woche 7 inkl getter und setter
 
     @PostConstruct
     public void init() {
@@ -42,9 +54,71 @@ public class DataBean implements Serializable {
     /**
      * Creates a new instance of DataBean
      */
-    public DataBean() {
+    public DataBean() throws SQLException {
+        try {
+            //neu in seminar woche 7
+            String driver = "org.mariadb.jdbc.Driver"; //Verbindung herstellen
+            Class.forName(driver); //registriren des db-treibers
+            String dbUrl ="jdbc:mariadb://localhost:3306/floristik";
+            //verbindung zur datenbank herstellen
+            setConn(DriverManager.getConnection(dbUrl, "dba", "dba"));//connection definieren 
+            
+            fillCostumerObjectListFromJDBC();
+            fillProductObjectListFromJDBC();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DataBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //neu in seminar woche 7
     }
 
+    public Connection getConn() {
+        return conn;
+    }
+
+    public void setConn(Connection conn) {
+        this.conn = conn;
+    }
+
+    private void fillCostumerObjectListFromJDBC() throws SQLException{
+        try {
+            String sql = "select * from costumer "
+                    + "inner join account on accid=fk_accid "
+                    + "order by clastname";
+            Statement stmnt = conn.createStatement();
+            ResultSet rs= stmnt.executeQuery(sql);
+            
+            while(rs.next()){
+                custommerobjectlist.add(new User(
+                //rs.getInt("CID"),// mit konstruktor in user anpassen
+                rs.getString("Clastname"),
+                rs.getString("cemail"),
+                rs.getString("cphone"),
+                rs.getString("accname"),
+                rs.getString("accpwd"),
+                rs.getDate("cbirthdate")   
+                ));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    private void fillProductObjectListFromJDBC(){
+        try {
+            String sql = "select * from product inner join productcategory on pcatid=fk_pcat order by prname ";
+            ResultSet rs = conn.createStatement().executeQuery(sql);
+            while(rs.next()){
+            BigDecimal priceNetto = BigDecimal.valueOf(rs.getDouble("pricenetto").setscale(2,RoundingMode.Half_up));
+                productObjectList.add(new Product (
+                        rs.getString("prname"),
+                        rs.getString("pcatname"),
+                        rs.getString("prcomment"),
+                ));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DataBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     public void generateTestUsers() {
         userList = new ArrayList<>();
         userList.add(new User("Markus", "Hartlage", "markus.hartlage@fh-bielefeld.de",
@@ -134,4 +208,6 @@ public class DataBean implements Serializable {
     public void setServiceList(ArrayList<Service> serviceList) {
         this.serviceList = serviceList;
     }
+    
+    
 }
