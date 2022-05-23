@@ -388,3 +388,24 @@ insert into invoice(FK_OID, INVDATE) value
               left join orderdetail o on product.PRID = o.FK_PRID
               group by Prid;
       ```
+
+
+
+
+
+-----
+
+Fragen von Grünwoldt
+
+Kunden ausgeben mit Service den sie gebucht haben
+
+```sql
+
+```
+
+wie oft alle Kunden einen bestimmten Service gekauft haben
+
+```sql
+
+```
+
