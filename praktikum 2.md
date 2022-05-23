@@ -61,7 +61,7 @@ create table costumer(
     PCATORIGIN enum('Selbst gezüchtet', 'Zukauf')
 
 );
- # 6. suplier
+# 6. Lieferant
 
 create table supplier
 (
@@ -104,8 +104,8 @@ create table supplier
     ODID     int     auto_increment  primary key,
     ODAMOUNT   tinyint           not null,
     FK_OID    int                    not null,
-    FK_PRID int                  not null,
-    FK_SERVID int         			 not null,
+    FK_PRID int                  ,
+    FK_SERVID int         			 ,
     ODATE     timestamp default current_timestamp()	 not null,
     foreign key (FK_OID) references order1(OID),
     foreign key (FK_PRID) references product(prid),
@@ -126,13 +126,13 @@ create table employee(
 create table employeeService
 (
     ESID     int     auto_increment  primary key,
-    FK_EID    int                    not null,
-    FK_SERVID int                   not null,
+    FK_EID    int                    ,
+    FK_SERVID int                   ,
     foreign key (FK_EID) references employee(eid),
     foreign key (FK_SERVID) references service(SERVID)
 );
 
-# 12. Rechnung
+#12. Rechnung
 create table invoice
 (
     INVID     int     auto_increment  primary key,
@@ -237,13 +237,13 @@ insert into service(servname, servprice) value
 ;
 
 insert into orderdetail(odamount, fk_oid, fk_prid, fk_servid) value
-    (1,2,3,4),
-    (5,1,2,3),
-    (4,5,1,2),
-    (3,4,5,1),
-    (2,3,4,5),
-    (4,6,3,2),
-    (4,7,6,2)
+    (1,2,3,NULL),
+    (5,1,2,NULL),
+    (4,5,1,NULL),
+    (3,4,5,NULL),
+    (2,3,4,NULL),
+    (4,6,3,NULL),
+    (4,7,6,NULL)
 ;
 
 insert into employee(efirstname, elastname, esalutation, esalary) value
@@ -388,4 +388,3 @@ insert into invoice(FK_OID, INVDATE) value
               left join orderdetail o on product.PRID = o.FK_PRID
               group by Prid;
       ```
-      
