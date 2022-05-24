@@ -4,6 +4,8 @@
 
 Erstellen Sie eine relationale Datenbank mit mindestens 12 Tabellen und füllen Sie Ihre Tabellen mit Datensätzen (mind. 10 Datensätze in Elterntabellen und mind. fünf Datensätze pro Kindtabelle)!
 
+
+
 ```sql
 drop database floristik;
 create database floristik;
@@ -397,15 +399,27 @@ insert into invoice(FK_OID, INVDATE) value
 
 Fragen von Grünwoldt
 
-Kunden ausgeben mit Service den sie gebucht haben
+Alle Kunden ausgeben mit Service den sie gebucht haben
 
 ```sql
-
+select CLASTNAME,
+       SERVNAME
+        from order1
+        inner join orderdetail o on order1.OID = o.FK_OID
+        left join costumer c on order1.FK_CID = c.CID
+        left join service s on o.FK_SERVID = s.SERVID
+        where FK_SERVID is not null ;
 ```
 
-wie oft alle Kunden einen bestimmten Service gekauft haben
+Wie oft alle Kunden einen bestimmten Service gekauft haben
 
 ```sql
-
+select SERVNAME,
+       sum(ODAMOUNT)
+        from order1
+        inner join orderdetail o on order1.OID = o.FK_OID
+        left join service s on  o.FK_SERVID=s.SERVID
+        where FK_SERVID is not null
+        group by FK_SERVID;
 ```
 
