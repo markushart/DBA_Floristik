@@ -4,7 +4,7 @@
 
 Erstellen Sie eine relationale Datenbank mit mindestens 12 Tabellen und füllen Sie Ihre Tabellen mit Datensätzen (mind. 10 Datensätze in Elterntabellen und mind. fünf Datensätze pro Kindtabelle)!
 
-
+![Diagramm](Bilder/praktikum 2/Diagramm.PNG)
 
 ```sql
 drop database floristik;
