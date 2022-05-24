@@ -285,7 +285,7 @@ insert into invoice(FK_OID, INVDATE) value
 
       
 
-   2. Selektieren Sie ==nacheinander==? (!) die Namen der Produkte (Alias: Produktname) und Einzelpreis mit einem Einzelpreis zwischen Preis 1 bis Preis 2 (WHERE - Klausel mit logischer AND-Verknüpfung) und den Produktnummern zwischen unterer und oberer Grenze!
+   2. Selektieren Sie nacheinander (!) die Namen der Produkte (Alias: Produktname) und Einzelpreis mit einem Einzelpreis zwischen Preis 1 bis Preis 2 (WHERE - Klausel mit logischer AND-Verknüpfung) und den Produktnummern zwischen unterer und oberer Grenze!
 
       ```sql
       select PRNAME as Produktname, PPRICENETTO from product where PPRICENETTO between 3.5 and 6.5;
@@ -300,7 +300,10 @@ insert into invoice(FK_OID, INVDATE) value
    1. Ermitteln Sie Anzahl der Bestellungen eines Kunden (Alias: Anzahl Bestellungen für einen Kunden) (COUNT - Funktion) und geben Sie diese und den Namen des Kunden (Alias: Kunde) aus!
 
       ```sql
-      select count(FK_CID) as Anzahl , concat(CLASTNAME,', ',CFIRSTNAME) as Kunde from order1,costumer where CID=3 and FK_CID=CID;
+      select count(FK_CID) as Anzahl , concat(CLASTNAME,', ',CFIRSTNAME) as Kunde
+              from order1
+              inner join costumer on order1.FK_CID = costumer.CID
+              where CID=3 and FK_CID=CID;
       ```
 
       
@@ -308,7 +311,12 @@ insert into invoice(FK_OID, INVDATE) value
    2. Ermitteln Sie die Namen aller Kunden (Alias: Kundenname) und die Anzahl der Bestellungen für jeden Kunden (Alias: Anzahl) und Gruppieren Sie die Ergebnisse nach der Anzahl (COUNT und GROUP BY - Klausel)!
 
       ```sql
-      select concat(CLASTNAME,', ',CFIRSTNAME) as Kunde, count(FK_CID) as Anzahl from order1,costumer where FK_CID=CID group by FK_CID;
+      select concat(CLASTNAME,', ',CFIRSTNAME) as Kunde,
+              count(FK_CID) as Anzahl
+              from order1
+              inner join costumer on order1.FK_CID = costumer.CID
+              where FK_CID=CID
+              group by FK_CID;
       ```
 
       
@@ -316,7 +324,7 @@ insert into invoice(FK_OID, INVDATE) value
    3. Ermitteln Sie den Kundennamen (Alias: Kunde) und 
 
       die Anzahl der Bestellungen für ein konkretes Produkt (via FK_PRID) für diesen Kunden (Alias: Anzahl) (COUNT und GROUP BY, INNER JOIN - Klausel)!
-   
+
       ```sql
       select concat(CLASTNAME,', ',CFIRSTNAME) as Kunde,
              count(FK_CID)  as Anzahl
@@ -326,7 +334,7 @@ insert into invoice(FK_OID, INVDATE) value
           where FK_PRID=3
           group by FK_CID;
       ```
-   
+
       
 
 3. Führen Sie die folgenden SQL-Abfragen ggf. als Verbundabfrage über die Tabellen order, customer, orderdetail und product durch:
