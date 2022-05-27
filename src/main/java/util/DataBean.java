@@ -6,14 +6,26 @@ package util;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.TypedQuery;
+import static javax.swing.UIManager.put;
+import javax.transaction.UserTransaction;
 import model.Product;
 import model.Service;
 import model.User;
 import model.UserRole;
+import com.dba_floristik.Costumer;
 
 /**
  * Name:            DataBean    
@@ -27,8 +39,16 @@ import model.UserRole;
 public class DataBean implements Serializable {
 
     static final Logger LOGGER = Logger.getLogger(DataBean.class.getName());
-    private ArrayList<User> userList;
-
+    private ArrayList<User> userList; //ohne DB
+    
+    private List<Costumer> costumerObjects;
+    
+    @PersistenceUnit(unitName="my_persistence_unit")//mit DB
+    private EntityManagerFactory emf;//mit DB
+    
+    @Resource//mit DB
+    private UserTransaction ut;//mit DB
+    
     private ArrayList<Product> productList;
 
     private ArrayList<Service> serviceList;
@@ -43,8 +63,34 @@ public class DataBean implements Serializable {
      * Creates a new instance of DataBean
      */
     public DataBean() {
+        //Neu für Datenbankanbindung
+        Map<String, String> properties = new HashMap<>();
+        properties.put("javax.persistence.jdbc.driver","org.mariadb.jdbc.driver");
+        emf = Persistence.createEntityManagerFactory("my_persistence_unit", properties);
+        if(emf.isOpen()){
+            findAllCostumerObjects();
+        }
+        else{
+            //
+        }
+    //Neu für Datenbankanbindung
     }
-
+    
+    /**
+     * @return the customerList
+     */
+    private void findAllCostumerObjects(){
+        EntityManager em =emf.createEntityManager();
+        TypedQuery<Costumer> query = em.createNamedQuery("Customer.findAll", Costumer.class);
+        costumerObjects = query.getResultList();
+        for(Costumer c:costumerObjects){
+            System.out.println(c.getCfirstname());
+        }
+    }
+        
+    
+    
+    
     public void generateTestUsers() {
         userList = new ArrayList<>();
         userList.add(new User("Markus", "Hartlage", "markus.hartlage@fh-bielefeld.de",
@@ -54,6 +100,7 @@ public class DataBean implements Serializable {
         userList.add(new User("Frank", "Floristiker", "frank@floristik.de",
                 "flowerfrank", "L0tusBlume".hashCode(), "Herr", UserRole.ADMIN));
     }
+    
 
     /**
      *
