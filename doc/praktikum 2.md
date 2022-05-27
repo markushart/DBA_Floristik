@@ -16,7 +16,7 @@ use floristik;
     ACCID   int auto_increment				primary key,
     ACCNAME varchar(255) 					not null,
     ACCPWD  varchar(255) 					not null,
-    ACCTYPE int          					not null
+    ACCTYPE enum ('Nobody', 'User', 'Admin') not null
 );
 # 2. costumer
 create table costumer(
@@ -107,8 +107,8 @@ create table supplier
     ODAMOUNT   tinyint                               not null,
     ORDTYPE enum ('PRODUCT', 'SERVICE')              not null,
     FK_OID    int                                    not null,
-    FK_PRID int                                      not null,
-    FK_SERVID int         		                     not null,
+    FK_PRID int                                      ,
+    FK_SERVID int         		                     ,
     ODATE     timestamp default current_timestamp()	 not null,
     foreign key (FK_OID) references order1(OID),
     foreign key (FK_PRID) references product(prid),
@@ -145,17 +145,17 @@ create table invoice
 );
 
 insert into account(ACCNAME,ACCPWD,ACCTYPE) values
-        ('kunde1', 'kunde1pwd', 1),
-        ('kunde2', 'kunde2pwd', 1),
-        ('kunde3', 'kunde3pwd', 1),
-        ('kunde4', 'kunde4pwd', 1),
-        ('kunde5', 'kunde5pwd', 1),
-        ('kunde6', 'kunde6pwd', 1),
-        ('kunde7', 'kunde7pwd', 1),
-        ('kunde8', 'kunde8pwd', 1),
-        ('kunde9', 'kunde9pwd', 1),
-        ('kunde10', 'kunde10pwd', 1),
-        ('admin1', 'admin1pwd', 2)
+        ('kunde1', 'kunde1pwd', 2),
+        ('kunde2', 'kunde2pwd', 2),
+        ('kunde3', 'kunde3pwd', 2),
+        ('kunde4', 'kunde4pwd', 2),
+        ('kunde5', 'kunde5pwd', 2),
+        ('kunde6', 'kunde6pwd', 2),
+        ('kunde7', 'kunde7pwd', 2),
+        ('kunde8', 'kunde8pwd', 2),
+        ('kunde9', 'kunde9pwd', 2),
+        ('kunde10', 'kunde10pwd', 2),
+        ('admin1', 'admin1pwd', 3)
         ;
 insert into costumer(CFIRSTNAME,CLASTNAME,CSALUTATION ,CEMAIL,CPHONE,CBIRTHDATE,FK_ACCID) values
       ('Mila',      'Müller',   'Fr.', 'milamueller@icloud.com',    0521654654, '1971-12-08',1),
@@ -239,14 +239,22 @@ insert into service(servname, servprice) value
     ('Bodendeckende Bepflanzung',       200.00)
 ;
 
-insert into orderdetail(odamount, ordtype, fk_oid, fk_prid, fk_servid) value
-    (1,2,PRODUCT,3,0),
-    (5,1,PRODUCT,2,0),
-    (4,5,PRODUCT,1,0),
-    (3,4,PRODUCT,5,0),
-    (2,3,PRODUCT,4,0),
-    (4,6,PRODUCT,3,0),
-    (4,7,PRODUCT,6,0)
+insert into orderdetail(odamount,  fk_oid, ordtype,fk_prid, fk_servid) value
+    (1,2,'PRODUCT',3,NULL),
+    (5,1,'PRODUCT',2,NULL),
+    (4,5,'PRODUCT',1,NULL),
+    (3,4,'PRODUCT',5,NULL),
+    (2,3,'PRODUCT',4,NULL),
+    (4,6,'PRODUCT',3,NULL),
+    (4,7,'PRODUCT',6,NULL),
+
+    (1,2,'SERVICE', Null, 3),
+    (5,1,'SERVICE', Null, 2),
+    (4,5,'SERVICE', Null, 1),
+    (3,4,'SERVICE', Null, 5),
+    (2,3,'SERVICE', Null, 4),
+    (4,6,'SERVICE', Null, 3),
+    (4,7,'SERVICE', Null, 6)
 ;
 
 insert into employee(efirstname, elastname, esalutation, esalary) value
