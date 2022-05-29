@@ -406,12 +406,22 @@ insert into invoice(FK_OID, INVDATE) value
              inner join orderdetail o on order1.OID = o.FK_OID
              right join product p on o.FK_PRID = p.PRID
               where OID is null;
+              
+        select PRNAME as Produkt
+             from orderdetail
+             right join product p on FK_PRID = p.PRID
+              where OdID is null;
+              
+       select PRNAME as Produkt, o.ODID
+             from product
+              left join orderdetail o on product.PRID = o.FK_PRID
+              where o.OdID is null;
       ```
-
+   
       
-
+   
    5. Ermitteln Sie die Anzahl an Bestellungen für jedes Produkt!
-
+   
       ```sql
       #Anzahl der Bestellten Blumen
       select  PRNAME as Produkt,
@@ -428,7 +438,6 @@ insert into invoice(FK_OID, INVDATE) value
               left join orderdetail o on product.PRID = o.FK_PRID
               group by Prid;
       ```
-
 
 
 
