@@ -298,10 +298,11 @@ insert into invoice(FK_OID, INVDATE) value
 
       ```sql
       select PRNAME as Produktname, PPRICENETTO from product where PPRICENETTO between 3.5 and 6.5;
+      select PRNAME as Produktname, PPRICENETTO from product where (PPRICENETTO between 3.5 and 6.5) and (PID betwe);
       ```
-
       
-
+      
+      
       
 
 2. Führen Sie die folgenden SQL-Abfragen als Verbundabfrage über die Tabellen order und customer durch:
