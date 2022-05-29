@@ -312,8 +312,13 @@ insert into invoice(FK_OID, INVDATE) value
       ```sql
       select count(FK_CID) as Anzahl , concat(CLASTNAME,', ',CFIRSTNAME) as Kunde
               from order1
-              inner join costumer on order1.FK_CID = costumer.CID
+              inner join customer on order1.FK_CID = customer.CID
               where CID=3 and FK_CID=CID;
+              
+              
+      select count(FK_CID) as Anzahl , concat(CLASTNAME,', ',CFIRSTNAME) as Kunde from order1,customer where fk_cid=3 and FK_CID=CID
+              
+              
       ```
 
       
@@ -324,7 +329,13 @@ insert into invoice(FK_OID, INVDATE) value
       select concat(CLASTNAME,', ',CFIRSTNAME) as Kunde,
               count(FK_CID) as Anzahl
               from order1
-              inner join costumer on order1.FK_CID = costumer.CID
+              inner join customer on order1.FK_CID = customer.CID
+              group by FK_CID;
+              
+              
+              
+              select count(FK_CID) as Anzahl , concat(CLASTNAME,', ',CFIRSTNAME) as Kunde
+              from order1, customer
               where FK_CID=CID
               group by FK_CID;
       ```
@@ -339,7 +350,7 @@ insert into invoice(FK_OID, INVDATE) value
       select concat(CLASTNAME,', ',CFIRSTNAME) as Kunde,
              count(FK_CID)  as Anzahl
               from order1
-          inner join costumer on order1.FK_CID = costumer.CID
+          inner join customer on order1.FK_CID = customer.CID
           inner join orderdetail o on order1.OID = o.FK_OID
           where FK_PRID=3
           group by FK_CID;
@@ -377,9 +388,9 @@ insert into invoice(FK_OID, INVDATE) value
       select CLASTNAME as Kunde,
              PRNAME as Produkt,
              ODELIVDATE as Lieferdatum,
-              PPRICENETTO as Preis
+              (PPRICENETTO*ODAMOUNT) as Bestellpreis
              from order1
-             inner join costumer c on order1.FK_CID = c.CID
+             inner join customer c on order1.FK_CID = c.CID
              inner join orderdetail o on order1.OID = o.FK_OID
              inner join product p on o.FK_PRID = p.PRID
              where cid=6
@@ -402,8 +413,17 @@ insert into invoice(FK_OID, INVDATE) value
    5. Ermitteln Sie die Anzahl an Bestellungen für jedes Produkt!
 
       ```sql
+      #Anzahl der Bestellten Blumen
       select  PRNAME as Produkt,
               sum(ODAMOUNT) as Anzahl
+             from product
+              left join orderdetail o on product.PRID = o.FK_PRID
+              group by Prid;
+              
+              
+       #Anzahl der Bestellungen wo die Blumen vorkommen       
+      select  PRNAME as Produkt,
+              count(FK_PRID) as Anzahl
              from product
               left join orderdetail o on product.PRID = o.FK_PRID
               group by Prid;
@@ -411,33 +431,4 @@ insert into invoice(FK_OID, INVDATE) value
 
 
 
-
-
------
-
-Fragen von Grünwoldt
-
-Alle Kunden ausgeben mit Service den sie gebucht haben
-
-```sql
-select CLASTNAME,
-       SERVNAME
-        from order1
-        inner join orderdetail o on order1.OID = o.FK_OID
-        left join costumer c on order1.FK_CID = c.CID
-        left join service s on o.FK_SERVID = s.SERVID
-        where FK_SERVID is not null ;
-```
-
-Wie oft alle Kunden einen bestimmten Service gekauft haben
-
-```sql
-select SERVNAME,
-       sum(ODAMOUNT)
-        from order1
-        inner join orderdetail o on order1.OID = o.FK_OID
-        left join service s on  o.FK_SERVID=s.SERVID
-        where FK_SERVID is not null
-        group by FK_SERVID;
-```
 
