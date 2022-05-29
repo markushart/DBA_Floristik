@@ -64,7 +64,7 @@ public class Order1 implements Serializable {
     private Collection<Invoice> invoiceCollection;
     @JoinColumn(name = "FK_CID", referencedColumnName = "CID")
     @ManyToOne
-    private Costumer fkCid;
+    private Customer fkCid;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkOid")
     private Collection<Orderdetail> orderdetailCollection;
 
@@ -128,11 +128,11 @@ public class Order1 implements Serializable {
         this.invoiceCollection = invoiceCollection;
     }
 
-    public Costumer getFkCid() {
+    public Customer getFkCid() {
         return fkCid;
     }
 
-    public void setFkCid(Costumer fkCid) {
+    public void setFkCid(Customer fkCid) {
         this.fkCid = fkCid;
     }
 

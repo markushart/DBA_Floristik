@@ -1,5 +1,4 @@
 com\dba_floristik\Productcategory.class
-com\dba_floristik\Costumer.class
 com\dba_floristik\Employeeservice.class
 controller\LogoutBean.class
 controller\UserBean.class

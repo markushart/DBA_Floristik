@@ -56,7 +56,7 @@ public class Account implements Serializable {
     @Column(name = "ACCTYPE")
     private String acctype;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkAccid")
-    private Collection<Costumer> costumerCollection;
+    private Collection<Customer> costumerCollection;
 
     public Account() {
     }
@@ -104,11 +104,11 @@ public class Account implements Serializable {
         this.acctype = acctype;
     }
 
-    public Collection<Costumer> getCostumerCollection() {
+    public Collection<Customer> getCostumerCollection() {
         return costumerCollection;
     }
 
-    public void setCostumerCollection(Collection<Costumer> costumerCollection) {
+    public void setCostumerCollection(Collection<Customer> costumerCollection) {
         this.costumerCollection = costumerCollection;
     }
 

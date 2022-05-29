@@ -5,7 +5,6 @@
     <jta-data-source>jdbc/floristik</jta-data-source>
     <class>com.dba_floristik.Account</class>
     <class>com.dba_floristik.Adress</class>
-    <class>com.dba_floristik.Costumer</class>
     <class>com.dba_floristik.Employee</class>
     <class>com.dba_floristik.Employeeservice</class>
     <class>com.dba_floristik.Invoice</class>
@@ -15,9 +14,10 @@
     <class>com.dba_floristik.Productcategory</class>
     <class>com.dba_floristik.Service</class>
     <class>com.dba_floristik.Supplier</class>
+    <class>com.dba_floristik.Customer</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
-        <property name="eclipselink.target-database" value="MySQL"/>
+      <property name="eclipselink.target-database" value="MySQL"/>
     </properties>
   </persistence-unit>
 </persistence>

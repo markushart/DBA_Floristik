@@ -18,8 +18,8 @@ use floristik;
     ACCPWD  varchar(255) 					not null,
     ACCTYPE enum ('Nobody', 'User', 'Admin') not null
 );
-# 2. costumer
-create table costumer(
+# 2. customer
+create table customer(
     CID         int      auto_increment       primary key,
     CFIRSTNAME  varchar(40)                 not null,
     CLASTNAME   varchar(40)                 not null,
@@ -42,7 +42,7 @@ create table costumer(
     ACITYCODE varchar(10)                   not null,
     ACOUNTRY  varchar(30)                   not null,
     ADATE     timestamp default current_timestamp()	not null,
-    foreign key (FK_CID) references costumer(cid)
+    foreign key (FK_CID) references customer(cid)
 );
 # 4. order
     CREATE TABLE order1 (
@@ -52,7 +52,7 @@ create table costumer(
         FK_CID int,
         BCOMMENT varchar(256),
         OCHANGEDATE timestamp,
-        foreign key (FK_CID) references costumer(CID)
+        foreign key (FK_CID) references customer(CID)
         );
 
  # 5. productcategory
@@ -157,7 +157,7 @@ insert into account(ACCNAME,ACCPWD,ACCTYPE) values
         ('kunde10', 'kunde10pwd', 2),
         ('admin1', 'admin1pwd', 3)
         ;
-insert into costumer(CFIRSTNAME,CLASTNAME,CSALUTATION ,CEMAIL,CPHONE,CBIRTHDATE,FK_ACCID) values
+insert into customer(CFIRSTNAME,CLASTNAME,CSALUTATION ,CEMAIL,CPHONE,CBIRTHDATE,FK_ACCID) values
       ('Mila',      'Müller',   'Fr.', 'milamueller@icloud.com',    0521654654, '1971-12-08',1),
       ('Emilia',    'Schmidt',  'Fr.', 'emiliaschmidt@verizon.net', 0521545245, '1972-08-13',2),
       ('Leni',      'Schneider','Fr.', 'lenischneider@verizon.net', 052156464,  '1975-08-25',3),
@@ -298,7 +298,7 @@ insert into invoice(FK_OID, INVDATE) value
 
       ```sql
       select PRNAME as Produktname, PPRICENETTO from product where PPRICENETTO between 3.5 and 6.5;
-      select PRNAME as Produktname, PPRICENETTO from product where (PPRICENETTO between 3.5 and 6.5) and (PID betwe);
+      select PRNAME as Produktname, PPRICENETTO from product where (PPRICENETTO between 3.5 and 6.5) and (PID between 2 an 5);
       ```
       
       

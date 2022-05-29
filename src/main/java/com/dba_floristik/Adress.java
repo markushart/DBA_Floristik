@@ -77,7 +77,7 @@ public class Adress implements Serializable {
     private Date adate;
     @JoinColumn(name = "FK_CID", referencedColumnName = "CID")
     @ManyToOne(optional = false)
-    private Costumer fkCid;
+    private Customer fkCid;
 
     public Adress() {
     }
@@ -152,11 +152,11 @@ public class Adress implements Serializable {
         this.adate = adate;
     }
 
-    public Costumer getFkCid() {
+    public Customer getFkCid() {
         return fkCid;
     }
 
-    public void setFkCid(Costumer fkCid) {
+    public void setFkCid(Customer fkCid) {
         this.fkCid = fkCid;
     }
 
