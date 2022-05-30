@@ -310,13 +310,13 @@ insert into invoice(FK_OID, INVDATE) value
    1. Ermitteln Sie Anzahl der Bestellungen eines Kunden (Alias: Anzahl Bestellungen für einen Kunden) (COUNT - Funktion) und geben Sie diese und den Namen des Kunden (Alias: Kunde) aus!
 
       ```sql
-      select count(FK_CID) as Anzahl , concat(CLASTNAME,', ',CFIRSTNAME) as Kunde
+      select count(OID) as Anzahl , concat(CLASTNAME,', ',CFIRSTNAME) as Kunde
               from order1
               inner join customer on order1.FK_CID = customer.CID
               where CID=3 and FK_CID=CID;
               
               
-      select count(FK_CID) as Anzahl , concat(CLASTNAME,', ',CFIRSTNAME) as Kunde from order1,customer where fk_cid=3 and FK_CID=CID
+      select count(OID) as Anzahl , concat(CLASTNAME,', ',CFIRSTNAME) as Kunde from order1,customer where fk_cid=3 and FK_CID=CID
               
               
       ```
@@ -327,14 +327,14 @@ insert into invoice(FK_OID, INVDATE) value
 
       ```sql
       select concat(CLASTNAME,', ',CFIRSTNAME) as Kunde,
-              count(FK_CID) as Anzahl
+              count(OID) as Anzahl
               from order1
               inner join customer on order1.FK_CID = customer.CID
               group by FK_CID;
               
               
               
-              select count(FK_CID) as Anzahl , concat(CLASTNAME,', ',CFIRSTNAME) as Kunde
+              select count(OID) as Anzahl , concat(CLASTNAME,', ',CFIRSTNAME) as Kunde
               from order1, customer
               where FK_CID=CID
               group by FK_CID;
@@ -363,15 +363,19 @@ insert into invoice(FK_OID, INVDATE) value
    1. Ermitteln Sie die Produktnamen (Alias: Produkt) für alle Produkttypen (Alias: Produkttyp) aller Einträge in der Tabelle product.
 
       ```sql
-      select PRNAME as Produkt from product;
+      select  PRNAME as Produkt, 
+              PCATNAME as Produkttyp 
+              from product 
+              inner join productcategory 
+              on product.FK_PCATID = productcategory.PCATID;
       ```
 
       
-
+   
    2. Ermitteln Sie die Summe aller Produkte in der Tabelle product.
 
       ```sql
-      select count(PRNAME)  from product;
+      select count(prid)  from product;
       ```
 
       
@@ -381,9 +385,9 @@ insert into invoice(FK_OID, INVDATE) value
       die bestellten Produkte (Alias: Produktname), 
 
       das Lieferdatum und 
-
+   
       den jeweiligen Bestellpreis für einen bestimmten Kunden über alle Bestellungseinträge.
-
+   
       ```sql
       select CLASTNAME as Kunde,
              PRNAME as Produkt,
@@ -397,9 +401,9 @@ insert into invoice(FK_OID, INVDATE) value
       ```
 
       
-
+   
    4. Welche Produkte wurden noch nicht bestellt?
-
+   
       ```sql
       select PRNAME as Produkt
              from order1
@@ -423,7 +427,7 @@ insert into invoice(FK_OID, INVDATE) value
    5. Ermitteln Sie die Anzahl an Bestellungen für jedes Produkt!
    
       ```sql
-      #Anzahl der Bestellten Blumen
+      #Anzahl der bestellten Blumen(G)
       select  PRNAME as Produkt,
               sum(ODAMOUNT) as Anzahl
              from product
