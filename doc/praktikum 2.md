@@ -100,23 +100,33 @@ create table supplier
 
 );
 
-# 9. orderdetails
-    create table orderdetail
+# 9 orderdetailsProduct
+    create table orderdetailProduct
 (
-    ODID     int     auto_increment                  primary key,
-    ODAMOUNT   tinyint                               not null,
-    ORDTYPE enum ('PRODUCT', 'SERVICE')              not null,
+    ODPID     int     auto_increment                  primary key,
+    ODPAMOUNT   tinyint                               not null,
     FK_OID    int                                    not null,
-    FK_PRID int                                      ,
-    FK_SERVID int         		                     ,
-    ODATE     timestamp default current_timestamp()	 not null,
+    FK_PRID int                                      not null,
+
+    ODPATE     timestamp default current_timestamp()	 not null,
     foreign key (FK_OID) references order1(OID),
-    foreign key (FK_PRID) references product(prid),
-    foreign key (FK_SERVID) references service(SERVID)
+    foreign key (FK_PRID) references product(prid)
 );
 
+# 10 orderdetailsService
+    create table orderdetailService
+(
+    ODSID     int     auto_increment                  primary key,
+    ODSAMOUNT   tinyint                               not null,
+    FK_OID    int                                    not null,
+    FK_ServID int                                      not null,
 
-# 10. employee
+    ODSATE     timestamp default current_timestamp()	 not null,
+    foreign key (FK_OID) references order1(OID),
+    foreign key (FK_ServID) references service(servid));
+
+
+# 11. employee
 create table employee(
     EID         int auto_increment       primary key,
     EFIRSTNAME  varchar(40)                 not null,
@@ -125,7 +135,7 @@ create table employee(
     ESALARY     FLOAT                       not null
     );
 
-# 11. MitarbeiterService
+# 12. MitarbeiterService
 create table employeeService
 (
     ESID     int     auto_increment  primary key,
@@ -135,7 +145,7 @@ create table employeeService
     foreign key (FK_SERVID) references service(SERVID)
 );
 
-#12. Rechnung
+#13. Rechnung
 create table invoice
 (
     INVID     int     auto_increment  primary key,
@@ -239,24 +249,44 @@ insert into service(servname, servprice) value
     ('Bodendeckende Bepflanzung',       200.00)
 ;
 
-insert into orderdetail(odamount,  fk_oid, ordtype,fk_prid, fk_servid) value
-    (1,2,'PRODUCT',3,NULL),
-    (5,1,'PRODUCT',2,NULL),
-    (4,5,'PRODUCT',1,NULL),
-    (3,4,'PRODUCT',5,NULL),
-    (2,3,'PRODUCT',4,NULL),
-    (4,6,'PRODUCT',3,NULL),
-    (4,7,'PRODUCT',6,NULL),
+# insert into orderdetail(odamount,  fk_oid, ordtype,fk_prid, fk_servid) value
+#     (1,2,'PRODUCT',3,NULL),
+#     (5,1,'PRODUCT',2,NULL),
+#     (4,5,'PRODUCT',1,NULL),
+#     (3,4,'PRODUCT',5,NULL),
+#     (2,3,'PRODUCT',4,NULL),
+#     (4,6,'PRODUCT',3,NULL),
+#     (4,7,'PRODUCT',6,NULL),
+#
+#     (1,2,'SERVICE', Null, 3),
+#     (5,1,'SERVICE', Null, 2),
+#     (4,5,'SERVICE', Null, 1),
+#     (3,4,'SERVICE', Null, 5),
+#     (2,3,'SERVICE', Null, 4),
+#     (4,6,'SERVICE', Null, 3),
+#     (4,7,'SERVICE', Null, 6)
+# ;
 
-    (1,2,'SERVICE', Null, 3),
-    (5,1,'SERVICE', Null, 2),
-    (4,5,'SERVICE', Null, 1),
-    (3,4,'SERVICE', Null, 5),
-    (2,3,'SERVICE', Null, 4),
-    (4,6,'SERVICE', Null, 3),
-    (4,7,'SERVICE', Null, 6)
+insert into orderdetailProduct(odpamount, fk_oid, fk_prid) value
+    (1,2,3),
+    (5,1,2),
+    (4,5,1),
+    (3,4,5),
+    (2,3,4),
+    (4,6,3),
+    (4,7,6)
 ;
 
+insert into orderdetailService(odsamount, fk_oid, fk_servid) value
+
+    (1,2,3),
+    (5,1,2),
+    (4,5,1),
+    (3,4,5),
+    (2,3,4),
+    (4,6,3),
+    (4,7,6)
+;
 insert into employee(efirstname, elastname, esalutation, esalary) value
     ('Lio','Krause','Hr.',2000.00),
     ('Emilio','Zimmermann','Hr.',2300.00),
@@ -279,6 +309,13 @@ insert into invoice(FK_OID, INVDATE) value
     (3,'2022-09-14'),
     (4,'2022-10-11'),
     (5,'2022-11-29');
+
+
+
+
+
+
+
 ```
 
 ## Aufgabe 2
