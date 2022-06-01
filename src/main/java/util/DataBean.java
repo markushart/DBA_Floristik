@@ -4,12 +4,26 @@
  */
 package util;
 
+import com.dba_floristik.Account;
+import com.dba_floristik.Customer;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
+import javax.transaction.UserTransaction;
 import model.Product;
 import model.Service;
 import model.User;
@@ -18,33 +32,139 @@ import model.UserRole;
 /**
  * Name:            DataBean    
  * Aufgabe:         Klasse für Interaktion mit Datenbank / dummy Daten
- * Version:         1.0
- * Letzte Änderung: 01.05.2022
- * Realisierung     Markus Hartlage
+ * Version:         1.1
+ * Letzte Änderung: 01.06.2022
+ * Realisierung     Markus Hartlage / Sascha Nickel
  */
 @Named(value = "dataBean")
-@SessionScoped
+@SessionScoped @Transactional
 public class DataBean implements Serializable {
-
-    static final Logger LOGGER = Logger.getLogger(DataBean.class.getName());
     private ArrayList<User> userList;
+    static final Logger LOGGER = Logger.getLogger(DataBean.class.getName());
+    private static int id = 0;
+    private List<Customer> customerObjectList;
+    private int size;
+    private FacesContext context;
+    private HttpSession session;
+    private EntityManagerFactory emf;
+    
+    @Resource
+    private UserTransaction ut;
 
-    private ArrayList<Product> productList;
+    @Inject
+    private Account actAccount;
 
-    private ArrayList<Service> serviceList;
+
+
+
+
+
 
     @PostConstruct
     public void init() {
-        generateTestUsers();
-        generateTestProducts();
+        context = FacesContext.getCurrentInstance();
+        session = (HttpSession) context.getExternalContext().getSession(false);
+        LOGGER.log(Level.INFO, "Databean: {0}", session.getId());
     }
 
     /**
      * Creates a new instance of DataBean
      */
     public DataBean() {
+        LOGGER.info("Konstruktor: DataBean");
+        emf = Persistence.createEntityManagerFactory("my_persistence_unit", System.getProperties());
+        if (emf.isOpen()) {
+            customerObjectList = new ArrayList<>();
+            findAllCustomerObjects();
+        }
+    }
+    
+    /**
+     * Alle Kundenobjekte für Admin-Kundentabelle
+     */
+    private void findAllCustomerObjects() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Customer> query= em.createNamedQuery("Customer.findAll", Customer.class);
+            this.customerObjectList = query.getResultList();
+            this.size = this.getCustomerObjectList().size();
+            LOGGER.log(Level.INFO,"Es wurden {0} Kunden in der DB gefunden.", size);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    /**
+     * Klassenmethode --> Aufruf in RegisterBean
+     *
+     * @param name
+     * @return
+     */
+    public Account findAccountForAccountName(String name) {
+        try {
+            EntityManager em = emf.createEntityManager();
+            TypedQuery<Account> query= em.createNamedQuery("Account.findByAccname",Account.class);
+            query.setParameter("accname", name);
+            setActAccount(query.getSingleResult());
+        } catch (Exception ex) {
+            LOGGER.info(ex.getMessage());
+        }
+        return getActAccount();
     }
 
+    
+    
+    public void setCustomerObjectList(List<Customer> customerObjectList) {
+        this.customerObjectList = customerObjectList;
+    }
+
+    public List<Customer> getCustomerObjectList() {
+        return customerObjectList;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public FacesContext getContext() {
+        return context;
+    }
+
+    public void setContext(FacesContext context) {
+        this.context = context;
+    }
+
+    public HttpSession getSession() {
+        return session;
+    }
+
+    public void setSession(HttpSession session) {
+        this.session = session;
+    }
+
+    public Account getActAccount() {
+        return actAccount;
+    }
+
+    public void setActAccount(Account actAccount) {
+        this.actAccount = actAccount;
+    }
+    
+    
+    /**
+     * Old ohne datenbank
+     *
+     */
+    
+    private ArrayList<Product> productList;
+
+    private ArrayList<Service> serviceList;
+
+    //* ohne datenbank, löschen?
     public void generateTestUsers() {
         userList = new ArrayList<>();
         userList.add(new User("Markus", "Hartlage", "markus.hartlage@fh-bielefeld.de",
@@ -126,12 +246,6 @@ public class DataBean implements Serializable {
         return serviceList;
     }
 
-    /**
-     * Set the value of serviceList
-     *
-     * @param serviceList new value of serviceList
-     */
-    public void setServiceList(ArrayList<Service> serviceList) {
-        this.serviceList = serviceList;
-    }
+
+
 }

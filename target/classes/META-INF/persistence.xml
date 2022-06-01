@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
-    <!-- Define Persistence Unit -->
-    <persistence-unit name="my_persistence_unit">
-        
-    </persistence-unit>
+<persistence version="2.2" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+  <!-- Define Persistence Unit -->
+  <persistence-unit name="my_persistence_unit" transaction-type="JTA">
+    <jta-data-source>jdbc/floristik</jta-data-source>
+    <class>com.dba_floristik.Account</class>
+    <class>com.dba_floristik.Adress</class>
+    <class>com.dba_floristik.Employee</class>
+    <class>com.dba_floristik.Employeeservice</class>
+    <class>com.dba_floristik.Invoice</class>
+    <class>com.dba_floristik.Order1</class>
+    <class>com.dba_floristik.Orderdetail</class>
+    <class>com.dba_floristik.Product</class>
+    <class>com.dba_floristik.Productcategory</class>
+    <class>com.dba_floristik.Service</class>
+    <class>com.dba_floristik.Supplier</class>
+    <class>com.dba_floristik.Customer</class>
+    <exclude-unlisted-classes>false</exclude-unlisted-classes>
+    <properties>
+      <property name="eclipselink.target-database" value="MySQL"/>
+    </properties>
+  </persistence-unit>
 </persistence>
