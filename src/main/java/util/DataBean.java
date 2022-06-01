@@ -6,6 +6,7 @@ package util;
 
 import com.dba_floristik.Account;
 import com.dba_floristik.Customer;
+import com.dba_floristik.Productcategory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,10 @@ public class DataBean implements Serializable {
     static final Logger LOGGER = Logger.getLogger(DataBean.class.getName());
     private static int id = 0;
     private List<Customer> customerObjectList;
+    private List<Product> productObjectList;
+    private List<Service> serviceObjectList;
+
+    
     private int size;
     private FacesContext context;
     private HttpSession session;
@@ -76,6 +81,10 @@ public class DataBean implements Serializable {
         if (emf.isOpen()) {
             customerObjectList = new ArrayList<>();
             findAllCustomerObjects();
+            serviceObjectList = new ArrayList<>();
+            findAllServiceObjects();
+            findAccountForAccountName("kunde");
+            findProductCategoryById(1);
         }
     }
     
@@ -93,6 +102,22 @@ public class DataBean implements Serializable {
             LOGGER.log(Level.SEVERE, null, ex);
         }
     }
+     
+    
+     /**
+     * Alle Produktobjekte für Admin-Servicetabelle
+     */
+    private void findAllServiceObjects() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Service> query= em.createNamedQuery("Service.findAll", Service.class);
+            this.serviceObjectList = query.getResultList();
+            this.size = this.getServiceObjectList().size();
+            LOGGER.log(Level.INFO,"Es wurden {0} Service(s) in der DB gefunden.", size);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }
     
     /**
      * Klassenmethode --> Aufruf in RegisterBean
@@ -101,16 +126,132 @@ public class DataBean implements Serializable {
      * @return
      */
     public Account findAccountForAccountName(String name) {
+        LOGGER.log(Level.INFO,"findAccountForAccountName aufgerufen");
         try {
             EntityManager em = emf.createEntityManager();
             TypedQuery<Account> query= em.createNamedQuery("Account.findByAccname",Account.class);
             query.setParameter("accname", name);
             setActAccount(query.getSingleResult());
+            //LOGGER.log(Level.INFO,"Es wurde {0} als Account in der DB gefunden.", name);
+            LOGGER.log(Level.INFO,"Es wurde als Account in der DB gefunden.");
         } catch (Exception ex) {
             LOGGER.info(ex.getMessage());
         }
         return getActAccount();
     }
+    
+    /**
+     * Verwendung in Converter: ProduktCategoryConverter der wiederum für die
+     * entsprechende SelectOneMenu- Komponente zu Einsatz kommt
+     *
+     * @param pcatid 
+     * @return
+     */
+    public Productcategory findProductCategoryById(int pcatid) {
+        LOGGER.log(Level.INFO,"findProductCategoryById aufgerufen");
+        Productcategory pcat = null;
+        try {
+            EntityManager em = emf.createEntityManager();
+            TypedQuery<Productcategory> query = em.createNamedQuery("Producttype.findByPtid",Productcategory.class);
+            query.setParameter("ptid", pcatid);
+            pcat = query.getSingleResult();
+            LOGGER.log(Level.INFO,"Die ID wurde gefunden");
+        } catch (Exception ex) {
+            LOGGER.info(ex.getMessage());
+        }
+        return pcat;
+    }
+
+    /**
+     * Für Produktliste (DataTable und DataView)
+     *
+     * @return
+     */
+    public List<Product> findAllProductObjects() {
+        List<Product> list = new ArrayList<>();
+        try {
+            EntityManager em = emf.createEntityManager();
+            TypedQuery<Product> query
+                    = em.createNamedQuery("Product.findAll",
+                            Product.class);
+            list = query.getResultList();
+            LOGGER.log(Level.INFO,
+                    "Produktsuche: {0} gefunden!",
+                    list.size());
+        } catch (Exception ex) {
+            LOGGER.info(ex.getMessage());
+        }
+        return list;
+    }
+    /**
+     * Erzeugen einer gefilterten Produktliste
+     *
+     * @param word
+     * @return
+     */
+    public List<Product> findProductForSearchWord(String word) {
+        List<Product> list = new ArrayList<>();
+        try {
+            EntityManager em = emf.createEntityManager();
+            TypedQuery<Product> query
+                    = em.createNamedQuery("Product.findByLikePrname",
+                            Product.class);
+            query.setParameter("prname", "%" + word + "%");
+            list = query.getResultList();
+            LOGGER.log(Level.INFO,
+                    "Produktsuche: {0} gefunden!",
+                    list.size());
+        } catch (Exception ex) {
+            LOGGER.info(ex.getMessage());
+        }
+        return list;
+    }
+    
+    /**
+     * Verwendung via Converter in SelectOneMenu-Komponente
+     *
+     * @return
+     */
+    public List<Productcategory> findAllProductCategories() {
+        List<Productcategory> list = new ArrayList<>();
+        try {
+            EntityManager em = emf.createEntityManager();
+            TypedQuery<Productcategory> query
+                    = em.createNamedQuery("Producttype.findAll",
+                            Productcategory.class);
+            list = query.getResultList();
+            LOGGER.log(Level.INFO,
+                    "Produkt-Kategorien: {0} gefunden!",
+                    list.size());
+        } catch (Exception ex) {
+            LOGGER.info(ex.getMessage());
+        }
+        return list;
+    }
+    
+    /**
+     * Suche eines Produkts für Merge-Operation (Update) ID-Schlüssel wird
+     * benötigt!
+     *
+     * @param pName
+     * @return
+     */
+    public Product findProductByName(String pName) {
+        Product p = null;
+        try {
+            EntityManager em = emf.createEntityManager();
+            TypedQuery<Product> query
+                    = em.createNamedQuery("Product.findByPrname",
+                            Product.class);
+            query.setParameter("prname", pName);
+            p = query.getSingleResult();
+        } catch (Exception ex) {
+            LOGGER.info(ex.getMessage());
+        }
+        return p;
+    }
+    
+
 
     
     
@@ -152,6 +293,22 @@ public class DataBean implements Serializable {
 
     public void setActAccount(Account actAccount) {
         this.actAccount = actAccount;
+    }
+    
+    public List<Product> getProductObjectList() {
+        return productObjectList;
+    }
+
+    public void setProductObjectList(List<Product> productObjectList) {
+        this.productObjectList = productObjectList;
+    }
+
+    public List<Service> getServiceObjectList() {
+        return serviceObjectList;
+    }
+
+    public void setServiceObjectList(List<Service> serviceObjectList) {
+        this.serviceObjectList = serviceObjectList;
     }
     
     
