@@ -18,13 +18,23 @@ import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.RollbackException;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpSession;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.Status;
+import javax.transaction.SystemException;
 import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
+import javax.validation.ConstraintViolationException;
 import model.Product;
 import model.Service;
 import model.User;
@@ -250,8 +260,85 @@ public class DataBean implements Serializable {
         }
         return p;
     }
-    
-
+    @SuppressWarnings("empty-statement")
+    public boolean updateProduct(Product p) throws javax.transaction.RollbackException {
+        boolean ok = true;
+//Erfragen des korrekten ID-Schlüssels für das zu ändernde Produkt
+        Product product = findProductByName(p.getName());
+        p.setName(product.getName());
+        EntityManager em = emf.createEntityManager();
+        try {
+//Payara-spezifisch
+            final Context icontext = new InitialContext();
+            ut = (UserTransaction) (icontext).lookup("java:comp/UserTransaction");
+//(Normale) Transaktion: Erforderlich für INSERT,UPDATE,DELETE-Ops
+            ut.begin();
+            em.joinTransaction();
+            em.merge(p);
+            ut.commit();
+            ok = true;
+        } catch (IllegalStateException | SecurityException ex) {
+            try {
+                LOGGER.log(Level.SEVERE, null, ex);
+                ut.rollback();
+            } catch (IllegalStateException | SecurityException
+                    | SystemException ex1) {
+                LOGGER.log(Level.SEVERE, null, ex1);
+            }
+            ok = false;
+        } catch (NotSupportedException | SystemException
+                | RollbackException | HeuristicMixedException
+                | HeuristicRollbackException | NamingException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+        return ok;
+    }
+    /**
+     * Registrierung eines neuen Kunden mit zugehörigem Account Verwendung in:
+     * RegisterBean.java
+     *
+     * @param newCustomer
+     * @param newAccount
+     * @return
+     */
+    public boolean persistCustomer(Customer newCustomer,
+            Account newAccount) throws NamingException, NotSupportedException, javax.transaction.RollbackException {
+        boolean ok = false;
+        try {
+            EntityManager em = emf.createEntityManager();//Payara-spezifisch
+            final Context icontext = new InitialContext();
+            ut = (UserTransaction) (icontext).lookup("java:comp/UserTransaction");
+            ut.begin();
+            em.joinTransaction();
+            em.persist(newAccount); //zuerst Kunden-Account speichern
+            newCustomer.setFkAccid(newAccount); //Account-Objekt im Kundenobjekt setzen
+            em.persist(newCustomer); //Kunden speichern
+            ut.commit();
+            ok = true;
+            LOGGER.info("Registrieren ok (Customer mit Account)");
+        } catch (IllegalStateException | SecurityException
+                | HeuristicMixedException | HeuristicRollbackException
+                | NotSupportedException | RollbackException
+                | SystemException ex) {
+            try {
+                int status = Status.STATUS_NO_TRANSACTION;
+                if (status != ut.getStatus()) {
+                    ut.rollback();
+                }
+            } catch (IllegalStateException
+                    | SecurityException
+                    | SystemException ex1) {
+                LOGGER.log(Level.SEVERE, null, ex1);
+            }
+        } catch (ConstraintViolationException e) {
+            LOGGER.log(Level.SEVERE, "Exception: ");
+            e.getConstraintViolations()
+                    .forEach(err -> LOGGER.log(Level.SEVERE, err.toString()));
+        } catch (NamingException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+        return ok;
+    }
 
     
     
