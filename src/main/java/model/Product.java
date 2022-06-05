@@ -32,6 +32,11 @@ public class Product extends Buyable implements Serializable {
         this.number = number;
         this.wholePrice = number * price;
     }
+    
+    public Product(String name, int id, float price) {
+        super(name, id, price);
+        this.wholePrice = number * price;
+    }
 
     /**
      * 

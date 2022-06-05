@@ -7,6 +7,7 @@ package util;
 import com.dba_floristik.Account;
 import com.dba_floristik.Customer;
 import com.dba_floristik.Productcategory;
+import com.dba_floristik.Productdb;
 import com.dba_floristik.Servicedb;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class DataBean implements Serializable {
     static final Logger LOGGER = Logger.getLogger(DataBean.class.getName());
     private static int id = 0;
     private List<Customer> customerObjectList;
-    private List<Product> productObjectList;
+    private List<Productdb> productObjectList;
     private List<Servicedb> serviceObjectList;
 
         private ArrayList<Product> productList;
@@ -97,6 +98,8 @@ public class DataBean implements Serializable {
             findAllCustomerObjects();
             serviceObjectList = new ArrayList<>();
             findAllServiceObjects();
+            productObjectList = new ArrayList<>();
+            findAllProductObjects();
             
         }
     }
@@ -111,18 +114,15 @@ public class DataBean implements Serializable {
             this.customerObjectList = query.getResultList();
             this.size = this.getCustomerObjectList().size();
             LOGGER.log(Level.INFO,"Es wurden {0} Kunden in der DB gefunden.", size);
-            System.out.println(customerObjectList.get(0));
-            customerObjectList.get(0).getCid();
             userList = new ArrayList<>();
-            
-            
-            userList.add(new User(customerObjectList.get(0).getCid(),
-                    customerObjectList.get(0).getCfirstname(),
-                    customerObjectList.get(0).getClastname(),
-                    customerObjectList.get(0).getCsalutation(),
-                    customerObjectList.get(0).getCemail(),
-                    customerObjectList.get(0).getCphone()));
-                    
+            for (int i = 0; i < size; i++) {
+                userList.add(new User(customerObjectList.get(i).getCid(),
+                    customerObjectList.get(i).getCfirstname(),
+                    customerObjectList.get(i).getClastname(),
+                    customerObjectList.get(i).getCsalutation(),
+                    customerObjectList.get(i).getCemail(),
+                    customerObjectList.get(i).getCphone()));
+            }  
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -144,18 +144,34 @@ public class DataBean implements Serializable {
                 serviceList.add(new Service(serviceObjectList.get(i).getServname(),
                         serviceObjectList.get(i).getServid(),
                         serviceObjectList.get(i).getServprice()));
-            }
-
-            
-                
-        //serviceList = new ArrayList<>();
-        //Service decoration = new Service("Dekoration", 3, 15.99f);
-        //serviceList.add(decoration);
-              
+            }              
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
     }
+    
+         /**
+     * Alle Produktobjekte für Admin-Produkttabelle
+     */
+    private void findAllProductObjects() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Productdb> query= em.createNamedQuery("Productdb.findAll", Productdb.class);
+            this.productObjectList = query.getResultList();
+            this.size = this.getServiceObjectList().size();
+            LOGGER.log(Level.INFO,"Es wurden {0} Produkt(e) in der DB gefunden.", size);
+            productList = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                productList.add(new Product(productObjectList.get(i).getPrname(),
+                        productObjectList.get(i).getPrid(),
+                        productObjectList.get(i).getPpricenetto()));
+            }              
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }
+    
+  
     
     /**
      * Klassenmethode --> Aufruf in RegisterBean
@@ -198,27 +214,7 @@ public class DataBean implements Serializable {
         return pcat;
     }
 
-    /**
-     * Für Produktliste (DataTable und DataView)
-     *
-     * @return
-     */
-    public List<Product> findAllProductObjects() {
-        List<Product> list = new ArrayList<>();
-        try {
-            EntityManager em = emf.createEntityManager();
-            TypedQuery<Product> query
-                    = em.createNamedQuery("Product.findAll",
-                            Product.class);
-            list = query.getResultList();
-            LOGGER.log(Level.INFO,
-                    "Produktsuche: {0} gefunden!",
-                    list.size());
-        } catch (Exception ex) {
-            LOGGER.info(ex.getMessage());
-        }
-        return list;
-    }
+
     /**
      * Erzeugen einer gefilterten Produktliste
      *
@@ -408,11 +404,11 @@ public class DataBean implements Serializable {
         this.actAccount = actAccount;
     }
     
-    public List<Product> getProductObjectList() {
+    public List<Productdb> getProductObjectList() {
         return productObjectList;
     }
 
-    public void setProductObjectList(List<Product> productObjectList) {
+    public void setProductObjectList(List<Productdb> productObjectList) {
         this.productObjectList = productObjectList;
     }
 
@@ -447,6 +443,7 @@ public class DataBean implements Serializable {
      *
      */
     public void generateTestProducts() {
+        /*
         productList = new ArrayList<>();
         Product flieder = new Product("flieder", 0, 0.5f, 1);
         productList.add(flieder);
@@ -456,6 +453,7 @@ public class DataBean implements Serializable {
 
         Product daisy = new Product("Gänseblümchen", 2, 0.33f, 1);
         productList.add(daisy);
+        */
     }
 
     /**

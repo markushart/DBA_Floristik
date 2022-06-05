@@ -48,7 +48,7 @@ public class Productcategory implements Serializable {
     @Column(name = "PCATORIGIN")
     private String pcatorigin;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkPcatid")
-    private Collection<Product> productCollection;
+    private Collection<Productdb> productCollection;
 
     public Productcategory() {
     }
@@ -86,11 +86,11 @@ public class Productcategory implements Serializable {
         this.pcatorigin = pcatorigin;
     }
 
-    public Collection<Product> getProductCollection() {
+    public Collection<Productdb> getProductCollection() {
         return productCollection;
     }
 
-    public void setProductCollection(Collection<Product> productCollection) {
+    public void setProductCollection(Collection<Productdb> productCollection) {
         this.productCollection = productCollection;
     }
 
