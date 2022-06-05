@@ -93,8 +93,7 @@ public class DataBean implements Serializable {
             findAllCustomerObjects();
             serviceObjectList = new ArrayList<>();
             findAllServiceObjects();
-            findAccountForAccountName("kunde");
-            findProductCategoryById(1);
+            
         }
     }
     
@@ -108,6 +107,18 @@ public class DataBean implements Serializable {
             this.customerObjectList = query.getResultList();
             this.size = this.getCustomerObjectList().size();
             LOGGER.log(Level.INFO,"Es wurden {0} Kunden in der DB gefunden.", size);
+            System.out.println(customerObjectList.get(0));
+            customerObjectList.get(0).getCid();
+            userList = new ArrayList<>();
+            
+            
+            userList.add(new User(customerObjectList.get(0).getCid(),
+                    customerObjectList.get(0).getCfirstname(),
+                    customerObjectList.get(0).getClastname(),
+                    customerObjectList.get(0).getCsalutation(),
+                    customerObjectList.get(0).getCemail(),
+                    customerObjectList.get(0).getCphone()));
+                    
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -115,7 +126,7 @@ public class DataBean implements Serializable {
      
     
      /**
-     * Alle Produktobjekte für Admin-Servicetabelle
+     * Alle Serviceobjekte für Admin-Servicetabelle
      */
     private void findAllServiceObjects() {
         EntityManager em = emf.createEntityManager();
@@ -124,6 +135,12 @@ public class DataBean implements Serializable {
             this.serviceObjectList = query.getResultList();
             this.size = this.getServiceObjectList().size();
             LOGGER.log(Level.INFO,"Es wurden {0} Service(s) in der DB gefunden.", size);
+            //serviceList = new ArrayList<>();
+            //System.out.println(serviceObjectList.get(0).getName());
+            //<serviceList.add(new Service(serviceList.get(0).getName(),
+             //       serviceList.get(0).getId(),
+              //      serviceList.get(0).getPrice()));
+              System.out.println(serviceObjectList.get(0).getId());
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -136,14 +153,13 @@ public class DataBean implements Serializable {
      * @return
      */
     public Account findAccountForAccountName(String name) {
-        LOGGER.log(Level.INFO,"findAccountForAccountName aufgerufen");
         try {
             EntityManager em = emf.createEntityManager();
             TypedQuery<Account> query= em.createNamedQuery("Account.findByAccname",Account.class);
             query.setParameter("accname", name);
             setActAccount(query.getSingleResult());
-            //LOGGER.log(Level.INFO,"Es wurde {0} als Account in der DB gefunden.", name);
-            LOGGER.log(Level.INFO,"Es wurde als Account in der DB gefunden.");
+            LOGGER.log(Level.INFO,"Es wurde {0} als Account in der DB gefunden.", name);
+            
         } catch (Exception ex) {
             LOGGER.info(ex.getMessage());
         }
@@ -158,7 +174,6 @@ public class DataBean implements Serializable {
      * @return
      */
     public Productcategory findProductCategoryById(int pcatid) {
-        LOGGER.log(Level.INFO,"findProductCategoryById aufgerufen");
         Productcategory pcat = null;
         try {
             EntityManager em = emf.createEntityManager();
@@ -407,7 +422,7 @@ public class DataBean implements Serializable {
     private ArrayList<Product> productList;
 
     private ArrayList<Service> serviceList;
-
+/*
     //* ohne datenbank, löschen?
     public void generateTestUsers() {
         userList = new ArrayList<>();
@@ -418,7 +433,7 @@ public class DataBean implements Serializable {
         userList.add(new User("Frank", "Floristiker", "frank@floristik.de",
                 "flowerfrank", "L0tusBlume".hashCode(), "Herr", UserRole.ADMIN));
     }
-
+*/
     /**
      *
      */
@@ -438,11 +453,13 @@ public class DataBean implements Serializable {
      *
      */
     public void generateTestServices() {
+        /*
         serviceList = new ArrayList<>();
         Service decoration = new Service("Dekoration", 3, 15.99f);
         serviceList.add(decoration);
         Service greening = new Service("Begrünung", 4, 7.85f);
         serviceList.add(greening);
+        */
     }
 
     /**

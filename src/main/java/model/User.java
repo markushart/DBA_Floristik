@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,6 +19,8 @@ public class User {
     
     private static final Logger LOGGER = Logger.getLogger(User.class.getName());
     
+    private Integer id;
+    
     private String firstName;
 
     private String lastName;
@@ -27,6 +30,11 @@ public class User {
     private String username;
 
     private int password;
+
+    private String phone;
+
+    private Date birthdate;
+
 
     private UserRole role = UserRole.NOBODY;
     
@@ -61,6 +69,29 @@ public class User {
         this.email = email;
         this.password = password;
         this.salutation = salutation;
+    }
+    
+    public User(Integer id, String firstName, String lastName, String salutation, String email, String phone ) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.salutation = salutation;
+        this.email = email;
+        this.phone = phone;
+    }
+    
+       public User(int id) {
+        this.id = id;
+    }
+
+
+    
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
     
     /**
@@ -115,6 +146,22 @@ public class User {
      */
     public void setPassword(String password) {
         this.password = password.hashCode();
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Date getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(Date birthdate) {
+        this.birthdate = birthdate;
     }
 
 

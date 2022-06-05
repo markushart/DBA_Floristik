@@ -52,7 +52,7 @@ public class LoginBean implements Serializable {
         LOGGER.log(Level.INFO, "Login: Session ID: {0}", session.getId());
 
         DataBean db = new DataBean();
-        db.generateTestUsers();
+       // db.generateTestUsers();
         knownUsers = db.getUserList();
         user = new User();
     }

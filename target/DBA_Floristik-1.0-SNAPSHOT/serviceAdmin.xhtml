@@ -13,12 +13,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
     <ui:composition template="template/master.xhtml">
         <ui:define name="content">
             <h2>Serviceübersicht</h2>
-            <h:form id="serviceForm">
-                <p:toolbar rendered="#{loginBean.user.isAdmin()}">
-                    <f:facet name="addNew">
-
-                    </f:facet>
-                </p:toolbar>
+            <h:form id="customerForm">
+               
                 <p:dataTable value="#{servicesBean.services}" var="service">
 
                     <p:column headerText="Logo">
