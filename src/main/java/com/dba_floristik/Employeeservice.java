@@ -39,7 +39,7 @@ public class Employeeservice implements Serializable {
     private Employee fkEid;
     @JoinColumn(name = "FK_SERVID", referencedColumnName = "SERVID")
     @ManyToOne
-    private Service fkServid;
+    private Servicedb fkServid;
 
     public Employeeservice() {
     }
@@ -64,11 +64,11 @@ public class Employeeservice implements Serializable {
         this.fkEid = fkEid;
     }
 
-    public Service getFkServid() {
+    public Servicedb getFkServid() {
         return fkServid;
     }
 
-    public void setFkServid(Service fkServid) {
+    public void setFkServid(Servicedb fkServid) {
         this.fkServid = fkServid;
     }
 

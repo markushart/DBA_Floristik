@@ -54,7 +54,7 @@ public class Orderdetailservice implements Serializable {
     private Order1 fkOid;
     @JoinColumn(name = "FK_ServID", referencedColumnName = "SERVID")
     @ManyToOne(optional = false)
-    private Service fKServID;
+    private Servicedb fKServID;
 
     public Orderdetailservice() {
     }
@@ -101,11 +101,11 @@ public class Orderdetailservice implements Serializable {
         this.fkOid = fkOid;
     }
 
-    public Service getFKServID() {
+    public Servicedb getFKServID() {
         return fKServID;
     }
 
-    public void setFKServID(Service fKServID) {
+    public void setFKServID(Servicedb fKServID) {
         this.fKServID = fKServID;
     }
 
