@@ -68,7 +68,7 @@ public class Supplier implements Serializable {
     @Column(name = "SUPWWW")
     private String supwww;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkSupid")
-    private Collection<Productdb> productCollection;
+    private Collection<Product> productCollection;
 
     public Supplier() {
     }
@@ -134,11 +134,11 @@ public class Supplier implements Serializable {
         this.supwww = supwww;
     }
 
-    public Collection<Productdb> getProductCollection() {
+    public Collection<Product> getProductCollection() {
         return productCollection;
     }
 
-    public void setProductCollection(Collection<Productdb> productCollection) {
+    public void setProductCollection(Collection<Product> productCollection) {
         this.productCollection = productCollection;
     }
 

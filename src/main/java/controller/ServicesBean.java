@@ -4,6 +4,7 @@
  */
 package controller;
 
+import com.dba_floristik.Service;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,7 +14,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
-import model.Service_old;
 import util.DataBean;
 
 /**
@@ -30,7 +30,7 @@ public class ServicesBean {
     private static final Logger LOGGER
             = Logger.getLogger(ProductsBean.class.getName());
 
-    private ArrayList<Service_old> services;
+    private ArrayList<Service> services;
 
     @Inject
     private DataBean db;
@@ -77,7 +77,7 @@ public class ServicesBean {
      *
      * @return the value of services
      */
-    public ArrayList<Service_old> getServices() {
+    public ArrayList<Service> getServices() {
         return services;
     }
 
@@ -86,7 +86,7 @@ public class ServicesBean {
      *
      * @param services new value of services
      */
-    public void setServices(ArrayList<Service_old> services) {
+    public void setServices(ArrayList<Service> services) {
         this.services = services;
     }
 

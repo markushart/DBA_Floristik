@@ -54,7 +54,7 @@ public class Orderdetailproduct implements Serializable {
     private Order1 fkOid;
     @JoinColumn(name = "FK_PRID", referencedColumnName = "PRID")
     @ManyToOne(optional = false)
-    private Productdb fkPrid;
+    private Product fkPrid;
 
     public Orderdetailproduct() {
     }
@@ -101,11 +101,11 @@ public class Orderdetailproduct implements Serializable {
         this.fkOid = fkOid;
     }
 
-    public Productdb getFkPrid() {
+    public Product getFkPrid() {
         return fkPrid;
     }
 
-    public void setFkPrid(Productdb fkPrid) {
+    public void setFkPrid(Product fkPrid) {
         this.fkPrid = fkPrid;
     }
 

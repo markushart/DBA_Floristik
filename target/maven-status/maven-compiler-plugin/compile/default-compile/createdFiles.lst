@@ -2,13 +2,13 @@ com\dba_floristik\Productcategory.class
 com\dba_floristik\Employeeservice.class
 controller\LogoutBean.class
 controller\UserBean.class
+model\Product_old.class
 com\dba_floristik\Orderdetailservice.class
-com\dba_floristik\Productdb.class
 converter\PasswordConverter.class
 com\dba_floristik\Account.class
 controller\ShoppingCartBean.class
-model\Product.class
 controller\ProductsBean.class
+com\dba_floristik\Product.class
 model\UserRole.class
 com\dba_floristik\Order1.class
 model\Buyable.class

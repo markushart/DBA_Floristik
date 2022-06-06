@@ -4,6 +4,7 @@
  */
 package controller;
 
+import com.dba_floristik.Product;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,7 +16,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
-import model.Product;
 import util.DataBean;
 
 /**
@@ -65,7 +65,7 @@ public class ProductsBean implements Serializable {
      */
     public void spinnerAjaxListener(AjaxBehaviorEvent ev) {
         for (Product p : products) {
-            p.setWholePrice();
+            //p.setWholePrice();
         }
     }
 

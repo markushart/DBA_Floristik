@@ -7,7 +7,7 @@ package util;
 import com.dba_floristik.Account;
 import com.dba_floristik.Customer;
 import com.dba_floristik.Productcategory;
-import com.dba_floristik.Productdb;
+import com.dba_floristik.Product;
 import com.dba_floristik.Service;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,8 +37,6 @@ import javax.transaction.SystemException;
 import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
 import javax.validation.ConstraintViolationException;
-import model.Product;
-import model.Service_old;
 import model.User;
 import model.UserRole;
 
@@ -56,12 +54,12 @@ public class DataBean implements Serializable {
     static final Logger LOGGER = Logger.getLogger(DataBean.class.getName());
     private static int id = 0;
     private List<Customer> customerObjectList;
-    private List<Productdb> productObjectList;
+    private List<Product> productObjectList;
     private List<Service> serviceObjectList;
 
         private ArrayList<Product> productList;
 
-    private ArrayList<Service_old> serviceList;
+    private ArrayList<Service> serviceList;
     
     private int size;
     private FacesContext context;
@@ -141,8 +139,9 @@ public class DataBean implements Serializable {
             LOGGER.log(Level.INFO,"Es wurden {0} Service(s) in der DB gefunden.", size);
             serviceList = new ArrayList<>();
             for (int i = 0; i < size; i++) {
-                serviceList.add(new Service_old(serviceObjectList.get(i).getServname(),
+                serviceList.add(new Service(
                         serviceObjectList.get(i).getServid(),
+                        serviceObjectList.get(i).getServname(),
                         serviceObjectList.get(i).getServprice()));
                 
             }              
@@ -157,14 +156,16 @@ public class DataBean implements Serializable {
     private void findAllProductObjects() {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Productdb> query= em.createNamedQuery("Productdb.findAll", Productdb.class);
+            TypedQuery<Product> query= em.createNamedQuery("Product.findAll", Product.class);
             this.productObjectList = query.getResultList();
             this.size = this.getServiceObjectList().size();
             LOGGER.log(Level.INFO,"Es wurden {0} Produkt(e) in der DB gefunden.", size);
             productList = new ArrayList<>();
             for (int i = 0; i < size; i++) {
-                productList.add(new Product(productObjectList.get(i).getPrname(),
-                        productObjectList.get(i).getPrid(),
+                productList.add(new Product(
+                        productObjectList.get(i).getPrid(), 
+                        productObjectList.get(i).getPrname(),
+                        productObjectList.get(i).getPramount(),
                         productObjectList.get(i).getPpricenetto()));
             }              
         } catch (Exception ex) {
@@ -287,8 +288,8 @@ public class DataBean implements Serializable {
     public boolean updateProduct(Product p) throws javax.transaction.RollbackException {
         boolean ok = true;
 //Erfragen des korrekten ID-Schlüssels für das zu ändernde Produkt
-        Product product = findProductByName(p.getName());
-        p.setName(product.getName());
+        Product product = findProductByName(p.getPrname());
+        p.setPrname(product.getPrname());
         EntityManager em = emf.createEntityManager();
         try {
 //Payara-spezifisch
@@ -405,11 +406,11 @@ public class DataBean implements Serializable {
         this.actAccount = actAccount;
     }
     
-    public List<Productdb> getProductObjectList() {
+    public List<Product> getProductObjectList() {
         return productObjectList;
     }
 
-    public void setProductObjectList(List<Productdb> productObjectList) {
+    public void setProductObjectList(List<Product> productObjectList) {
         this.productObjectList = productObjectList;
     }
 
@@ -446,13 +447,13 @@ public class DataBean implements Serializable {
     public void generateTestProducts() {
         /*
         productList = new ArrayList<>();
-        Product flieder = new Product("flieder", 0, 0.5f, 1);
+        Product_old flieder = new Product_old("flieder", 0, 0.5f, 1);
         productList.add(flieder);
 
-        Product rose = new Product("rose", 1, 1.15f, 1);
+        Product_old rose = new Product_old("rose", 1, 1.15f, 1);
         productList.add(rose);
 
-        Product daisy = new Product("Gänseblümchen", 2, 0.33f, 1);
+        Product_old daisy = new Product_old("Gänseblümchen", 2, 0.33f, 1);
         productList.add(daisy);
         */
     }
@@ -512,7 +513,7 @@ public class DataBean implements Serializable {
      *
      * @return the value of serviceList
      */
-    public ArrayList<Service_old> getServiceList() {
+    public ArrayList<Service> getServiceList() {
         return serviceList;
     }
 

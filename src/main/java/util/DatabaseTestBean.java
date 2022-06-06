@@ -17,7 +17,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpSession;
-import model.Product;
+import model.Product_old;
 
 /**
  *
@@ -57,15 +57,15 @@ public class DatabaseTestBean implements Serializable {
      * @param catName
      * @return
      */
-    public List<Product> findProductsByCategoryName(String catName) {
-        List<Product> list = null;
+    public List<Product_old> findProductsByCategoryName(String catName) {
+        List<Product_old> list = null;
         EntityManager em = emf.createEntityManager();
         final String SQL
                 = "SELECT p FROM Product p "
                 + "INNER JOIN p.fkPcatid cid "
                 + "WHERE cid.pcatname = :pcatname";
         try {
-            TypedQuery<Product> query = em.createQuery(SQL, Product.class);
+            TypedQuery<Product_old> query = em.createQuery(SQL, Product_old.class);
             query.setParameter("pcatname", catName);
             list = query.getResultList();
         } catch (Exception ex) {
