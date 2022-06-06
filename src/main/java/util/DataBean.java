@@ -8,7 +8,7 @@ import com.dba_floristik.Account;
 import com.dba_floristik.Customer;
 import com.dba_floristik.Productcategory;
 import com.dba_floristik.Productdb;
-import com.dba_floristik.Servicedb;
+import com.dba_floristik.Service;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
 import javax.validation.ConstraintViolationException;
 import model.Product;
-import model.Service;
+import model.Service_old;
 import model.User;
 import model.UserRole;
 
@@ -57,11 +57,11 @@ public class DataBean implements Serializable {
     private static int id = 0;
     private List<Customer> customerObjectList;
     private List<Productdb> productObjectList;
-    private List<Servicedb> serviceObjectList;
+    private List<Service> serviceObjectList;
 
         private ArrayList<Product> productList;
 
-    private ArrayList<Service> serviceList;
+    private ArrayList<Service_old> serviceList;
     
     private int size;
     private FacesContext context;
@@ -135,15 +135,16 @@ public class DataBean implements Serializable {
     private void findAllServiceObjects() {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Servicedb> query= em.createNamedQuery("Servicedb.findAll", Servicedb.class);
+            TypedQuery<Service> query= em.createNamedQuery("Service.findAll", Service.class);
             this.serviceObjectList = query.getResultList();
             this.size = this.getServiceObjectList().size();
             LOGGER.log(Level.INFO,"Es wurden {0} Service(s) in der DB gefunden.", size);
             serviceList = new ArrayList<>();
             for (int i = 0; i < size; i++) {
-                serviceList.add(new Service(serviceObjectList.get(i).getServname(),
+                serviceList.add(new Service_old(serviceObjectList.get(i).getServname(),
                         serviceObjectList.get(i).getServid(),
                         serviceObjectList.get(i).getServprice()));
+                
             }              
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -412,11 +413,11 @@ public class DataBean implements Serializable {
         this.productObjectList = productObjectList;
     }
 
-    public List<Servicedb> getServiceObjectList() {
+    public List<Service> getServiceObjectList() {
         return serviceObjectList;
     }
 
-    public void setServiceObjectList(List<Servicedb> serviceObjectList) {
+    public void setServiceObjectList(List<Service> serviceObjectList) {
         this.serviceObjectList = serviceObjectList;
     }
     
@@ -462,9 +463,9 @@ public class DataBean implements Serializable {
     public void generateTestServices() {
         /*
         serviceList = new ArrayList<>();
-        Service decoration = new Service("Dekoration", 3, 15.99f);
+        Service_old decoration = new Service_old("Dekoration", 3, 15.99f);
         serviceList.add(decoration);
-        Service greening = new Service("Begrünung", 4, 7.85f);
+        Service_old greening = new Service_old("Begrünung", 4, 7.85f);
         serviceList.add(greening);
         */
         
@@ -511,7 +512,7 @@ public class DataBean implements Serializable {
      *
      * @return the value of serviceList
      */
-    public ArrayList<Service> getServiceList() {
+    public ArrayList<Service_old> getServiceList() {
         return serviceList;
     }
 

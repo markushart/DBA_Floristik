@@ -13,8 +13,8 @@
     <class>com.dba_floristik.Productcategory</class>
     <class>com.dba_floristik.Supplier</class>
     <class>com.dba_floristik.Customer</class>
-    <class>com.dba_floristik.Servicedb</class>
     <class>com.dba_floristik.Productdb</class>
+    <class>com.dba_floristik.Service</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="eclipselink.target-database" value="MySQL"/>

@@ -23,7 +23,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import model.Product;
-import model.Service;
+import model.Service_old;
 
 /**
  * Name: ShoppingCartBean Aufgabe: Klasse für Interaktion mit dem Warenkorb
@@ -40,14 +40,14 @@ public class ShoppingCartBean implements Serializable {
     // customers can only order MAXORDERPERIOD days ahead from now
     private static final int MAXORDERPERIOD = 21;
     private ArrayList<Product> products;
-    private ArrayList<Service> services;
+    private ArrayList<Service_old> services;
     private float overallPrice;
     private FacesContext context;
     private LocalDate deliveryDate;
     private Map<String, LocalTime> deliveryTimeOptions;
     private LocalTime deliveryTime;
     private Product lastAddedProduct;
-    private Service lastAddedService;
+    private Service_old lastAddedService;
     private LocalDate minDate;
     private LocalDate maxDate;
     @Inject
@@ -137,7 +137,7 @@ public class ShoppingCartBean implements Serializable {
      *
      * @param s the service to add
      */
-    public void addService(Service s) {
+    public void addService(Service_old s) {
         this.services.add(s);
         setOverallPrice();
     }
@@ -177,7 +177,7 @@ public class ShoppingCartBean implements Serializable {
         setOverallPrice();
     }
 
-    public void removeService(Service s) {
+    public void removeService(Service_old s) {
         this.services.remove(s);
         setOverallPrice();
     }
@@ -274,7 +274,7 @@ public class ShoppingCartBean implements Serializable {
             p.setWholePrice();
             sum += p.getWholePrice();
         }
-        for (Service s : services) {
+        for (Service_old s : services) {
             sum += s.getPrice();
         }
         this.overallPrice = sum;
@@ -302,7 +302,7 @@ public class ShoppingCartBean implements Serializable {
      *
      * @return services in the shopping cart
      */
-    public ArrayList<Service> getServices() {
+    public ArrayList<Service_old> getServices() {
         return services;
     }
 
@@ -310,7 +310,7 @@ public class ShoppingCartBean implements Serializable {
      *
      * @param services to put in the shopping cart
      */
-    public void setServices(ArrayList<Service> services) {
+    public void setServices(ArrayList<Service_old> services) {
         this.services = services;
     }
 
@@ -412,11 +412,11 @@ public class ShoppingCartBean implements Serializable {
         this.maxDate = dateToLocalDate(maxDate);
     }
 
-    public Service getLastAddedService() {
+    public Service_old getLastAddedService() {
         return lastAddedService;
     }
 
-    public void setLastAddedService(Service lastAddedService) {
+    public void setLastAddedService(Service_old lastAddedService) {
         this.addService(lastAddedService);
         this.lastAddedService = lastAddedService;
     }

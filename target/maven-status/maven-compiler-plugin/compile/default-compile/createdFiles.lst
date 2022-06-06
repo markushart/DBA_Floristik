@@ -16,14 +16,14 @@ model\User.class
 com\dba_floristik\JAXRSConfiguration.class
 converter\EuroConverter.class
 controller\LoginBean.class
+model\Service_old.class
 com\dba_floristik\Supplier.class
-com\dba_floristik\Servicedb.class
 controller\ServicesBean.class
 com\dba_floristik\Invoice.class
 controller\RegisterBean.class
 util\DataBean.class
 com\dba_floristik\Customer.class
-model\Service.class
+com\dba_floristik\Service.class
 util\DatabaseTestBean.class
 com\dba_floristik\Orderdetailproduct.class
 com\dba_floristik\Adress.class

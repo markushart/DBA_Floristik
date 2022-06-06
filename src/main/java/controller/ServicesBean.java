@@ -13,15 +13,15 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
-import model.Service;
+import model.Service_old;
 import util.DataBean;
 
 /**
  * Name: ServiceBean 
- * Aufgabe: Klasse für INteraktion mit Service Seite 
- * Version: 1.0 
- * Letzte Änderung: 01.05.2022 
- * Realisierung Markus Hartlage
+ Aufgabe: Klasse für INteraktion mit Service_old Seite 
+ Version: 1.0 
+ Letzte Änderung: 01.05.2022 
+ Realisierung Markus Hartlage
  */
 @Named(value = "servicesBean")
 @RequestScoped
@@ -30,7 +30,7 @@ public class ServicesBean {
     private static final Logger LOGGER
             = Logger.getLogger(ProductsBean.class.getName());
 
-    private ArrayList<Service> services;
+    private ArrayList<Service_old> services;
 
     @Inject
     private DataBean db;
@@ -77,7 +77,7 @@ public class ServicesBean {
      *
      * @return the value of services
      */
-    public ArrayList<Service> getServices() {
+    public ArrayList<Service_old> getServices() {
         return services;
     }
 
@@ -86,7 +86,7 @@ public class ServicesBean {
      *
      * @param services new value of services
      */
-    public void setServices(ArrayList<Service> services) {
+    public void setServices(ArrayList<Service_old> services) {
         this.services = services;
     }
 
