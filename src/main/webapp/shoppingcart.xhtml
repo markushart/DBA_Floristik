@@ -30,32 +30,32 @@
                 <h3>Produkte</h3>
                 <p:dataTable id="productTable" value="#{shoppingCartBean.products}" var="product" rowIndexVar="rowIdx">
 
-                    <p:column headerText="">
-                        <p:graphicImage value="#{product.image}"/>
-                    </p:column>
+                 
 
                     <p:column headerText="Produktbezeichnung">
-                        <h:outputLabel value="#{product.name}"/>
+                        <h:outputLabel value="#{product.prname}"/>
                     </p:column>
 
                     <p:column headerText="Menge">
-                        <p:spinner value="#{product.number}" 
+                        <p:spinner value="#{product.pramount}" 
                                    stepFactor="1" min="1">
-                            <f:ajax event="valueChange"
-                                    render="itemWholePrice"/>
+                            <p:ajax 
+                                    update="itemWholePrice"
+                                    event="valueChange"
+                                    />
                             <f:ajax listener="#{shoppingCartBean.setOverallPrice()}"
                                     render="cartForm:overallPrice"/>
                         </p:spinner>
                     </p:column>
 
                     <p:column headerText="Stückpreis">
-                        <h:outputLabel value="#{product.price}" 
+                        <h:outputLabel value="#{product.ppricenetto}" 
                                        converter="#{euroConverter}"/>
                     </p:column>
 
                     <p:column headerText="Gesamtpreis">
                         <h:outputLabel id="itemWholePrice" 
-                                       value="#{product.wholePrice}"
+                                       value="#{shoppingCartBean.wholePrice(product.pramount,product.ppricenetto)}"
                                        converter="#{euroConverter}"/>
                     </p:column>
 
@@ -68,12 +68,10 @@
                 <h3>Services</h3>
                 <p:dataTable id="serviceTable" value="#{shoppingCartBean.services}" var="service" rowIndexVar="rowIdx">
 
-                    <p:column headerText="">
-                        <p:graphicImage value="#{service.image}"/>
-                    </p:column>
+                    
 
                     <p:column headerText="Servicebezeichnung">
-                        <h:outputLabel value="#{service.name}"/>
+                        <h:outputLabel value="#{service.servname}"/>
                     </p:column>
 
                     <p:column headerText="Datum">
@@ -84,7 +82,7 @@
                     </p:column>
 
                     <p:column headerText="Preis">
-                        <h:outputLabel value="#{service.price}" 
+                        <h:outputLabel value="#{service.servprice}" 
                                        converter="#{euroConverter}"/>
                     </p:column>
 

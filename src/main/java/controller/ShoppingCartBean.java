@@ -4,6 +4,8 @@
  */
 package controller;
 
+import com.dba_floristik.Product;
+import com.dba_floristik.Service;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -22,8 +24,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
-import model.Product_old;
-import model.Service_old;
 
 /**
  * Name: ShoppingCartBean Aufgabe: Klasse für Interaktion mit dem Warenkorb
@@ -39,15 +39,15 @@ public class ShoppingCartBean implements Serializable {
     private static final int INITIALDELIVERYHOUR = 8;
     // customers can only order MAXORDERPERIOD days ahead from now
     private static final int MAXORDERPERIOD = 21;
-    private ArrayList<Product_old> products;
-    private ArrayList<Service_old> services;
+    private ArrayList<Product> products;
+    private ArrayList<Service> services;
     private float overallPrice;
     private FacesContext context;
     private LocalDate deliveryDate;
     private Map<String, LocalTime> deliveryTimeOptions;
     private LocalTime deliveryTime;
-    private Product_old lastAddedProduct;
-    private Service_old lastAddedService;
+    private Product lastAddedProduct;
+    private Service lastAddedService;
     private LocalDate minDate;
     private LocalDate maxDate;
     @Inject
@@ -122,19 +122,19 @@ public class ShoppingCartBean implements Serializable {
      *
      * @param p the product in the shopping Cart
      */
-    public void addProduct(Product_old p) {
+    public void addProduct(Product p) {
         boolean isInCart = false;
-        for (Product_old i : products) {
-            if (i.getId() == p.getId()) {
+        for (Product i : products) {
+            if (i.getPrid()== p.getPrid()) {
                 isInCart = true;
-                i.setNumber(i.getNumber() + p.getNumber());
+                i.setPramount(i.getPramount()+ p.getPramount());
                 break;
             }
         }
         if (!isInCart) {
             this.products.add(p);
         }
-        setOverallPrice();
+        //setOverallPrice();
     }
 
     /**
@@ -142,9 +142,9 @@ public class ShoppingCartBean implements Serializable {
      *
      * @param s the service to add
      */
-    public void addService(Service_old s) {
+    public void addService(Service s) {
         this.services.add(s);
-        setOverallPrice();
+        //setOverallPrice();
     }
 
     /**
@@ -157,16 +157,16 @@ public class ShoppingCartBean implements Serializable {
         } catch (IndexOutOfBoundsException e) {
             LOGGER.log(Level.WARNING, "found no product {0} to remove!", i);
         }
-        setOverallPrice();
+        //setOverallPrice();
     }
 
     /**
      *
      * @param p product to remove
      */
-    public void removeProduct(Product_old p) {
+    public void removeProduct(Product p) {
         this.products.remove(p);
-        setOverallPrice();
+        //setOverallPrice();
     }
 
     /**
@@ -179,12 +179,12 @@ public class ShoppingCartBean implements Serializable {
         } catch (IndexOutOfBoundsException e) {
             LOGGER.log(Level.WARNING, "found no service {0} to remove!", i);
         }
-        setOverallPrice();
+        //setOverallPrice();
     }
 
-    public void removeService(Service_old s) {
+    public void removeService(Service s) {
         this.services.remove(s);
-        setOverallPrice();
+        //setOverallPrice();
     }
 
     /**
@@ -218,7 +218,7 @@ public class ShoppingCartBean implements Serializable {
      *
      * @return the value of lastAddedProduct
      */
-    public Product_old getLastAddedProduct() {
+    public Product getLastAddedProduct() {
         return lastAddedProduct;
     }
 
@@ -227,7 +227,7 @@ public class ShoppingCartBean implements Serializable {
      *
      * @param lastAddedProduct new value of lastAddedProduct
      */
-    public void setLastAddedProduct(Product_old lastAddedProduct) {
+    public void setLastAddedProduct(Product lastAddedProduct) {
         addProduct(lastAddedProduct);
         this.lastAddedProduct = lastAddedProduct;
     }
@@ -235,19 +235,20 @@ public class ShoppingCartBean implements Serializable {
     /**
      *
      * @param ev
-     */
+     
     public void spinnerAjaxListener(AjaxBehaviorEvent ev) {
         for (Product_old i : products) {
             i.setWholePrice();
         }
     }
+    * */
 
     /**
      * Get the value of items
      *
      * @return the value of items
      */
-    public ArrayList<Product_old> getProducts() {
+    public ArrayList<Product> getProducts() {
         return products;
     }
 
@@ -256,7 +257,7 @@ public class ShoppingCartBean implements Serializable {
      *
      * @param products new value of products
      */
-    public void setProducts(ArrayList<Product_old> products) {
+    public void setProducts(ArrayList<Product> products) {
         this.products = products;
     }
 
@@ -271,18 +272,19 @@ public class ShoppingCartBean implements Serializable {
 
     /**
      * return price of whole shopping cart
-     *
+     *########################################################################################################
      */
     public void setOverallPrice() {
-        float sum = 0;
-        for (Product_old p : products) {
+        /*float sum = 0;
+        for (Product p : products) {
+            
             p.setWholePrice();
             sum += p.getWholePrice();
         }
-        for (Service_old s : services) {
-            sum += s.getPrice();
+        for (Service s : services) {
+            sum += s.getServprice();
         }
-        this.overallPrice = sum;
+        this.overallPrice = sum;*/
     }
 
     /**
@@ -307,7 +309,7 @@ public class ShoppingCartBean implements Serializable {
      *
      * @return services in the shopping cart
      */
-    public ArrayList<Service_old> getServices() {
+    public ArrayList<Service> getServices() {
         return services;
     }
 
@@ -315,7 +317,7 @@ public class ShoppingCartBean implements Serializable {
      *
      * @param services to put in the shopping cart
      */
-    public void setServices(ArrayList<Service_old> services) {
+    public void setServices(ArrayList<Service> services) {
         this.services = services;
     }
 
@@ -417,11 +419,11 @@ public class ShoppingCartBean implements Serializable {
         this.maxDate = dateToLocalDate(maxDate);
     }
 
-    public Service_old getLastAddedService() {
+    public Service getLastAddedService() {
         return lastAddedService;
     }
 
-    public void setLastAddedService(Service_old lastAddedService) {
+    public void setLastAddedService(Service lastAddedService) {
         this.addService(lastAddedService);
         this.lastAddedService = lastAddedService;
     }
