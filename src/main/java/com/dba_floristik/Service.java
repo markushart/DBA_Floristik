@@ -128,7 +128,7 @@ public class Service implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.Service[ servid=" + servid + " ]";
+        return "com.dba_floristik.resources.Service[ servid=" + servid + " ]";
     }
     
 }

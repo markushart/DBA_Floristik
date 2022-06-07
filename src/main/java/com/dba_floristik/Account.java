@@ -134,7 +134,7 @@ public class Account implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.Account[ accid=" + accid + " ]";
+        return "com.dba_floristik.resources.Account[ accid=" + accid + " ]";
     }
     
 }

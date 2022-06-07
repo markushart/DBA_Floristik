@@ -1,6 +1,7 @@
 com\dba_floristik\Productcategory.class
 com\dba_floristik\Employeeservice.class
 controller\LogoutBean.class
+com\dba_floristik\JavaEE8Resource.class
 controller\UserBean.class
 model\Product_old.class
 com\dba_floristik\Orderdetailservice.class
@@ -13,7 +14,6 @@ model\UserRole.class
 com\dba_floristik\Order1.class
 model\Buyable.class
 model\User.class
-com\dba_floristik\JAXRSConfiguration.class
 converter\EuroConverter.class
 controller\LoginBean.class
 model\Service_old.class
@@ -28,4 +28,3 @@ util\DatabaseTestBean.class
 com\dba_floristik\Orderdetailproduct.class
 com\dba_floristik\Adress.class
 com\dba_floristik\Employee.class
-com\dba_floristik\resources\JavaEE8Resource.class

@@ -110,6 +110,11 @@ public class ShoppingCartBean implements Serializable {
         LOGGER.log(Level.INFO, fm.getDetail());
         context.addMessage("orderForm:orderButton", fm);
     }
+    
+    public float wholePrice(int amount, float price){
+         float wholePrice = amount*price; 
+         return wholePrice;
+    }
 
     /**
      * adds a product p, if product with the same Id is allready in Cart, add n

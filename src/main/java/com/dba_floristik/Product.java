@@ -19,8 +19,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -36,7 +34,6 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Product.findByPrname", query = "SELECT p FROM Product p WHERE p.prname = :prname"),
     @NamedQuery(name = "Product.findByPramount", query = "SELECT p FROM Product p WHERE p.pramount = :pramount"),
     @NamedQuery(name = "Product.findByPpricenetto", query = "SELECT p FROM Product p WHERE p.ppricenetto = :ppricenetto")})
-    //@NamedQuery(name = "Product.findByPrimodifdate", query = "SELECT p FROM Product p WHERE p.primodifdate = :primodifdate")})
 public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,11 +55,6 @@ public class Product implements Serializable {
     @NotNull
     @Column(name = "PPRICENETTO")
     private float ppricenetto;
-    //@Basic(optional = false)
-    //@NotNull
-    //@Column(name = "PRIMODIFDATE")
-    //@Temporal(TemporalType.TIMESTAMP)
-    //private Date primodifdate;
     @JoinColumn(name = "FK_PCATID", referencedColumnName = "PCATID")
     @ManyToOne(optional = false)
     private Productcategory fkPcatid;
@@ -79,13 +71,11 @@ public class Product implements Serializable {
         this.prid = prid;
     }
 
-    //public Product(Integer prid, String prname, int pramount, float ppricenetto, Date primodifdate) {
     public Product(Integer prid, String prname, int pramount, float ppricenetto) {
         this.prid = prid;
         this.prname = prname;
         this.pramount = pramount;
         this.ppricenetto = ppricenetto;
-        //this.primodifdate = primodifdate;
     }
 
     public Integer getPrid() {
@@ -120,15 +110,6 @@ public class Product implements Serializable {
         this.ppricenetto = ppricenetto;
     }
 
-    /*
-    public Date getPrimodifdate() {
-        return primodifdate;
-    }
-
-    public void setPrimodifdate(Date primodifdate) {
-        this.primodifdate = primodifdate;
-    }
-     */
     public Productcategory getFkPcatid() {
         return fkPcatid;
     }
@@ -175,7 +156,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.Product[ prid=" + prid + " ]";
+        return "com.dba_floristik.resources.Product[ prid=" + prid + " ]";
     }
     
 }

@@ -30,7 +30,6 @@ import javax.validation.constraints.NotNull;
 @NamedQueries({
     @NamedQuery(name = "Orderdetailservice.findAll", query = "SELECT o FROM Orderdetailservice o"),
     @NamedQuery(name = "Orderdetailservice.findByOdsid", query = "SELECT o FROM Orderdetailservice o WHERE o.odsid = :odsid"),
-    @NamedQuery(name = "Orderdetailservice.findByOdsamount", query = "SELECT o FROM Orderdetailservice o WHERE o.odsamount = :odsamount"),
     @NamedQuery(name = "Orderdetailservice.findByOdsate", query = "SELECT o FROM Orderdetailservice o WHERE o.odsate = :odsate")})
 public class Orderdetailservice implements Serializable {
 
@@ -40,10 +39,6 @@ public class Orderdetailservice implements Serializable {
     @Basic(optional = false)
     @Column(name = "ODSID")
     private Integer odsid;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "ODSAMOUNT")
-    private short odsamount;
     @Basic(optional = false)
     @NotNull
     @Column(name = "ODSATE")
@@ -63,9 +58,8 @@ public class Orderdetailservice implements Serializable {
         this.odsid = odsid;
     }
 
-    public Orderdetailservice(Integer odsid, short odsamount, Date odsate) {
+    public Orderdetailservice(Integer odsid, Date odsate) {
         this.odsid = odsid;
-        this.odsamount = odsamount;
         this.odsate = odsate;
     }
 
@@ -75,14 +69,6 @@ public class Orderdetailservice implements Serializable {
 
     public void setOdsid(Integer odsid) {
         this.odsid = odsid;
-    }
-
-    public short getOdsamount() {
-        return odsamount;
-    }
-
-    public void setOdsamount(short odsamount) {
-        this.odsamount = odsamount;
     }
 
     public Date getOdsate() {
@@ -131,7 +117,7 @@ public class Orderdetailservice implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.Orderdetailservice[ odsid=" + odsid + " ]";
+        return "com.dba_floristik.resources.Orderdetailservice[ odsid=" + odsid + " ]";
     }
     
 }

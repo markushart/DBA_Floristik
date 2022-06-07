@@ -147,7 +147,7 @@ public class Employee implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.Employee[ eid=" + eid + " ]";
+        return "com.dba_floristik.resources.Employee[ eid=" + eid + " ]";
     }
     
 }

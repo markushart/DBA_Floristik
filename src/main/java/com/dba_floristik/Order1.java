@@ -176,7 +176,7 @@ public class Order1 implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.Order1[ oid=" + oid + " ]";
+        return "com.dba_floristik.resources.Order1[ oid=" + oid + " ]";
     }
     
 }

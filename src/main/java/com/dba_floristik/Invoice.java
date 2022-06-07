@@ -98,7 +98,7 @@ public class Invoice implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.Invoice[ invid=" + invid + " ]";
+        return "com.dba_floristik.resources.Invoice[ invid=" + invid + " ]";
     }
     
 }

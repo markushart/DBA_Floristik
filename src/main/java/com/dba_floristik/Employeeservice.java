@@ -94,7 +94,7 @@ public class Employeeservice implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.Employeeservice[ esid=" + esid + " ]";
+        return "com.dba_floristik.resources.Employeeservice[ esid=" + esid + " ]";
     }
     
 }

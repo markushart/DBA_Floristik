@@ -116,7 +116,7 @@ public class Productcategory implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.Productcategory[ pcatid=" + pcatid + " ]";
+        return "com.dba_floristik.resources.Productcategory[ pcatid=" + pcatid + " ]";
     }
     
 }

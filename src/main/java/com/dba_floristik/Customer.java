@@ -205,7 +205,7 @@ public class Customer implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.Customer[ cid=" + cid + " ]";
+        return "com.dba_floristik.resources.Customer[ cid=" + cid + " ]";
     }
     
 }

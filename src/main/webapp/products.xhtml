@@ -34,31 +34,30 @@
             <h:form id="productForm">
                 <p:dataTable value="#{productsBean.products}" var="product">
 
-                    <p:column headerText="Logo" style="background-color: lightgray">
-                        <p:graphicImage value="#{product.image}"/>
-                    </p:column>
+                    
 
                     <p:column headerText="Produktbezeichnung">
-                        <h:outputLabel value="#{product.name}"/>
+                        <h:outputLabel value="#{product.prname}"/>
                     </p:column>
 
                     <p:column headerText="Menge" style="background-color: lightgray">
-                        <p:spinner value="#{product.number}" 
+                        <p:spinner value="#{product.pramount}" 
                                    stepFactor="1" min="1">
-                            <f:ajax listener="#{productsBean.spinnerAjaxListener}"
+                            <p:ajax 
+                                    update="itemWholePrice"
                                     event="valueChange"
-                                    render="itemWholePrice"/>
+                                    />
                         </p:spinner>
                     </p:column>
 
                     <p:column headerText="Stückpreis">
-                        <h:outputLabel value="#{product.price}"
+                        <h:outputLabel value="#{product.ppricenetto}"
                                        converter="#{euroConverter}"/>
                     </p:column>
 
                     <p:column headerText="Gesamtpreis" style="background-color: lightgray">
                         <h:outputLabel id="itemWholePrice" 
-                                       value="#{product.wholePrice}"
+                                       value="#{shoppingCartBean.wholePrice(product.pramount,product.ppricenetto)}"
                                        converter="#{euroConverter}"
                                        class="whiteTxt"/>
                     </p:column>
