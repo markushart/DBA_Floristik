@@ -156,7 +156,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.resources.Product[ prid=" + prid + " ]";
+        return "com.dba_floristik.Product[ prid=" + prid + " ]";
     }
     
 }

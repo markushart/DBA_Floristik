@@ -30,7 +30,7 @@ import javax.validation.constraints.NotNull;
 @NamedQueries({
     @NamedQuery(name = "Orderdetailservice.findAll", query = "SELECT o FROM Orderdetailservice o"),
     @NamedQuery(name = "Orderdetailservice.findByOdsid", query = "SELECT o FROM Orderdetailservice o WHERE o.odsid = :odsid"),
-    @NamedQuery(name = "Orderdetailservice.findByOdsate", query = "SELECT o FROM Orderdetailservice o WHERE o.odsate = :odsate")})
+    @NamedQuery(name = "Orderdetailservice.findByOdsdate", query = "SELECT o FROM Orderdetailservice o WHERE o.odsdate = :odsdate")})
 public class Orderdetailservice implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -41,9 +41,9 @@ public class Orderdetailservice implements Serializable {
     private Integer odsid;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "ODSATE")
+    @Column(name = "ODSDATE")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date odsate;
+    private Date odsdate;
     @JoinColumn(name = "FK_OID", referencedColumnName = "OID")
     @ManyToOne(optional = false)
     private Order1 fkOid;
@@ -58,9 +58,9 @@ public class Orderdetailservice implements Serializable {
         this.odsid = odsid;
     }
 
-    public Orderdetailservice(Integer odsid, Date odsate) {
+    public Orderdetailservice(Integer odsid, Date odsdate) {
         this.odsid = odsid;
-        this.odsate = odsate;
+        this.odsdate = odsdate;
     }
 
     public Integer getOdsid() {
@@ -71,12 +71,12 @@ public class Orderdetailservice implements Serializable {
         this.odsid = odsid;
     }
 
-    public Date getOdsate() {
-        return odsate;
+    public Date getOdsdate() {
+        return odsdate;
     }
 
-    public void setOdsate(Date odsate) {
-        this.odsate = odsate;
+    public void setOdsdate(Date odsdate) {
+        this.odsdate = odsdate;
     }
 
     public Order1 getFkOid() {
@@ -117,7 +117,7 @@ public class Orderdetailservice implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.resources.Orderdetailservice[ odsid=" + odsid + " ]";
+        return "com.dba_floristik.Orderdetailservice[ odsid=" + odsid + " ]";
     }
     
 }

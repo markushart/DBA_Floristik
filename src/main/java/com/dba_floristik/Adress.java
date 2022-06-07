@@ -182,7 +182,7 @@ public class Adress implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.resources.Adress[ adrid=" + adrid + " ]";
+        return "com.dba_floristik.Adress[ adrid=" + adrid + " ]";
     }
     
 }

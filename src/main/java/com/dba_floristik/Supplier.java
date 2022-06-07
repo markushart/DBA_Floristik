@@ -164,7 +164,7 @@ public class Supplier implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.resources.Supplier[ supid=" + supid + " ]";
+        return "com.dba_floristik.Supplier[ supid=" + supid + " ]";
     }
     
 }

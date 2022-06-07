@@ -5,6 +5,7 @@
 package com.dba_floristik;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -27,7 +30,8 @@ import javax.validation.constraints.NotNull;
 @NamedQueries({
     @NamedQuery(name = "Orderdetailproduct.findAll", query = "SELECT o FROM Orderdetailproduct o"),
     @NamedQuery(name = "Orderdetailproduct.findByOdpid", query = "SELECT o FROM Orderdetailproduct o WHERE o.odpid = :odpid"),
-    @NamedQuery(name = "Orderdetailproduct.findByOdpamount", query = "SELECT o FROM Orderdetailproduct o WHERE o.odpamount = :odpamount")})
+    @NamedQuery(name = "Orderdetailproduct.findByOdpamount", query = "SELECT o FROM Orderdetailproduct o WHERE o.odpamount = :odpamount"),
+    @NamedQuery(name = "Orderdetailproduct.findByOdpdate", query = "SELECT o FROM Orderdetailproduct o WHERE o.odpdate = :odpdate")})
 public class Orderdetailproduct implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,6 +44,11 @@ public class Orderdetailproduct implements Serializable {
     @NotNull
     @Column(name = "ODPAMOUNT")
     private short odpamount;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "ODPDATE")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date odpdate;
     @JoinColumn(name = "FK_OID", referencedColumnName = "OID")
     @ManyToOne(optional = false)
     private Order1 fkOid;
@@ -54,9 +63,10 @@ public class Orderdetailproduct implements Serializable {
         this.odpid = odpid;
     }
 
-    public Orderdetailproduct(Integer odpid, short odpamount) {
+    public Orderdetailproduct(Integer odpid, short odpamount, Date odpdate) {
         this.odpid = odpid;
         this.odpamount = odpamount;
+        this.odpdate = odpdate;
     }
 
     public Integer getOdpid() {
@@ -73,6 +83,14 @@ public class Orderdetailproduct implements Serializable {
 
     public void setOdpamount(short odpamount) {
         this.odpamount = odpamount;
+    }
+
+    public Date getOdpdate() {
+        return odpdate;
+    }
+
+    public void setOdpdate(Date odpdate) {
+        this.odpdate = odpdate;
     }
 
     public Order1 getFkOid() {
@@ -113,7 +131,7 @@ public class Orderdetailproduct implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.resources.Orderdetailproduct[ odpid=" + odpid + " ]";
+        return "com.dba_floristik.Orderdetailproduct[ odpid=" + odpid + " ]";
     }
     
 }
