@@ -37,7 +37,7 @@
                     </p:column>
 
                     <p:column headerText="Menge">
-                        <p:spinner value="#{product.pramount}" 
+                        <p:spinner value="#{shoppingCartBean.quantity}" 
                                    stepFactor="1" min="1">
                             <p:ajax 
                                     update="itemWholePrice"
@@ -55,7 +55,7 @@
 
                     <p:column headerText="Gesamtpreis">
                         <h:outputLabel id="itemWholePrice" 
-                                       value="#{shoppingCartBean.wholePrice(product.pramount,product.ppricenetto)}"
+                                       value="#{shoppingCartBean.wholePrice(shoppingCartBean.quantity,product.ppricenetto)}"
                                        converter="#{euroConverter}"/>
                     </p:column>
 

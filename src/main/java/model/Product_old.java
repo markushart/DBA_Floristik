@@ -38,25 +38,11 @@ public class Product_old extends Buyable implements Serializable {
         this.wholePrice = number * price;
     }
 
-    /**
-     * 
-     * @return 
-     */
-    public int getNumber() {
-        return number;
-    }
 
-    /**
-     * 
-     * @param number 
-     */
-    public void setNumber(int number) {
-        this.number = number;
-    }
 
     /**
      * set whole price to price * number
-     */
+    */ 
     public void setWholePrice(){
         this.wholePrice = price * number;
     }
@@ -64,10 +50,11 @@ public class Product_old extends Buyable implements Serializable {
     /**
      * 
      * @return price of single products times the number
-     */
+    */ 
     public float getWholePrice(){
         return this.wholePrice;
     }
+    
 
     
     

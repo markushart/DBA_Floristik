@@ -66,7 +66,13 @@ public class Product implements Serializable {
 
     public Product() {
     }
+    
+    
 
+  
+     
+    
+    
     public Product(Integer prid) {
         this.prid = prid;
     }

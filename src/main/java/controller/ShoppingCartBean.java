@@ -52,6 +52,19 @@ public class ShoppingCartBean implements Serializable {
     private LocalDate maxDate;
     @Inject
     private LoginBean lbean;
+    
+    
+    private Map<Integer, Integer> productQuantityMap = new HashMap<>();
+    int quantity = 1;
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    //inner join zwischen product
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     @PostConstruct
     public void init() {
@@ -122,17 +135,19 @@ public class ShoppingCartBean implements Serializable {
      *
      * @param p the product in the shopping Cart
      */
-    public void addProduct(Product p) {
+    public void addProduct(Product p, Integer quantity) {
         boolean isInCart = false;
         for (Product i : products) {
             if (i.getPrid()== p.getPrid()) {
                 isInCart = true;
-                i.setPramount(i.getPramount()+ p.getPramount());
+                int q = this.productQuantityMap.get(p.getPrid());
+                this.productQuantityMap.replace(p.getPrid(), q+quantity);
                 break;
             }
         }
         if (!isInCart) {
             this.products.add(p);
+            this.productQuantityMap.put(p.getPrid(), quantity);
         }
         //setOverallPrice();
     }
@@ -226,9 +241,11 @@ public class ShoppingCartBean implements Serializable {
      * Set the value of lastAddedItem
      *
      * @param lastAddedProduct new value of lastAddedProduct
+     * @param quantity
      */
-    public void setLastAddedProduct(Product lastAddedProduct) {
-        addProduct(lastAddedProduct);
+    public void setLastAddedProduct(Product lastAddedProduct, int quantity) {
+        System.out.println("QUANTITY: "+ quantity);
+        addProduct(lastAddedProduct, quantity);
         this.lastAddedProduct = lastAddedProduct;
     }
 
@@ -275,16 +292,17 @@ public class ShoppingCartBean implements Serializable {
      *########################################################################################################
      */
     public void setOverallPrice() {
-        /*float sum = 0;
+        float sum = 0;
+        /*
         for (Product p : products) {
             
             p.setWholePrice();
             sum += p.getWholePrice();
-        }
+        }*/
         for (Service s : services) {
             sum += s.getServprice();
         }
-        this.overallPrice = sum;*/
+        this.overallPrice = sum;
     }
 
     /**

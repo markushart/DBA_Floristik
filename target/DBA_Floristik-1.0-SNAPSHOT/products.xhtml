@@ -41,7 +41,7 @@
                     </p:column>
 
                     <p:column headerText="Menge" style="background-color: lightgray">
-                        <p:spinner value="#{product.pramount}" 
+                        <p:spinner binding="#{shoppingCartBean.quantity}" 
                                    stepFactor="1" min="1">
                             <p:ajax 
                                     update="itemWholePrice"
@@ -57,17 +57,14 @@
 
                     <p:column headerText="Gesamtpreis" style="background-color: lightgray">
                         <h:outputLabel id="itemWholePrice" 
-                                       value="#{shoppingCartBean.wholePrice(product.pramount,product.ppricenetto)}"
+                                       value="#{shoppingCartBean.wholePrice(shoppingCartBean.quantity,product.ppricenetto)}"
                                        converter="#{euroConverter}"
                                        class="whiteTxt"/>
                     </p:column>
 
                     <p:column>
                         <h:commandButton value="Zu Einkaufswagen hinzu" 
-                                         action="shoppingcart.xhtml">
-                            <f:setPropertyActionListener value="#{product}" 
-                                                         target="#{shoppingCartBean.lastAddedProduct}"/>
-                        </h:commandButton>
+                                         action="#{shoppingCartBean.lastAddedProduct(product, quantity)}"/>
                     </p:column>
                 </p:dataTable>
 
