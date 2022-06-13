@@ -68,6 +68,33 @@
                                 warnStyle="color: yellow" 
                                 errorStyle="color:red"/>
 
+                            <h:outputText value="Telefonnummer"/>
+                            <p:inputText id="cphone" 
+                                         value="#{registerBean.cphone}"
+                                         label="cphone"
+                                         required="false">
+                            </p:inputText>
+                            <h:message
+                                id="cphonemsg"
+                                for="cphone"
+                                showSummary="true"
+                                showDetail="false"
+                                infoStyle="color: green"
+                                warnStyle="color: yellow" 
+                                errorStyle="color:red"/>
+
+                            <h:outputText value="Geburtstag"/>
+                            <p:datePicker value="#{registerBean.birthdate}" label="bday">
+                            </p:datePicker>
+                            <h:message
+                                id="bdaymsg"
+                                for="bday"
+                                showSummary="true"
+                                showDetail="false"
+                                infoStyle="color:green"
+                                warnStyle="color:yellow" 
+                                errorStyle="color:red"/>
+
                             <h:outputText value="Username*"/>
                             <p:inputText id="uname" 
                                          value="#{registerBean.uname}"

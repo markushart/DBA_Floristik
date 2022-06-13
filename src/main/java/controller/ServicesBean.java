@@ -50,7 +50,6 @@ public class ServicesBean {
 
         db = new DataBean();
         services = new ArrayList<>();
-        db.generateTestServices();
         this.services = db.getServiceList();
     }
 

@@ -56,8 +56,8 @@ public class DataBean implements Serializable {
     private List<Customer> customerObjectList;
     private List<Product> productObjectList;
     private List<Service> serviceObjectList;
-
-        private ArrayList<Product> productList;
+    
+    private ArrayList<Product> productList;
 
     private ArrayList<Service> serviceList;
     
@@ -150,7 +150,7 @@ public class DataBean implements Serializable {
         }
     }
     
-         /**
+    /**
      * Alle Produktobjekte für Admin-Produkttabelle
      */
     private void findAllProductObjects() {
@@ -345,7 +345,7 @@ public class DataBean implements Serializable {
                 | NotSupportedException | RollbackException
                 | SystemException ex) {
             try {
-                int status = Status.STATUS_NO_TRANSACTION;
+                int status = Status.STATUS_NO_TRANSACTION; // wirft aktuell IllegalStateExc
                 if (status != ut.getStatus()) {
                     ut.rollback();
                 }
@@ -422,56 +422,6 @@ public class DataBean implements Serializable {
         this.serviceObjectList = serviceObjectList;
     }
     
-    
-    /**
-     * Old ohne datenbank
-     *
-     */
-    
-
-/*
-    //* ohne datenbank, löschen?
-    public void generateTestUsers() {
-        userList = new ArrayList<>();
-        userList.add(new User("Markus", "Hartlage", "markus.hartlage@fh-bielefeld.de",
-                "hartmark", "Hallo1234".hashCode(), "Herr"));
-        userList.add(new User("Bianca", "Beispiel", "biancab@yahoo.com",
-                "bibibsp", "GanzGeheim123".hashCode(), "Frau"));
-        userList.add(new User("Frank", "Floristiker", "frank@floristik.de",
-                "flowerfrank", "L0tusBlume".hashCode(), "Herr", UserRole.ADMIN));
-    }
-*/
-    /**
-     *
-     */
-    public void generateTestProducts() {
-        /*
-        productList = new ArrayList<>();
-        Product_old flieder = new Product_old("flieder", 0, 0.5f, 1);
-        productList.add(flieder);
-
-        Product_old rose = new Product_old("rose", 1, 1.15f, 1);
-        productList.add(rose);
-
-        Product_old daisy = new Product_old("Gänseblümchen", 2, 0.33f, 1);
-        productList.add(daisy);
-        */
-    }
-
-    /**
-     *
-     */
-    public void generateTestServices() {
-        /*
-        serviceList = new ArrayList<>();
-        Service_old decoration = new Service_old("Dekoration", 3, 15.99f);
-        serviceList.add(decoration);
-        Service_old greening = new Service_old("Begrünung", 4, 7.85f);
-        serviceList.add(greening);
-        */
-        
-    }
-
     /**
      * Get the value of userList
      *

@@ -4,9 +4,13 @@
  */
 package controller;
 
+import com.dba_floristik.Account;
+import com.dba_floristik.Customer;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,9 +23,12 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
+import javax.naming.NamingException;
+import javax.transaction.NotSupportedException;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Digits;
 import model.User;
 import util.DataBean;
 
@@ -41,6 +48,7 @@ public class RegisterBean implements Serializable {
     private static final String PWDREGEX = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$";
     private static final String PWDMSG
             = "Das Passwort muss mindestens 8 Zeichen lang sein und mindestens einen Groß- und Kleinbuchstaben, sowie eine Ziffer enthalten!";
+    private static final String CPHONEMSG = "Die Telefonnummer darf nur Zahlen enthalten!";
 
     private Map<String, String> greetings = new HashMap<>();
     private String greeting;
@@ -54,13 +62,18 @@ public class RegisterBean implements Serializable {
     private String password;
     @Email(message = "email should match")
     private String email;
+    // Telefonnummer darf maximal 20 stellen haben und kein Bruch sein
+    // @Digits(integer = 20, fraction = 0, message = CPHONEMSG)
+    private String cphone;
+    private Date birthdate;
+
     private boolean registered;
     private FacesContext context;
+
     @Inject
     private DataBean dbean;
 
-    private ArrayList<User> users;
-
+    private List<Customer> users;
 
     @PostConstruct
     public void init() {
@@ -73,8 +86,8 @@ public class RegisterBean implements Serializable {
 
         registered = false;
 
-        users = dbean.getUserList();
-        
+        users = dbean.getCustomerObjectList();
+
         LOGGER.log(Level.INFO, "new registerBean {0}", users);
     }
 
@@ -83,25 +96,38 @@ public class RegisterBean implements Serializable {
         registered = true;
         // username is allready taken
         try {
-            for (User u : users) {
-                try{
-                if (u.getUsername().equals(this.uname)
-                        || (u.getEmail().equals(this.email) && !this.email.isEmpty())) {
-                    registered = false;
-                }
-                } catch(NullPointerException e) {
+            for (Customer c : users) {
+                try {
+                    Account a = c.getFkAccid();
+                    if (a.getAccname().equals(this.uname)
+                            || (c.getCemail().equals(this.email) && !this.email.isEmpty())) {
+                        registered = false;
+                    }
+                } catch (NullPointerException e) {
                     LOGGER.log(Level.WARNING, "users was not null!");
                 }
             }
         } catch (NullPointerException e) {
-            if (users == null){
-            LOGGER.log(Level.WARNING, "users was null!");
+            if (users == null) {
+                LOGGER.log(Level.WARNING, "users was null!");
             }
+        }
+
+        Account a = new Account(99, this.uname, this.password, "USER");
+        Customer c = new Customer(99, this.fname, this.lname, this.greeting, this.email, this.cphone, this.birthdate);
+        try {
+            registered = this.dbean.persistCustomer(c, a);
+        } catch (NamingException | NotSupportedException | javax.transaction.RollbackException ex) {
+
+            fm = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehlschlag!",
+                    ex.toString());
+            context.addMessage(null, fm);
+            return "register.xhtml";
         }
 
         if (!registered) {
             fm = new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlschlag",
-                    ": Username oder Email bereits vergeben.");
+                    ": Fehlschalg bei der Registrierung.");
             context.addMessage(null, fm);
             return null;
         } else if (!password.matches(PWDREGEX)) { // Kontrolle auf zulaessiges Passwort
@@ -110,6 +136,7 @@ public class RegisterBean implements Serializable {
             context.addMessage(null, fm);
             return null;
         } else {
+
             fm = new FacesMessage(FacesMessage.SEVERITY_INFO, "Erfolg",
                     ": Registrieren erfolgreich!");
             context.addMessage(null, fm);
@@ -200,6 +227,10 @@ public class RegisterBean implements Serializable {
      * @param email new value of email
      */
     public void setEmail(String email) {
+        if (email == null)
+        {
+            this.email = "null@null.com"; 
+        }
         this.email = email;
     }
 
@@ -267,6 +298,7 @@ public class RegisterBean implements Serializable {
     public Map<String, String> getGreetings() {
         return greetings;
     }
+
     /**
      * Get the value of dbean
      *
@@ -284,4 +316,42 @@ public class RegisterBean implements Serializable {
     public void setDbean(DataBean dbean) {
         this.dbean = dbean;
     }
+
+    /**
+     *
+     * @return
+     */
+    public String getCphone() {
+        return cphone;
+    }
+
+    /**
+     *
+     * @param cphone
+     */
+    public void setCphone(String cphone) {
+        if (cphone == null)
+        {
+            this.cphone = "000000";
+        }
+        this.cphone = cphone;
+    }
+
+    public Date getBirthdate() {
+        return birthdate;
+    }
+
+    /**
+     *
+     * @param birthdate
+     */
+    public void setBirthdate(Date birthdate) {
+        if (birthdate == null)
+        {
+            // default birthday
+            this.birthdate = new Date();
+        }
+        this.birthdate = birthdate;
+    }
+
 }

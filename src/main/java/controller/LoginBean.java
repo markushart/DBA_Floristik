@@ -4,8 +4,10 @@
  */
 package controller;
 
+import com.dba_floristik.Customer;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -30,9 +32,9 @@ public class LoginBean implements Serializable {
     private HttpSession session;
     private String uname;
     private String password;
-    private ArrayList<User> knownUsers;
+    private List<Customer> Customers;
     private FacesContext context;
-    private User user;
+    private Customer customer;
 
     private boolean loggedIn = false;
 
@@ -52,18 +54,20 @@ public class LoginBean implements Serializable {
         LOGGER.log(Level.INFO, "Login: Session ID: {0}", session.getId());
 
         DataBean db = new DataBean();
-       // db.generateTestUsers();
-        knownUsers = db.getUserList();
-        user = new User();
+        Customers = db.getCustomerObjectList();
+        customer = new Customer();
     }
 
     public void login() {
         FacesMessage fm;
+        LOGGER.log(Level.INFO, "Eingbae uname: {0}passwort: {1}", new Object[]{this.uname, this.password});
 
-        for (User u : knownUsers) {
-            if (u.getUsername().equals(this.uname)) {
-                loggedIn = u.login(this.password);
-                this.user = u;
+        for (Customer c : Customers) {
+            LOGGER.log(Level.INFO, "Kunde: {0}passwort: {1}", new Object[]{c.getFkAccid().getAccname(), c.getFkAccid().getAccpwd()});
+
+            if (c.getFkAccid().getAccname().equals(this.uname)) {
+                loggedIn = c.getFkAccid().getAccpwd().equals(this.password);
+                this.customer = c;
                 break;
             }
         }
@@ -82,21 +86,19 @@ public class LoginBean implements Serializable {
     }
 
     /**
-     * Get the value of knownUsers
      *
-     * @return the value of knownUsers
+     * @return
      */
-    public ArrayList<User> getKnownUsers() {
-        return knownUsers;
+    public List<Customer> getCustomers() {
+        return Customers;
     }
 
     /**
-     * Set the value of knownUsers
      *
-     * @param knownUsers new value of knownUsers
+     * @param c
      */
-    public void setKnownUsers(ArrayList<User> knownUsers) {
-        this.knownUsers = knownUsers;
+    public void setCustomers(List<Customer> c) {
+        this.Customers = c;
     }
 
     /**
@@ -170,22 +172,19 @@ public class LoginBean implements Serializable {
     }
 
     /**
-     * Get the value of user
      *
-     * @return the value of user
+     * @return
      */
-    public User getUser() {
-        LOGGER.log(Level.INFO, "delivering user{0}", user.getUsername());
-        return user;
+    public Customer getCustomer() {
+        return customer;
     }
 
     /**
-     * Set the value of user
      *
-     * @param user new value of user
+     * @param customer
      */
-    public void setUser(User user) {
-        this.user = user;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     /**

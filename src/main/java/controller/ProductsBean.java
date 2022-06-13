@@ -32,7 +32,7 @@ public class ProductsBean implements Serializable {
     private static final Logger LOGGER
             = Logger.getLogger(ProductsBean.class.getName());
 
-    private ArrayList<Product> products;
+    private ArrayList<Product> products; // hier vielleicht einfach eine List mit Orderdetailproduct, diese kann dann auch Menge und Gesamtpreis abbilden
 
     @Inject
     private DataBean db;
@@ -55,7 +55,6 @@ public class ProductsBean implements Serializable {
 
         db = new DataBean();
         products = new ArrayList<>();
-        db.generateTestProducts();
         this.products = db.getProductList();
     }
 
