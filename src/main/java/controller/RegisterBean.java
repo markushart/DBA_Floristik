@@ -78,9 +78,9 @@ public class RegisterBean implements Serializable {
     @PostConstruct
     public void init() {
         greetings = new HashMap<>();
-        greetings.put("Herr", "Herr");
-        greetings.put("Frau", "Frau");
-        setGreeting(greetings.get("Frau"));
+        greetings.put("Hr.", "Hr.");
+        greetings.put("Fr.", "Fr.");
+        setGreeting(greetings.get("Fr."));
 
         context = FacesContext.getCurrentInstance();
 

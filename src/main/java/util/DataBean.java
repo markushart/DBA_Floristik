@@ -26,6 +26,7 @@ import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.RollbackException;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpSession;
@@ -41,54 +42,40 @@ import model.User;
 import model.UserRole;
 
 /**
- * Name:            DataBean    
- * Aufgabe:         Klasse für Interaktion mit Datenbank / dummy Daten
- * Version:         1.1
- * Letzte Änderung: 01.06.2022
- * Realisierung     Markus Hartlage / Sascha Nickel
+ * Name: DataBean Aufgabe: Klasse für Interaktion mit Datenbank / dummy Daten
+ * Version: 1.1 Letzte Änderung: 01.06.2022 Realisierung Markus Hartlage /
+ * Sascha Nickel
  */
 @Named(value = "dataBean")
-@SessionScoped @Transactional
+@SessionScoped
+@Transactional
 public class DataBean implements Serializable {
+
     private ArrayList<User> userList;
     static final Logger LOGGER = Logger.getLogger(DataBean.class.getName());
     private static int id = 0;
     private List<Customer> customerObjectList;
     private List<Product> productObjectList;
     private List<Service> serviceObjectList;
-    
+
     private ArrayList<Product> productList;
 
     private ArrayList<Service> serviceList;
-    
+
     private int size;
     private FacesContext context;
     private HttpSession session;
+    @PersistenceUnit(unitName = "my_persistence_unit")
     private EntityManagerFactory emf;
-    
+
     @Resource
     private UserTransaction ut;
 
     @Inject
     private Account actAccount;
 
-
-
-
-
-
-
     @PostConstruct
     public void init() {
-        context = FacesContext.getCurrentInstance();
-        session = (HttpSession) context.getExternalContext().getSession(false);
-        LOGGER.log(Level.INFO, "Databean: {0}", session.getId());
-    }
-
-    /**
-     * Creates a new instance of DataBean
-     */
-    public DataBean() {
         LOGGER.info("Konstruktor: DataBean");
         emf = Persistence.createEntityManagerFactory("my_persistence_unit", System.getProperties());
         if (emf.isOpen()) {
@@ -98,83 +85,90 @@ public class DataBean implements Serializable {
             findAllServiceObjects();
             productObjectList = new ArrayList<>();
             findAllProductObjects();
-            
+
         }
+        context = FacesContext.getCurrentInstance();
+        session = (HttpSession) context.getExternalContext().getSession(false);
+        LOGGER.log(Level.INFO, "Databean: {0}", session.getId());
     }
-    
+
+    /**
+     * Creates a new instance of DataBean
+     */
+    public DataBean() {
+
+    }
+
     /**
      * Alle Kundenobjekte für Admin-Kundentabelle
      */
     private void findAllCustomerObjects() {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Customer> query= em.createNamedQuery("Customer.findAll", Customer.class);
+            TypedQuery<Customer> query = em.createNamedQuery("Customer.findAll", Customer.class);
             this.customerObjectList = query.getResultList();
             this.size = this.getCustomerObjectList().size();
-            LOGGER.log(Level.INFO,"Es wurden {0} Kunden in der DB gefunden.", size);
+            LOGGER.log(Level.INFO, "Es wurden {0} Kunden in der DB gefunden.", size);
             userList = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 userList.add(new User(customerObjectList.get(i).getCid(),
-                    customerObjectList.get(i).getCfirstname(),
-                    customerObjectList.get(i).getClastname(),
-                    customerObjectList.get(i).getCsalutation(),
-                    customerObjectList.get(i).getCemail(),
-                    customerObjectList.get(i).getCphone()));
-            }  
+                        customerObjectList.get(i).getCfirstname(),
+                        customerObjectList.get(i).getClastname(),
+                        customerObjectList.get(i).getCsalutation(),
+                        customerObjectList.get(i).getCemail(),
+                        customerObjectList.get(i).getCphone()));
+            }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
     }
-     
-    
-     /**
+
+    /**
      * Alle Serviceobjekte für Admin-Servicetabelle
      */
     private void findAllServiceObjects() {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Service> query= em.createNamedQuery("Service.findAll", Service.class);
+            TypedQuery<Service> query = em.createNamedQuery("Service.findAll", Service.class);
             this.serviceObjectList = query.getResultList();
             this.size = this.getServiceObjectList().size();
-            LOGGER.log(Level.INFO,"Es wurden {0} Service(s) in der DB gefunden.", size);
+            LOGGER.log(Level.INFO, "Es wurden {0} Service(s) in der DB gefunden.", size);
             serviceList = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 serviceList.add(new Service(
                         serviceObjectList.get(i).getServid(),
                         serviceObjectList.get(i).getServname(),
                         serviceObjectList.get(i).getServprice()));
-                
-            }              
+
+            }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      * Alle Produktobjekte für Admin-Produkttabelle
      */
     private void findAllProductObjects() {
         EntityManager em = emf.createEntityManager();
         try {
-            TypedQuery<Product> query= em.createNamedQuery("Product.findAll", Product.class);
+            TypedQuery<Product> query = em.createNamedQuery("Product.findAll", Product.class);
             this.productObjectList = query.getResultList();
             this.size = this.getServiceObjectList().size();
-            LOGGER.log(Level.INFO,"Es wurden {0} Produkt(e) in der DB gefunden.", size);
+            LOGGER.log(Level.INFO, "Es wurden {0} Produkt(e) in der DB gefunden.", size);
             productList = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 productList.add(new Product(
-                        productObjectList.get(i).getPrid(), 
+                        productObjectList.get(i).getPrid(),
                         productObjectList.get(i).getPrname(),
                         productObjectList.get(i).getPramount(),
                         productObjectList.get(i).getPpricenetto()));
-            }              
+            }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
     }
-    
-  
-    
+
     /**
      * Klassenmethode --> Aufruf in RegisterBean
      *
@@ -184,38 +178,37 @@ public class DataBean implements Serializable {
     public Account findAccountForAccountName(String name) {
         try {
             EntityManager em = emf.createEntityManager();
-            TypedQuery<Account> query= em.createNamedQuery("Account.findByAccname",Account.class);
+            TypedQuery<Account> query = em.createNamedQuery("Account.findByAccname", Account.class);
             query.setParameter("accname", name);
             setActAccount(query.getSingleResult());
-            LOGGER.log(Level.INFO,"Es wurde {0} als Account in der DB gefunden.", name);
-            
+            LOGGER.log(Level.INFO, "Es wurde {0} als Account in der DB gefunden.", name);
+
         } catch (Exception ex) {
             LOGGER.info(ex.getMessage());
         }
         return getActAccount();
     }
-    
+
     /**
      * Verwendung in Converter: ProduktCategoryConverter der wiederum für die
      * entsprechende SelectOneMenu- Komponente zu Einsatz kommt
      *
-     * @param pcatid 
+     * @param pcatid
      * @return
      */
     public Productcategory findProductCategoryById(int pcatid) {
         Productcategory pcat = null;
         try {
             EntityManager em = emf.createEntityManager();
-            TypedQuery<Productcategory> query = em.createNamedQuery("Producttype.findByPtid",Productcategory.class);
+            TypedQuery<Productcategory> query = em.createNamedQuery("Producttype.findByPtid", Productcategory.class);
             query.setParameter("ptid", pcatid);
             pcat = query.getSingleResult();
-            LOGGER.log(Level.INFO,"Die ID wurde gefunden");
+            LOGGER.log(Level.INFO, "Die ID wurde gefunden");
         } catch (Exception ex) {
             LOGGER.info(ex.getMessage());
         }
         return pcat;
     }
-
 
     /**
      * Erzeugen einer gefilterten Produktliste
@@ -240,7 +233,7 @@ public class DataBean implements Serializable {
         }
         return list;
     }
-    
+
     /**
      * Verwendung via Converter in SelectOneMenu-Komponente
      *
@@ -262,7 +255,7 @@ public class DataBean implements Serializable {
         }
         return list;
     }
-    
+
     /**
      * Suche eines Produkts für Merge-Operation (Update) ID-Schlüssel wird
      * benötigt!
@@ -284,6 +277,7 @@ public class DataBean implements Serializable {
         }
         return p;
     }
+
     @SuppressWarnings("empty-statement")
     public boolean updateProduct(Product p) throws javax.transaction.RollbackException {
         boolean ok = true;
@@ -317,6 +311,7 @@ public class DataBean implements Serializable {
         }
         return ok;
     }
+
     /**
      * Registrierung eines neuen Kunden mit zugehörigem Account Verwendung in:
      * RegisterBean.java
@@ -327,45 +322,22 @@ public class DataBean implements Serializable {
      */
     public boolean persistCustomer(Customer newCustomer,
             Account newAccount) throws NamingException, NotSupportedException, javax.transaction.RollbackException {
-        boolean ok = false;
+        boolean ok;
+        
         try {
             EntityManager em = emf.createEntityManager();//Payara-spezifisch
-            final Context icontext = new InitialContext();
-            ut = (UserTransaction) (icontext).lookup("java:comp/UserTransaction");
-            ut.begin();
             em.joinTransaction();
             em.persist(newAccount); //zuerst Kunden-Account speichern
             newCustomer.setFkAccid(newAccount); //Account-Objekt im Kundenobjekt setzen
             em.persist(newCustomer); //Kunden speichern
-            ut.commit();
             ok = true;
             LOGGER.info("Registrieren ok (Customer mit Account)");
-        } catch (IllegalStateException | SecurityException
-                | HeuristicMixedException | HeuristicRollbackException
-                | NotSupportedException | RollbackException
-                | SystemException ex) {
-            try {
-                int status = Status.STATUS_NO_TRANSACTION; // wirft aktuell IllegalStateExc
-                if (status != ut.getStatus()) {
-                    ut.rollback();
-                }
-            } catch (IllegalStateException
-                    | SecurityException
-                    | SystemException ex1) {
-                LOGGER.log(Level.SEVERE, null, ex1);
-            }
-        } catch (ConstraintViolationException e) {
-            LOGGER.log(Level.SEVERE, "Exception: ");
-            e.getConstraintViolations()
-                    .forEach(err -> LOGGER.log(Level.SEVERE, err.toString()));
-        } catch (NamingException ex) {
-            LOGGER.log(Level.SEVERE, null, ex);
+        } catch (IllegalStateException | SecurityException ex) {
+            ok = false;
         }
         return ok;
     }
 
-    
-    
     public void setCustomerObjectList(List<Customer> customerObjectList) {
         this.customerObjectList = customerObjectList;
     }
@@ -405,7 +377,7 @@ public class DataBean implements Serializable {
     public void setActAccount(Account actAccount) {
         this.actAccount = actAccount;
     }
-    
+
     public List<Product> getProductObjectList() {
         return productObjectList;
     }
@@ -421,7 +393,7 @@ public class DataBean implements Serializable {
     public void setServiceObjectList(List<Service> serviceObjectList) {
         this.serviceObjectList = serviceObjectList;
     }
-    
+
     /**
      * Get the value of userList
      *
@@ -466,7 +438,5 @@ public class DataBean implements Serializable {
     public ArrayList<Service> getServiceList() {
         return serviceList;
     }
-
-
 
 }
