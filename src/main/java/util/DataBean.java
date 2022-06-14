@@ -7,12 +7,15 @@ package util;
 import com.dba_floristik.Account;
 import com.dba_floristik.Adress;
 import com.dba_floristik.Customer;
+import com.dba_floristik.Orderdetailproduct;
+import com.dba_floristik.Orderdetailservice;
 import com.dba_floristik.Productcategory;
 import com.dba_floristik.Product;
 import com.dba_floristik.Service;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -41,6 +44,8 @@ import javax.transaction.SystemException;
 import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
 import javax.validation.ConstraintViolationException;
+import model.ProductListItem;
+import model.ServiceListItem;
 import model.User;
 import model.UserRole;
 
@@ -348,6 +353,42 @@ public class DataBean implements Serializable {
         }
         return ok;
     }
+
+    /**
+     * 
+     * @param plist
+     * @param slist
+     * @return 
+     */
+    public boolean persistShoppingCart (ArrayList<ProductListItem> plist, ArrayList<ServiceListItem> slist){
+        
+        EntityManager em = emf.createEntityManager();
+        em.joinTransaction();
+        
+        for(ProductListItem pi : plist){
+            Product p = pi.getProduct();
+            // new orderdetail for product
+            Orderdetailproduct op = new Orderdetailproduct(0, (short) pi.getOrderAmount(), new Date());
+            op.setFkPrid(p);
+            em.persist(op);
+            p.getOrderdetailproductCollection().add(op);
+            em.persist(p);
+        }
+        
+        for(ServiceListItem si : slist){
+            Service s = si.getService();
+            // new orderdetail for service
+            Orderdetailservice os = new Orderdetailservice(0, si.getServiceDate());
+            os.setFKServID(s);
+            em.persist(os);
+            s.getOrderdetailserviceCollection().add(os);
+            em.persist(s);
+        }
+        
+        return true;
+    }
+
+    
 
     public void setCustomerObjectList(List<Customer> customerObjectList) {
         this.customerObjectList = customerObjectList;
