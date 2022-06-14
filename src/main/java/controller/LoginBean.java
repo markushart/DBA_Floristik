@@ -6,7 +6,6 @@ package controller;
 
 import com.dba_floristik.Customer;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,8 +14,8 @@ import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
-import model.User;
 import util.DataBean;
 
 /**
@@ -35,6 +34,8 @@ public class LoginBean implements Serializable {
     private List<Customer> Customers;
     private FacesContext context;
     private Customer customer;
+    @Inject
+    private DataBean db;
 
     private boolean loggedIn = false;
 
@@ -53,14 +54,14 @@ public class LoginBean implements Serializable {
         session = (HttpSession) context.getExternalContext().getSession(false);
         LOGGER.log(Level.INFO, "Login: Session ID: {0}", session.getId());
 
-        DataBean db = new DataBean();
         Customers = db.getCustomerObjectList();
         customer = new Customer();
     }
 
     public void login() {
         FacesMessage fm;
-        LOGGER.log(Level.INFO, "Eingbae uname: {0}passwort: {1}", new Object[]{this.uname, this.password});
+        // LOGGER.log(Level.INFO, "Eingabe uname: {0} passwort: {1}", new Object[]{this.uname, this.password});
+        this.Customers = db.getCustomerObjectList();
 
         for (Customer c : Customers) {
             LOGGER.log(Level.INFO, "Kunde: {0}passwort: {1}", new Object[]{c.getFkAccid().getAccname(), c.getFkAccid().getAccpwd()});

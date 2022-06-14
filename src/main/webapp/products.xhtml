@@ -21,7 +21,7 @@
             </style>
             <h2>Produktübersicht</h2>
             <h:form>
-                <p:toolbar rendered="#{loginBean.user.isAdmin()}">
+                <p:toolbar rendered="#{loginBean.loggedIn}">
                     <p:toolbarGroup>
                         <p:outputLabel value="Neue Produktbezeichnung"/>
                         <p:inputText/>
@@ -32,16 +32,14 @@
                 </p:toolbar>
             </h:form>
             <h:form id="productForm">
-                <p:dataTable value="#{productsBean.products}" var="product">
-
-                    
+                <p:dataTable value="#{productsBean.productListItems}" var="pi">
 
                     <p:column headerText="Produktbezeichnung">
-                        <h:outputLabel value="#{product.prname}"/>
+                        <h:outputLabel value="#{pi.product.prname}"/>
                     </p:column>
 
                     <p:column headerText="Menge" style="background-color: lightgray">
-                        <p:spinner value="#{product.pramount}" 
+                        <p:spinner value="#{pi.orderAmount}" 
                                    stepFactor="1" min="1">
                             <p:ajax 
                                     update="itemWholePrice"
@@ -51,13 +49,13 @@
                     </p:column>
 
                     <p:column headerText="Stückpreis">
-                        <h:outputLabel value="#{product.ppricenetto}"
+                        <h:outputLabel value="#{pi.product.ppricenetto}"
                                        converter="#{euroConverter}"/>
                     </p:column>
 
                     <p:column headerText="Gesamtpreis" style="background-color: lightgray">
                         <h:outputLabel id="itemWholePrice" 
-                                       value="#{shoppingCartBean.wholePrice(product.pramount,product.ppricenetto)}"
+                                       value="#{shoppingCartBean.wholePrice(pi.orderAmount, pi.product.ppricenetto)}"
                                        converter="#{euroConverter}"
                                        class="whiteTxt"/>
                     </p:column>
@@ -65,8 +63,8 @@
                     <p:column>
                         <h:commandButton value="Zu Einkaufswagen hinzu" 
                                          action="shoppingcart.xhtml">
-                            <f:setPropertyActionListener value="#{product}" 
-                                                         target="#{shoppingCartBean.lastAddedProduct}"/>
+                            <f:setPropertyActionListener value="#{pi}" 
+                                                         target="#{shoppingCartBean.lastAddedItem}"/>
                         </h:commandButton>
                     </p:column>
                 </p:dataTable>

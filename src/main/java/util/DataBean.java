@@ -5,12 +5,15 @@
 package util;
 
 import com.dba_floristik.Account;
+import com.dba_floristik.Adress;
 import com.dba_floristik.Customer;
 import com.dba_floristik.Productcategory;
 import com.dba_floristik.Product;
 import com.dba_floristik.Service;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -79,6 +82,7 @@ public class DataBean implements Serializable {
         LOGGER.info("Konstruktor: DataBean");
         emf = Persistence.createEntityManagerFactory("my_persistence_unit", System.getProperties());
         if (emf.isOpen()) {
+            LOGGER.info("DataBean: emf is open!");
             customerObjectList = new ArrayList<>();
             findAllCustomerObjects();
             serviceObjectList = new ArrayList<>();
@@ -86,6 +90,8 @@ public class DataBean implements Serializable {
             productObjectList = new ArrayList<>();
             findAllProductObjects();
 
+        } else {
+            LOGGER.info("DataBean: emf is not open!");
         }
         context = FacesContext.getCurrentInstance();
         session = (HttpSession) context.getExternalContext().getSession(false);
@@ -320,20 +326,25 @@ public class DataBean implements Serializable {
      * @param newAccount
      * @return
      */
-    public boolean persistCustomer(Customer newCustomer,
-            Account newAccount) throws NamingException, NotSupportedException, javax.transaction.RollbackException {
+    public boolean persistCustomer(Customer newCustomer, Account newAccount, Collection<Adress> newAdressCollection) throws ConstraintViolationException {
         boolean ok;
-        
+
         try {
             EntityManager em = emf.createEntityManager();//Payara-spezifisch
             em.joinTransaction();
             em.persist(newAccount); //zuerst Kunden-Account speichern
             newCustomer.setFkAccid(newAccount); //Account-Objekt im Kundenobjekt setzen
             em.persist(newCustomer); //Kunden speichern
+            /* Adressen persistieren */
+            for (Adress add : newAdressCollection) {
+                add.setFkCid(newCustomer);
+                em.persist(add);
+            }
             ok = true;
             LOGGER.info("Registrieren ok (Customer mit Account)");
-        } catch (IllegalStateException | SecurityException ex) {
+        } catch (IllegalStateException | SecurityException | ConstraintViolationException ex) {
             ok = false;
+            throw ex;
         }
         return ok;
     }

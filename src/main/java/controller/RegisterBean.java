@@ -5,9 +5,11 @@
 package controller;
 
 import com.dba_floristik.Account;
+import com.dba_floristik.Adress;
 import com.dba_floristik.Customer;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,13 +25,10 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
-import javax.naming.NamingException;
-import javax.transaction.NotSupportedException;
+import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Digits;
-import model.User;
 import util.DataBean;
 
 /**
@@ -48,9 +47,9 @@ public class RegisterBean implements Serializable {
     private static final String PWDREGEX = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$";
     private static final String PWDMSG
             = "Das Passwort muss mindestens 8 Zeichen lang sein und mindestens einen Groß- und Kleinbuchstaben, sowie eine Ziffer enthalten!";
-    private static final String CPHONEMSG = "Die Telefonnummer darf nur Zahlen enthalten!";
+    // private static final String CPHONEMSG = "Die Telefonnummer darf nur Zahlen enthalten!";
 
-    private Map<String, String> greetings = new HashMap<>();
+    private final Map<String, String> greetings = new HashMap<>(2);
     private String greeting;
     @Pattern(regexp = NAMEREGEX, message = NAMEMSG)
     private String fname;
@@ -62,12 +61,38 @@ public class RegisterBean implements Serializable {
     private String password;
     @Email(message = "email should match")
     private String email;
+    private static final String DEFAULTEMAIL = "x@x.x";
+
     // Telefonnummer darf maximal 20 stellen haben und kein Bruch sein
     // @Digits(integer = 20, fraction = 0, message = CPHONEMSG)
     private String cphone;
-    private Date birthdate;
+    private static final String DEFAULTCPHONE = "xxxxxxxxxx 0";
 
-    private boolean registered;
+    private Date birthdate = new Date();
+
+    /* Adressinformationen */
+    private final Map<String, String> supportedCountries = new HashMap<>(5);
+
+    private final Map<String, String> supportedFedStates = new HashMap<>(14);
+
+    private String street;
+
+    private static final String DEFAULTSTREET = "xxxxxxxxxx 0";
+
+    private String city;
+
+    private static final String DEFAULTCITY = "xxxxxxxxxx";
+
+    private String citycode;
+
+    private static final String DEFAULTCITYCODE = "000000";
+
+    private String country;
+
+    private String fedState;
+
+    /* Adressinformationen Ende*/
+    private boolean not_registered;
     private FacesContext context;
 
     @Inject
@@ -77,57 +102,68 @@ public class RegisterBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        greetings = new HashMap<>();
-        greetings.put("Hr.", "Hr.");
-        greetings.put("Fr.", "Fr.");
-        setGreeting(greetings.get("Fr."));
+
+        this.init_maps();
 
         context = FacesContext.getCurrentInstance();
 
-        registered = false;
+        not_registered = false;
 
         users = dbean.getCustomerObjectList();
 
-        LOGGER.log(Level.INFO, "new registerBean {0}", users);
+        // LOGGER.log(Level.INFO, "new registerBean {0}", users);
     }
 
     public String process() {
         FacesMessage fm;
-        registered = true;
-        // username is allready taken
-        try {
-            for (Customer c : users) {
-                try {
-                    Account a = c.getFkAccid();
-                    if (a.getAccname().equals(this.uname)
-                            || (c.getCemail().equals(this.email) && !this.email.isEmpty())) {
-                        registered = false;
-                    }
-                } catch (NullPointerException e) {
-                    LOGGER.log(Level.WARNING, "users was not null!");
-                }
-            }
-        } catch (NullPointerException e) {
-            if (users == null) {
-                LOGGER.log(Level.WARNING, "users was null!");
+        not_registered = true;
+
+        // fill empty parameters with default values
+        setDefaultForEmptyAttributes();
+
+        if (users == null) {
+            LOGGER.log(Level.WARNING, "Userlist was null!");
+            return null;
+        }
+
+        // check if username is allready taken
+        for (Customer c : users) {
+
+            Account a = c.getFkAccid();
+            if (a.getAccname().equals(this.uname)
+                    || (c.getCemail().equals(this.email)
+                    && !(this.email.equals(DEFAULTEMAIL)))) {
+
+                fm = new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlschlag",
+                        ": Die Email Adresse oder der Username wird bereits verwendet.");
+                context.addMessage(null, fm);
+                return null;
             }
         }
 
-        Account a = new Account(99, this.uname, this.password, "USER");
-        Customer c = new Customer(99, this.fname, this.lname, this.greeting, this.email, this.cphone, this.birthdate);
         try {
-            registered = this.dbean.persistCustomer(c, a);
-        } catch (NamingException | NotSupportedException | javax.transaction.RollbackException ex) {
-
-            fm = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Fehlschlag!",
-                    ex.toString());
-            context.addMessage(null, fm);
-            return "register.xhtml";
-        }
-
-        if (!registered) {
+            if (not_registered) {
+                // IDs werden automatisch vergeben
+                Account a = new Account(0, this.uname, this.password, "USER");
+                Customer c = new Customer(0, this.fname, this.lname, this.greeting, this.email, this.cphone, this.birthdate);
+                LOGGER.log(Level.INFO, "cid: {0}", c.getCid());
+                Adress add = new Adress(c.getCid(), this.street, this.city, this.fedState, this.citycode, this.country, new Date());
+                Collection<Adress> add_coll = new ArrayList<>();
+                add_coll.add(add);
+                not_registered = this.dbean.persistCustomer(c, a, add_coll);
+                c.setAdressCollection(add_coll);
+            }
+        } catch (ConstraintViolationException ex) {
+            // 
             fm = new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlschlag",
-                    ": Fehlschalg bei der Registrierung.");
+                    ": Eine der Eingaben entsprach nicht den Eingabebeschränkungen.");
+            context.addMessage(null, fm);
+            return null;
+        }
+
+        if (!not_registered) {
+            fm = new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlschlag",
+                    ": Fehlschlag bei der Registrierung.");
             context.addMessage(null, fm);
             return null;
         } else if (!password.matches(PWDREGEX)) { // Kontrolle auf zulaessiges Passwort
@@ -227,10 +263,6 @@ public class RegisterBean implements Serializable {
      * @param email new value of email
      */
     public void setEmail(String email) {
-        if (email == null)
-        {
-            this.email = "null@null.com"; 
-        }
         this.email = email;
     }
 
@@ -273,21 +305,21 @@ public class RegisterBean implements Serializable {
     }
 
     /**
-     * Get the value of registered
+     * Get the value of not_registered
      *
-     * @return the value of registered
+     * @return the value of not_registered
      */
     public boolean isRegistered() {
-        return registered;
+        return not_registered;
     }
 
     /**
-     * Set the value of registered
+     * Set the value of not_registered
      *
-     * @param registered new value of registered
+     * @param registered new value of not_registered
      */
     public void setRegistered(boolean registered) {
-        this.registered = registered;
+        this.not_registered = registered;
     }
 
     /**
@@ -330,10 +362,6 @@ public class RegisterBean implements Serializable {
      * @param cphone
      */
     public void setCphone(String cphone) {
-        if (cphone == null)
-        {
-            this.cphone = "000000";
-        }
         this.cphone = cphone;
     }
 
@@ -346,12 +374,120 @@ public class RegisterBean implements Serializable {
      * @param birthdate
      */
     public void setBirthdate(Date birthdate) {
-        if (birthdate == null)
-        {
-            // default birthday
-            this.birthdate = new Date();
-        }
         this.birthdate = birthdate;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCitycode() {
+        return citycode;
+    }
+
+    public void setCitycode(String citycode) {
+        this.citycode = citycode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getFedState() {
+        return fedState;
+    }
+
+    public void setFedState(String fedState) {
+        this.fedState = fedState;
+    }
+
+    public Map<String, String> getSupportedCountries() {
+        return supportedCountries;
+    }
+
+    public Map<String, String> getSupportedFedStates() {
+        return supportedFedStates;
+    }
+
+    /**
+     * initialize hashmaps for selectOne with values for greeting, country and
+     * fedstate
+     *
+     */
+    public void init_maps() {
+
+        // init Greetings
+        greetings.put("Hr.", "Hr.");
+        greetings.put("Fr.", "Fr.");
+        setGreeting(greetings.get("Fr."));
+
+        // init possible countries
+        supportedCountries.put("DE", "DE");
+        supportedCountries.put("DK", "DK");
+        supportedCountries.put("NL", "NL");
+        supportedCountries.put("AU", "AU");
+        supportedCountries.put("CH", "CH");
+        setCountry(supportedCountries.get("DE"));
+
+        // init possible regions
+        supportedFedStates.put("nrw", "nrw");
+        supportedFedStates.put("ns", "ns");
+        supportedFedStates.put("he", "he");
+        supportedFedStates.put("by", "by");
+        supportedFedStates.put("bw", "bw");
+        supportedFedStates.put("rp", "rp");
+        supportedFedStates.put("sh", "sh");
+        supportedFedStates.put("sa", "sa");
+        supportedFedStates.put("th", "th");
+        supportedFedStates.put("br", "br");
+        supportedFedStates.put("hb", "hb");
+        supportedFedStates.put("sl", "sl");
+        supportedFedStates.put("mvp", "mvp");
+        supportedFedStates.put("bin", "bin");
+        setFedState(supportedFedStates.get("nrw"));
+
+    }
+
+    /**
+     * if any attribute that is optional is left empty, it will be filled with a
+     * default value that fits the database requirements
+     */
+    public void setDefaultForEmptyAttributes() {
+        if (this.email.isEmpty()) {
+            this.email = DEFAULTEMAIL;
+        }
+
+        if (this.cphone.isEmpty()) {
+            this.cphone = DEFAULTCPHONE;
+        }
+
+        if (this.street.isEmpty()) {
+            this.street = DEFAULTSTREET;
+        }
+
+        if (this.city.isEmpty()) {
+            this.city = DEFAULTCITY;
+        }
+
+        if (this.citycode.isEmpty()) {
+            this.citycode = DEFAULTCITYCODE;
+        }
     }
 
 }

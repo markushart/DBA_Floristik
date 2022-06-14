@@ -28,16 +28,14 @@
             <h2>Einkaufswagen</h2>
             <h:form id="cartForm">
                 <h3>Produkte</h3>
-                <p:dataTable id="productTable" value="#{shoppingCartBean.products}" var="product" rowIndexVar="rowIdx">
-
-                 
+                <p:dataTable id="productTable" value="#{shoppingCartBean.productListItems}" var="pi" rowIndexVar="rowIdx">
 
                     <p:column headerText="Produktbezeichnung">
-                        <h:outputLabel value="#{product.prname}"/>
+                        <h:outputLabel value="#{pi.product.prname}"/>
                     </p:column>
 
                     <p:column headerText="Menge">
-                        <p:spinner value="#{product.pramount}" 
+                        <p:spinner value="#{pi.orderAmount}" 
                                    stepFactor="1" min="1">
                             <p:ajax 
                                     update="itemWholePrice"
@@ -49,13 +47,13 @@
                     </p:column>
 
                     <p:column headerText="Stückpreis">
-                        <h:outputLabel value="#{product.ppricenetto}" 
+                        <h:outputLabel value="#{pi.product.ppricenetto}" 
                                        converter="#{euroConverter}"/>
                     </p:column>
 
                     <p:column headerText="Gesamtpreis">
                         <h:outputLabel id="itemWholePrice" 
-                                       value="#{shoppingCartBean.wholePrice(product.pramount,product.ppricenetto)}"
+                                       value="#{shoppingCartBean.wholePrice(pi.orderAmount, pi.product.ppricenetto)}"
                                        converter="#{euroConverter}"/>
                     </p:column>
 
@@ -68,16 +66,12 @@
                 <h3>Services</h3>
                 <p:dataTable id="serviceTable" value="#{shoppingCartBean.services}" var="service" rowIndexVar="rowIdx">
 
-                    
-
                     <p:column headerText="Servicebezeichnung">
                         <h:outputLabel value="#{service.servname}"/>
                     </p:column>
 
                     <p:column headerText="Datum">
-
-                        <p:datePicker value="#{service.serviceDate}">
-
+                        <p:datePicker>
                         </p:datePicker>
                     </p:column>
 

@@ -16,6 +16,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
+import model.ProductListItem;
 import util.DataBean;
 
 /**
@@ -32,8 +33,10 @@ public class ProductsBean implements Serializable {
     private static final Logger LOGGER
             = Logger.getLogger(ProductsBean.class.getName());
 
-    private ArrayList<Product> products; // hier vielleicht einfach eine List mit Orderdetailproduct, diese kann dann auch Menge und Gesamtpreis abbilden
-
+    // private ArrayList<Product> products; // hier vielleicht einfach eine List mit Orderdetailproduct, diese kann dann auch Menge und Gesamtpreis abbilden
+    
+    private ArrayList<ProductListItem> productListItems;
+    
     @Inject
     private DataBean db;
 
@@ -53,9 +56,14 @@ public class ProductsBean implements Serializable {
                 = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         LOGGER.log(Level.INFO, "Products: Session ID: {0}", session.getId());
 
-        db = new DataBean();
-        products = new ArrayList<>();
-        this.products = db.getProductList();
+        productListItems = new ArrayList<>();
+        ArrayList<Product> products;
+        products = db.getProductList();
+        
+        for(Product p : products){
+            ProductListItem pi = new ProductListItem(p, 1);
+            productListItems.add(pi);
+        }
     }
 
     /**
@@ -63,7 +71,7 @@ public class ProductsBean implements Serializable {
      * @param ev
      */
     public void spinnerAjaxListener(AjaxBehaviorEvent ev) {
-        for (Product p : products) {
+        for (ProductListItem p : productListItems) {
             //p.setWholePrice();
         }
     }
@@ -73,8 +81,8 @@ public class ProductsBean implements Serializable {
      *
      * @return the value of items
      */
-    public ArrayList<Product> getProducts() {
-        return products;
+    public ArrayList<ProductListItem> getProductListItems() {
+        return productListItems;
     }
 
     /**
@@ -82,8 +90,8 @@ public class ProductsBean implements Serializable {
      *
      * @param products new value of products
      */
-    public void setProducts(ArrayList<Product> products) {
-        this.products = products;
+    public void setProducts(ArrayList<ProductListItem> products) {
+        this.productListItems = products;
     }
 
     public ShoppingCartBean getCartBean() {

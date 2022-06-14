@@ -95,6 +95,40 @@
                                 warnStyle="color:yellow" 
                                 errorStyle="color:red"/>
 
+                            <h:outputText value="Strasse"/>
+                            <p:inputText id="street" 
+                                         value="#{registerBean.street}"
+                                         label="street"
+                                         required="false">
+                            </p:inputText>
+                            <div></div>
+
+                            <h:outputText value="Stadt"/>
+                            <p:inputText id="city" 
+                                         value="#{registerBean.city}"
+                                         label="city"
+                                         required="false">
+                            </p:inputText>
+                            <div></div>
+
+                            <h:outputText value="Postleitzahl"/>
+                            <p:inputText id="citycode" 
+                                         value="#{registerBean.citycode}"
+                                         label="citycode"
+                                         required="false">
+                            </p:inputText>
+                            <div></div>
+
+                            <h:outputText value="Land und Region"/>
+                            <p:selectOneMenu id="countryPicker" 
+                                             value="#{registerBean.country}">
+                                <f:selectItems value="#{registerBean.supportedCountries}"/>
+                            </p:selectOneMenu>
+                            <p:selectOneMenu id="fedstate" 
+                                             value="#{registerBean.fedState}">
+                                <f:selectItems value="#{registerBean.supportedFedStates}"/>
+                            </p:selectOneMenu>
+
                             <h:outputText value="Username*"/>
                             <p:inputText id="uname" 
                                          value="#{registerBean.uname}"
@@ -138,7 +172,7 @@
                                         showSummary="true"
                                         showDetail="true"
                                         infoStyle="color:green"
-                                        warnStyle="color:yellow"
+                                        warnStyle="color:black"
                                         errorStyle="color:red"/>
                         </h:panelGrid>
                     </p:panel>
