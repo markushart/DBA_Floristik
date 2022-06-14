@@ -10,34 +10,33 @@
         <ui:define name="content">
             <h2>Serviceübersicht</h2>
             <h:form id="serviceForm">
-                <p:toolbar rendered="#{loginBean.user.isAdmin()}">
+                <p:toolbar rendered="#{loginBean.loggedIn}">
                     <f:facet name="addNew">
 
                     </f:facet>
                 </p:toolbar>
-                <p:dataTable value="#{servicesBean.services}" var="service">
+                <p:dataTable value="#{servicesBean.serviceListItems}" var="si">
 
                     
-
-                    <p:column headerText="Produktbezeichnung">
-                        <h:outputLabel value="#{service.name}"/>
+                    <p:column headerText="Servicebezeichnung">
+                        <h:outputLabel value="#{si.service.servname}"/>
                     </p:column>
 
                     <p:column headerText="Servicedatum">
-                        <p:datePicker value="#{service.serviceDate}">
+                        <p:datePicker value="#{si.serviceDate}">
 
                         </p:datePicker>
                     </p:column>
 
                     <p:column headerText="Stückpreis">
-                        <h:outputLabel value="#{service.price}"
+                        <h:outputLabel value="#{si.service.servprice}"
                                        converter="#{euroConverter}"/>
                     </p:column>
 
                     <p:column>
                         <h:commandButton value="Zu Einkaufswagen hinzu" 
                                          action="shoppingcart.xhtml">
-                            <f:setPropertyActionListener value="#{service}" 
+                            <f:setPropertyActionListener value="#{si}" 
                                                          target="#{shoppingCartBean.lastAddedService}"/>
                         </h:commandButton>
                     </p:column>

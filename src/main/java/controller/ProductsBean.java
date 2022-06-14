@@ -33,7 +33,6 @@ public class ProductsBean implements Serializable {
     private static final Logger LOGGER
             = Logger.getLogger(ProductsBean.class.getName());
 
-    // private ArrayList<Product> products; // hier vielleicht einfach eine List mit Orderdetailproduct, diese kann dann auch Menge und Gesamtpreis abbilden
     
     private ArrayList<ProductListItem> productListItems;
     

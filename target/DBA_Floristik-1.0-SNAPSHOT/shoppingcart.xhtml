@@ -64,19 +64,19 @@
                 </p:dataTable>
 
                 <h3>Services</h3>
-                <p:dataTable id="serviceTable" value="#{shoppingCartBean.services}" var="service" rowIndexVar="rowIdx">
+                <p:dataTable id="serviceTable" value="#{shoppingCartBean.serviceListItems}" var="si" rowIndexVar="rowIdx">
 
                     <p:column headerText="Servicebezeichnung">
-                        <h:outputLabel value="#{service.servname}"/>
+                        <h:outputLabel value="#{si.service.servname}"/>
                     </p:column>
 
                     <p:column headerText="Datum">
-                        <p:datePicker>
+                        <p:datePicker value="#{si.serviceDate}">
                         </p:datePicker>
                     </p:column>
 
                     <p:column headerText="Preis">
-                        <h:outputLabel value="#{service.servprice}" 
+                        <h:outputLabel value="#{si.service.servprice}" 
                                        converter="#{euroConverter}"/>
                     </p:column>
 

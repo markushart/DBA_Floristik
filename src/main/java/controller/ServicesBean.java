@@ -14,6 +14,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
+import model.ServiceListItem;
 import util.DataBean;
 
 /**
@@ -30,7 +31,7 @@ public class ServicesBean {
     private static final Logger LOGGER
             = Logger.getLogger(ProductsBean.class.getName());
 
-    private ArrayList<Service> services;
+    private ArrayList<ServiceListItem> serviceListItems;
 
     @Inject
     private DataBean db;
@@ -48,9 +49,15 @@ public class ServicesBean {
                 = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         LOGGER.log(Level.INFO, "Products: Session ID: {0}", session.getId());
 
-        db = new DataBean();
-        services = new ArrayList<>();
-        this.services = db.getServiceList();
+        serviceListItems = new ArrayList<>();
+        
+        ArrayList<Service> services = db.getServiceList();
+        
+        // move list of services to serviceilistitem list
+        for (Service s : services){
+            ServiceListItem item = new ServiceListItem(s);
+            serviceListItems.add(item);
+        }
     }
 
     /**
@@ -72,21 +79,21 @@ public class ServicesBean {
     }
 
     /**
-     * Get the value of services
+     * Get the value of serviceListItems
      *
-     * @return the value of services
+     * @return the value of serviceListItems
      */
-    public ArrayList<Service> getServices() {
-        return services;
+    public ArrayList<ServiceListItem> getServiceListItems() {
+        return serviceListItems;
     }
 
     /**
-     * Set the value of services
+     * Set the value of serviceListItems
      *
-     * @param services new value of services
+     * @param services new value of serviceListItems
      */
-    public void setServices(ArrayList<Service> services) {
-        this.services = services;
+    public void setServiceListItems(ArrayList<ServiceListItem> services) {
+        this.serviceListItems = services;
     }
 
 }

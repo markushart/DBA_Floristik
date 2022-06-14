@@ -3,7 +3,6 @@ com\dba_floristik\Employeeservice.class
 controller\LogoutBean.class
 com\dba_floristik\JavaEE8Resource.class
 controller\UserBean.class
-model\Product_old.class
 com\dba_floristik\Orderdetailservice.class
 converter\PasswordConverter.class
 com\dba_floristik\Account.class
@@ -12,11 +11,9 @@ controller\ProductsBean.class
 com\dba_floristik\Product.class
 model\UserRole.class
 com\dba_floristik\Order1.class
-model\Buyable.class
 model\User.class
 converter\EuroConverter.class
 controller\LoginBean.class
-model\Service_old.class
 com\dba_floristik\Supplier.class
 controller\ServicesBean.class
 com\dba_floristik\Invoice.class
@@ -25,7 +22,7 @@ util\DataBean.class
 com\dba_floristik\Customer.class
 com\dba_floristik\Service.class
 model\ProductListItem.class
-util\DatabaseTestBean.class
 com\dba_floristik\Orderdetailproduct.class
+model\ServiceListItem.class
 com\dba_floristik\Adress.class
 com\dba_floristik\Employee.class
