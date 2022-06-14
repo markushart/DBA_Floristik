@@ -104,6 +104,10 @@ public class ShoppingCartBean implements Serializable {
                     fm = new FacesMessage(FacesMessage.SEVERITY_WARN,
                             "Unzulässiger Liefertag", "Bitte innerhalb der nächsten " + MAXORDERPERIOD + " Tage bestellen.");
                 } else {
+                    
+                    // persist the users order to the database
+                    db.persistShoppingCart(this.productListItems, this.serviceListItems);
+                    
                     fm = new FacesMessage(FacesMessage.SEVERITY_INFO,
                             "Bestellung abgeschlossen.", "Vielen Dank für ihre Bestellung.");
                     clearCart();
