@@ -4,6 +4,7 @@
  */
 package controller;
 
+import com.dba_floristik.Account;
 import com.dba_floristik.Customer;
 import java.io.Serializable;
 import java.util.List;
@@ -33,7 +34,7 @@ public class LoginBean implements Serializable {
     private String password;
     private List<Customer> Customers;
     private FacesContext context;
-    private Customer customer;
+    private Account currAccount;
     @Inject
     private DataBean db;
 
@@ -55,21 +56,25 @@ public class LoginBean implements Serializable {
         LOGGER.log(Level.INFO, "Login: Session ID: {0}", session.getId());
 
         Customers = db.getCustomerObjectList();
-        customer = new Customer();
     }
 
     public void login() {
         FacesMessage fm;
         // LOGGER.log(Level.INFO, "Eingabe uname: {0} passwort: {1}", new Object[]{this.uname, this.password});
-        this.Customers = db.getCustomerObjectList();
 
-        for (Customer c : Customers) {
-            LOGGER.log(Level.INFO, "Kunde: {0}passwort: {1}", new Object[]{c.getFkAccid().getAccname(), c.getFkAccid().getAccpwd()});
+        Account acc = db.findAccountForAccountName(uname);
+        LOGGER.log(Level.INFO, "search for name {0} returned account with name {1} and id {2}!",
+                new Object[]{this.uname, acc.getAccname(), acc.getAccid()});
 
-            if (c.getFkAccid().getAccname().equals(this.uname)) {
-                loggedIn = c.getFkAccid().getAccpwd().equals(this.password);
-                this.customer = c;
-                break;
+        // accountname or accid is null if uname was not found
+        if (acc.getAccname() == null || acc.getAccid() == null) {
+            LOGGER.log(Level.WARNING, "Account was not found!");
+        } else {
+            LOGGER.log(Level.INFO, "Account was found!");
+
+            if (acc.getAccpwd().equals(this.password)) {
+                this.currAccount = acc;
+                loggedIn = true;
             }
         }
 
@@ -176,16 +181,16 @@ public class LoginBean implements Serializable {
      *
      * @return
      */
-    public Customer getCustomer() {
-        return customer;
+    public Account getCurrAccount() {
+        return currAccount;
     }
 
     /**
      *
-     * @param customer
+     * @param currAccount
      */
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setCurrAccount(Account currAccount) {
+        this.currAccount = currAccount;
     }
 
     /**
