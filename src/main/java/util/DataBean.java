@@ -412,7 +412,10 @@ public class DataBean implements Serializable {
         for (ServiceListItem si : slist) {
             Service s = si.getService();
             // new orderdetail for service
-            Orderdetailservice ods = new Orderdetailservice(0, si.getServiceDate());
+            /* ODSAMOUNT is currently always set to 0 because website does not provide possibility
+            *  to change it
+            */
+            Orderdetailservice ods = new Orderdetailservice(0, (short) 1, si.getServiceDate());
             // 
             ods.setFKServID(s);
             ods.setFkOid(o);

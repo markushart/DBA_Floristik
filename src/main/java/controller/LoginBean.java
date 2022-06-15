@@ -70,7 +70,7 @@ public class LoginBean implements Serializable {
 
         // accountname or accid is null if uname was not found
         if (acc.getAccname() == null || acc.getAccid() == null) {
-            LOGGER.log(Level.WARNING, "Account was not found!");
+            LOGGER.log(Level.WARNING, "Account not found!");
         } else {
             LOGGER.log(Level.INFO, "Account was found!");
 

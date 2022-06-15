@@ -41,6 +41,10 @@ public class Orderdetailservice implements Serializable {
     private Integer odsid;
     @Basic(optional = false)
     @NotNull
+    @Column(name = "ODSAMOUNT")
+    private short odsamount;
+    @Basic(optional = false)
+    @NotNull
     @Column(name = "ODSDATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date odsdate;
@@ -58,8 +62,9 @@ public class Orderdetailservice implements Serializable {
         this.odsid = odsid;
     }
 
-    public Orderdetailservice(Integer odsid, Date odsdate) {
+    public Orderdetailservice(Integer odsid, short odsamount, Date odsdate) {
         this.odsid = odsid;
+        this.odsamount = odsamount;
         this.odsdate = odsdate;
     }
 
@@ -69,6 +74,14 @@ public class Orderdetailservice implements Serializable {
 
     public void setOdsid(Integer odsid) {
         this.odsid = odsid;
+    }
+
+    public short getOdsamount() {
+        return odsamount;
+    }
+
+    public void setOdsamount(short odsamount) {
+        this.odsamount = odsamount;
     }
 
     public Date getOdsdate() {
@@ -117,7 +130,7 @@ public class Orderdetailservice implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.Orderdetailproduct[ odpid=" + odsid + ", odsdate=" + odsdate + ", fKServID=" + fKServID + ", fkOid=" + fkOid + "]";
+        return "com.dba_floristik.Orderdetailproduct[ odpid=" + odsid + ", odpamount=" + odsamount + ", odsdate=" + odsdate + ", fKServID=" + fKServID + ", fkOid=" + fkOid + "]";
 
     }
 

@@ -103,7 +103,8 @@ public class ShoppingCartBean implements Serializable {
                     fm = new FacesMessage(FacesMessage.SEVERITY_WARN,
                             "Unzulässiger Liefertag", "Bitte innerhalb der nächsten " + MAXORDERPERIOD + " Tage bestellen.");
                 } else {
-
+                    
+                    // get Customer for account
                     ArrayList<Customer> c = new ArrayList<>(this.lbean.getCurrAccount().getCustomerCollection());
                     if (c.isEmpty()) {
                         LOGGER.log(Level.WARNING, "customer collection of account {0} was empty!",
