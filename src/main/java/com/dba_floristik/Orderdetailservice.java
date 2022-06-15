@@ -117,7 +117,8 @@ public class Orderdetailservice implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.Orderdetailservice[ odsid=" + odsid + " ]";
+        return "com.dba_floristik.Orderdetailproduct[ odpid=" + odsid + ", odsdate=" + odsdate + ", fKServID=" + fKServID + ", fkOid=" + fkOid + "]";
+
     }
-    
+
 }

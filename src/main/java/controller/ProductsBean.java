@@ -56,22 +56,10 @@ public class ProductsBean implements Serializable {
         LOGGER.log(Level.INFO, "Products: Session ID: {0}", session.getId());
 
         productListItems = new ArrayList<>();
-        ArrayList<Product> products;
-        products = db.getProductList();
         
-        for(Product p : products){
+        for(Product p : db.getProductObjectList()){
             ProductListItem pi = new ProductListItem(p, 1);
             productListItems.add(pi);
-        }
-    }
-
-    /**
-     *
-     * @param ev
-     */
-    public void spinnerAjaxListener(AjaxBehaviorEvent ev) {
-        for (ProductListItem p : productListItems) {
-            //p.setWholePrice();
         }
     }
 

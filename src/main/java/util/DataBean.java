@@ -7,6 +7,8 @@ package util;
 import com.dba_floristik.Account;
 import com.dba_floristik.Adress;
 import com.dba_floristik.Customer;
+import com.dba_floristik.Invoice;
+import com.dba_floristik.Order1;
 import com.dba_floristik.Orderdetailproduct;
 import com.dba_floristik.Orderdetailservice;
 import com.dba_floristik.Productcategory;
@@ -65,8 +67,6 @@ public class DataBean implements Serializable {
     private List<Customer> customerObjectList;
     private List<Product> productObjectList;
     private List<Service> serviceObjectList;
-
-    private ArrayList<Product> productList;
 
     private ArrayList<Service> serviceList;
 
@@ -167,13 +167,8 @@ public class DataBean implements Serializable {
             this.productObjectList = query.getResultList();
             this.size = this.getServiceObjectList().size();
             LOGGER.log(Level.INFO, "Es wurden {0} Produkt(e) in der DB gefunden.", size);
-            productList = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
-                productList.add(new Product(
-                        productObjectList.get(i).getPrid(),
-                        productObjectList.get(i).getPrname(),
-                        productObjectList.get(i).getPramount(),
-                        productObjectList.get(i).getPpricenetto()));
+            for (Product p : productObjectList) {
+                LOGGER.log(Level.INFO, p.toString());
             }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -329,6 +324,7 @@ public class DataBean implements Serializable {
      *
      * @param newCustomer
      * @param newAccount
+     * @param newAdressCollection
      * @return
      */
     public boolean persistCustomer(Customer newCustomer, Account newAccount, Collection<Adress> newAdressCollection) throws ConstraintViolationException {
@@ -355,40 +351,92 @@ public class DataBean implements Serializable {
     }
 
     /**
-     * 
+     *
      * @param plist
      * @param slist
-     * @return 
+     * @param c
+     * @return
      */
-    public boolean persistShoppingCart (ArrayList<ProductListItem> plist, ArrayList<ServiceListItem> slist){
-        
+    public boolean persistShoppingCart(Customer c, ArrayList<ProductListItem> plist, ArrayList<ServiceListItem> slist) {
+
+        /**
+         * *****************************************************
+         * achtung Sascha, ODPDATE könnte bei dir noch ODPATE heißen! ich habe
+         * die Datenbank geändert! achtung Sascha, ODSDATE könnte bei dir noch
+         * ODSATE heißen! ich habe die Datenbank geändert!
+         *
+         *
+         *
+         * *****************************************************
+         */
         EntityManager em = emf.createEntityManager();
         em.joinTransaction();
-        
-        for(ProductListItem pi : plist){
+
+        // new order for order1
+        Order1 o = new Order1(0, new Date());
+        o.setFkCid(c);
+        em.persist(o);
+
+        // new invoice
+        Invoice i = new Invoice(0);
+        i.setFkOid(o);
+        em.persist(i);
+
+        LOGGER.log(Level.INFO, "created new order {0}", o.getOid());
+
+        for (ProductListItem pi : plist) {
             Product p = pi.getProduct();
-            // new orderdetail for product
-            Orderdetailproduct op = new Orderdetailproduct(0, (short) pi.getOrderAmount(), new Date());
-            op.setFkPrid(p);
-            em.persist(op);
-            p.getOrderdetailproductCollection().add(op);
+            LOGGER.log(Level.INFO, "persisting product: {0}", p.toString());
+            // new orderdetail for product, order date is now
+            Orderdetailproduct odp = new Orderdetailproduct(0, (short) pi.getOrderAmount(), new Date());
+            // set product and order id
+            odp.setFkPrid(p);
+            odp.setFkOid(o);
+            try {
+                em.persist(odp);
+            } catch (ConstraintViolationException exp) {
+                LOGGER.log(Level.SEVERE, "persisting did not succeed, orderdetailproduct was: {0}", odp.toString());
+                // somehow rollback on error?
+                return false;
+            }
+
+            Collection<Orderdetailproduct> opc = p.getOrderdetailproductCollection();
+            // make sure collection is not null
+            if (opc == null) {
+                opc = new ArrayList<>();
+            }
+            opc.add(odp);
             em.persist(p);
         }
-        
-        for(ServiceListItem si : slist){
+
+        for (ServiceListItem si : slist) {
             Service s = si.getService();
             // new orderdetail for service
-            Orderdetailservice os = new Orderdetailservice(0, si.getServiceDate());
-            os.setFKServID(s);
-            em.persist(os);
-            s.getOrderdetailserviceCollection().add(os);
+            Orderdetailservice ods = new Orderdetailservice(0, si.getServiceDate());
+            // 
+            ods.setFKServID(s);
+            ods.setFkOid(o);
+            try {
+                em.persist(ods);
+            } catch (ConstraintViolationException exs) {
+                LOGGER.log(Level.SEVERE, "persisting did not succeed, orderdetailservice was: {0}", ods.toString());
+                // somehow rollback on error?
+                return false;
+            }
+
+            Collection<Orderdetailservice> osc = s.getOrderdetailserviceCollection();
+            // make sure collection is not null
+            if (osc == null) {
+                osc = new ArrayList<>();
+            }
+            osc.add(ods);
             em.persist(s);
         }
-        
+
+        em.close();
+
         return true;
     }
-
-    
 
     public void setCustomerObjectList(List<Customer> customerObjectList) {
         this.customerObjectList = customerObjectList;
@@ -462,24 +510,6 @@ public class DataBean implements Serializable {
      */
     public void setUserList(ArrayList<User> userList) {
         this.userList = userList;
-    }
-
-    /**
-     * Get the value of productList
-     *
-     * @return the value of productList
-     */
-    public ArrayList<Product> getProductList() {
-        return productList;
-    }
-
-    /**
-     * Set the value of productList
-     *
-     * @param productList new value of productList
-     */
-    public void setProductList(ArrayList<Product> productList) {
-        this.productList = productList;
     }
 
     /**

@@ -4,8 +4,7 @@
  */
 package controller;
 
-import com.dba_floristik.Product;
-import com.dba_floristik.Service;
+import com.dba_floristik.Customer;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -104,13 +103,26 @@ public class ShoppingCartBean implements Serializable {
                     fm = new FacesMessage(FacesMessage.SEVERITY_WARN,
                             "Unzulässiger Liefertag", "Bitte innerhalb der nächsten " + MAXORDERPERIOD + " Tage bestellen.");
                 } else {
-                    
+
+                    ArrayList<Customer> c = new ArrayList<>(this.lbean.getCurrAccount().getCustomerCollection());
+                    if (c.isEmpty()) {
+                        LOGGER.log(Level.WARNING, "customer collection of account {0} was empty!",
+                                lbean.getCurrAccount().getAccname());
+                        return;
+                    }
+
                     // persist the users order to the database
-                    db.persistShoppingCart(this.productListItems, this.serviceListItems);
-                    
-                    fm = new FacesMessage(FacesMessage.SEVERITY_INFO,
-                            "Bestellung abgeschlossen.", "Vielen Dank für ihre Bestellung.");
-                    clearCart();
+                    boolean ok = db.persistShoppingCart(c.get(0), this.productListItems, this.serviceListItems);
+
+                    if (ok) {
+                        fm = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                "Bestellung abgeschlossen.", "Vielen Dank für ihre Bestellung.");
+                        clearCart();
+
+                    } else {
+                        fm = new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                                "Bestellung abgenrochen.", "Etwas ist schiefgelaufen!");
+                    }
                 }
             } else {
                 fm = new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -274,12 +286,12 @@ public class ShoppingCartBean implements Serializable {
 
     /**
      * return price of whole shopping cart
-     * 
+     *
      */
     public void setOverallPrice() {
         float sum = 0;
         for (ProductListItem p : productListItems) {
-            
+
             sum += p.getPriceForAmount();
         }
         for (ServiceListItem s : serviceListItems) {

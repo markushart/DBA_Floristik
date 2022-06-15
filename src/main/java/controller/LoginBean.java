@@ -35,10 +35,12 @@ public class LoginBean implements Serializable {
     private List<Customer> Customers;
     private FacesContext context;
     private Account currAccount;
+    
     @Inject
     private DataBean db;
 
     private boolean loggedIn = false;
+    // private Customer customer;
 
     /**
      * Creates a new instance of LoginBean
