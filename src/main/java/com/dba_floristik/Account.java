@@ -13,9 +13,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -27,11 +29,11 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "account")
 @NamedQueries({
-    @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a"),
-    @NamedQuery(name = "Account.findByAccid", query = "SELECT a FROM Account a WHERE a.accid = :accid"),
-    @NamedQuery(name = "Account.findByAccname", query = "SELECT a FROM Account a WHERE a.accname = :accname"),
-    @NamedQuery(name = "Account.findByAccpwd", query = "SELECT a FROM Account a WHERE a.accpwd = :accpwd"),
-    @NamedQuery(name = "Account.findByAcctype", query = "SELECT a FROM Account a WHERE a.acctype = :acctype")})
+    @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a LEFT JOIN FETCH a.customerCollection"),
+    @NamedQuery(name = "Account.findByAccid", query = "SELECT a FROM Account a LEFT JOIN FETCH a.customerCollection WHERE a.accid = :accid"),
+    @NamedQuery(name = "Account.findByAccname", query = "SELECT a FROM Account a LEFT JOIN FETCH a.customerCollection WHERE a.accname = :accname"),
+    @NamedQuery(name = "Account.findByAccpwd", query = "SELECT a FROM Account a LEFT JOIN FETCH a.customerCollection WHERE a.accpwd = :accpwd"),
+    @NamedQuery(name = "Account.findByAcctype", query = "SELECT a FROM Account a LEFT JOIN FETCH a.customerCollection WHERE a.acctype = :acctype")})
 public class Account implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -55,6 +57,14 @@ public class Account implements Serializable {
     @Size(min = 1, max = 6)
     @Column(name = "ACCTYPE")
     private String acctype;
+    
+    /*
+    @JoinColumn(name="FK_CID", referencedColumnName="CID")
+    @OneToOne(optional = false)
+    private Customer 
+    */
+    
+    // make this onetoone
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkAccid")
     private Collection<Customer> customerCollection;
 

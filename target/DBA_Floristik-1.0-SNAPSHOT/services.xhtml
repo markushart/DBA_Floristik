@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html  xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:h="http://xmlns.jcp.org/jsf/html"
+       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:composition template="template/master.xhtml">
+        <ui:define name="content">
+            <h2>Serviceübersicht</h2>
+            <h:form id="serviceForm">
+                <p:toolbar rendered="#{loginBean.loggedIn}">
+                    <f:facet name="addNew">
+
+                    </f:facet>
+                </p:toolbar>
+                <p:dataTable value="#{servicesBean.serviceListItems}" var="si">
+
+                    
+                    <p:column headerText="Servicebezeichnung">
+                        <h:outputLabel value="#{si.service.servname}"/>
+                    </p:column>
+
+                    <p:column headerText="Servicedatum">
+                        <p:datePicker value="#{si.serviceDate}">
+
+                        </p:datePicker>
+                    </p:column>
+
+                    <p:column headerText="Stückpreis">
+                        <h:outputLabel value="#{si.service.servprice}"
+                                       converter="#{euroConverter}"/>
+                    </p:column>
+
+                    <p:column>
+                        <h:commandButton value="Zu Einkaufswagen hinzu" 
+                                         action="shoppingcart.xhtml">
+                            <f:setPropertyActionListener value="#{si}" 
+                                                         target="#{shoppingCartBean.lastAddedService}"/>
+                        </h:commandButton>
+                    </p:column>
+                </p:dataTable>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -341,6 +341,17 @@ public class DataBean implements Serializable {
                 add.setFkCid(newCustomer);
                 em.persist(add);
             }
+            
+            // update collections
+            /*
+            ArrayList<Customer> cc = new ArrayList<>(1);
+            cc.add(newCustomer);
+            newAccount.setCustomerCollection(cc);
+            newCustomer.setAdressCollection(newAdressCollection);
+            em.persist(newAccount);
+            em.persist(newCustomer);
+            */
+
             ok = true;
             LOGGER.info("Registrieren ok (Customer mit Account)");
         } catch (IllegalStateException | SecurityException | ConstraintViolationException ex) {
@@ -414,8 +425,8 @@ public class DataBean implements Serializable {
             // new orderdetail for service
             /* ODSAMOUNT is currently always set to 0 because website does not provide possibility
             *  to change it
-            */
-            Orderdetailservice ods = new Orderdetailservice(0, (short) 1, si.getServiceDate());
+             */
+            Orderdetailservice ods = new Orderdetailservice(0, si.getServiceDate());
             // 
             ods.setFKServID(s);
             ods.setFkOid(o);

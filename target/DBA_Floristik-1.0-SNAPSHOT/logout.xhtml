@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition template="template/master.xhtml">
+        <ui:define name="content">
+            <h:form id="logoutForm">
+                <p:panel id="logoutPanel" header="Abmelden">
+                    <h:panelGrid columns="1" width="100%">
+                        <p:commandButton id="logoutButton" 
+                                         action="#{logoutBean.logout}" 
+                                         value="Abmelden" 
+                                         update="logoutForm" 
+                                         ajax="true">
+                        </p:commandButton>
+                        <h:messages globalOnly="true" 
+                                    id="logoutMsg"
+                                    showDetail="true"/>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
