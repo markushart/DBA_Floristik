@@ -35,6 +35,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
+import javax.persistence.Query;
 import javax.persistence.RollbackException;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpSession;
@@ -341,7 +342,7 @@ public class DataBean implements Serializable {
                 add.setFkCid(newCustomer);
                 em.persist(add);
             }
-            
+
             // update collections
             /*
             ArrayList<Customer> cc = new ArrayList<>(1);
@@ -350,8 +351,7 @@ public class DataBean implements Serializable {
             newCustomer.setAdressCollection(newAdressCollection);
             em.persist(newAccount);
             em.persist(newCustomer);
-            */
-
+             */
             ok = true;
             LOGGER.info("Registrieren ok (Customer mit Account)");
         } catch (IllegalStateException | SecurityException | ConstraintViolationException ex) {
@@ -360,7 +360,7 @@ public class DataBean implements Serializable {
         }
         return ok;
     }
-
+    
     /**
      *
      * @param plist
@@ -411,13 +411,17 @@ public class DataBean implements Serializable {
                 return false;
             }
 
+            // update the database storage amount
+            p.setPramount(p.getPramount() - odp.getOdpamount());  
+            
             Collection<Orderdetailproduct> opc = p.getOrderdetailproductCollection();
             // make sure collection is not null
             if (opc == null) {
                 opc = new ArrayList<>();
             }
             opc.add(odp);
-            em.persist(p);
+            em.merge(p);
+
         }
 
         for (ServiceListItem si : slist) {
@@ -444,7 +448,7 @@ public class DataBean implements Serializable {
                 osc = new ArrayList<>();
             }
             osc.add(ods);
-            em.persist(s);
+            em.merge(s);
         }
 
         em.close();

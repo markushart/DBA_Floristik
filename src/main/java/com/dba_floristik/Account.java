@@ -62,12 +62,6 @@ public class Account implements Serializable {
     @OneToOne(optional = false, mappedBy = "fkAccid")
     private Customer fkCid;
     
-    // make this onetoone
-    /*
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkAccid")
-    private Collection<Customer> customerCollection;
-    */
-    
     public Account() {
     }
 

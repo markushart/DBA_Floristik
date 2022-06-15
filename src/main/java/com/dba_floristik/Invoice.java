@@ -42,8 +42,8 @@ public class Invoice implements Serializable {
     @Column(name = "INVDATE")
     @Temporal(TemporalType.DATE)
     private Date invdate;
-    @JoinColumn(name = "FK_OID", referencedColumnName = "OID")
     
+    @JoinColumn(name = "FK_OID", referencedColumnName = "OID")
     @OneToOne(optional = false)
     private Order1 fkOid;
 

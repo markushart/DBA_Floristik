@@ -63,14 +63,16 @@ public class Order1 implements Serializable {
     private Date ochangedate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkOid")
     private Collection<Orderdetailservice> orderdetailserviceCollection;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkOid")
-    private Collection<Invoice> invoiceCollection;
+    
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "fkOid")
+    private Invoice invoice;
+    
     @JoinColumn(name = "FK_CID", referencedColumnName = "CID")
     @ManyToOne
     private Customer fkCid;
     
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "fkOid")
-    private Orderdetailproduct fkOid;
+    private Collection<Orderdetailproduct> orderdetailproductCollection;
 
     public Order1() {
     }
@@ -132,12 +134,12 @@ public class Order1 implements Serializable {
         this.orderdetailserviceCollection = orderdetailserviceCollection;
     }
 
-    public Collection<Invoice> getInvoiceCollection() {
-        return invoiceCollection;
+    public Invoice getInvoice() {
+        return invoice;
     }
 
-    public void setInvoiceCollection(Collection<Invoice> invoiceCollection) {
-        this.invoiceCollection = invoiceCollection;
+    public void setInvoice(Invoice invoice) {
+        this.invoice = invoice;
     }
 
     public Customer getFkCid() {
@@ -148,12 +150,12 @@ public class Order1 implements Serializable {
         this.fkCid = fkCid;
     }
 
-    public Orderdetailproduct getFkOid() {
-        return fkOid;
+    public Collection<Orderdetailproduct> getOrderdetailproductCollection() {
+        return orderdetailproductCollection;
     }
 
-    public void setFkOid(Orderdetailproduct fkOid) {
-        this.fkOid = fkOid;
+    public void setOrderdetailproductCollection(Collection<Orderdetailproduct> orderdetailproductCollection) {
+        this.orderdetailproductCollection = orderdetailproductCollection;
     }
 
     @Override
