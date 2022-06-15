@@ -29,7 +29,7 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a"),
     @NamedQuery(name = "Account.findByAccid", query = "SELECT a FROM Account a WHERE a.accid = :accid"),
-    @NamedQuery(name = "Account.findByAccname", query = "SELECT a FROM Account a LEFT JOIN FETCH a.customerCollection WHERE a.accname = :accname"),
+    @NamedQuery(name = "Account.findByAccname", query = "SELECT a FROM Account a WHERE a.accname = :accname"),
     @NamedQuery(name = "Account.findByAccpwd", query = "SELECT a FROM Account a WHERE a.accpwd = :accpwd"),
     @NamedQuery(name = "Account.findByAcctype", query = "SELECT a FROM Account a WHERE a.acctype = :acctype")})
 public class Account implements Serializable {

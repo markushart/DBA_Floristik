@@ -29,7 +29,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "product")
 @NamedQueries({
-    @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p LEFT JOIN FETCH p.fkPcatid"),
+    @NamedQuery(name = "Product.findAll", query = "SELECT p FROM Product p"),
     @NamedQuery(name = "Product.findByPrid", query = "SELECT p FROM Product p WHERE p.prid = :prid"),
     @NamedQuery(name = "Product.findByPrname", query = "SELECT p FROM Product p WHERE p.prname = :prname"),
     @NamedQuery(name = "Product.findByPramount", query = "SELECT p FROM Product p WHERE p.pramount = :pramount"),
@@ -156,9 +156,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "com.dba_floristik.Product[ prid=" + prid + ", prname= "
-                + prname + ", pramount=" + pramount + ", ppricenetto= " 
-                + ppricenetto + ", fkPcatid=" + fkPcatid + ", fkSupid=" + fkSupid + "]";
+        return "com.dba_floristik.Product[ prid=" + prid + " ]";
     }
     
 }
