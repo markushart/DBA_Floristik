@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -29,11 +30,11 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "account")
 @NamedQueries({
-    @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a LEFT JOIN FETCH a.customerCollection"),
-    @NamedQuery(name = "Account.findByAccid", query = "SELECT a FROM Account a LEFT JOIN FETCH a.customerCollection WHERE a.accid = :accid"),
-    @NamedQuery(name = "Account.findByAccname", query = "SELECT a FROM Account a LEFT JOIN FETCH a.customerCollection WHERE a.accname = :accname"),
-    @NamedQuery(name = "Account.findByAccpwd", query = "SELECT a FROM Account a LEFT JOIN FETCH a.customerCollection WHERE a.accpwd = :accpwd"),
-    @NamedQuery(name = "Account.findByAcctype", query = "SELECT a FROM Account a LEFT JOIN FETCH a.customerCollection WHERE a.acctype = :acctype")})
+    @NamedQuery(name = "Account.findAll", query = "SELECT a FROM Account a LEFT JOIN FETCH a.fkCid"),
+    @NamedQuery(name = "Account.findByAccid", query = "SELECT a FROM Account a LEFT JOIN FETCH a.fkCid WHERE a.accid = :accid"),
+    @NamedQuery(name = "Account.findByAccname", query = "SELECT a FROM Account a LEFT JOIN FETCH a.fkCid WHERE a.accname = :accname"),
+    @NamedQuery(name = "Account.findByAccpwd", query = "SELECT a FROM Account a LEFT JOIN FETCH a.fkCid WHERE a.accpwd = :accpwd"),
+    @NamedQuery(name = "Account.findByAcctype", query = "SELECT a FROM Account a LEFT JOIN FETCH a.fkCid WHERE a.acctype = :acctype")})
 public class Account implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -58,16 +59,15 @@ public class Account implements Serializable {
     @Column(name = "ACCTYPE")
     private String acctype;
     
-    /*
-    @JoinColumn(name="FK_CID", referencedColumnName="CID")
-    @OneToOne(optional = false)
-    private Customer 
-    */
+    @OneToOne(optional = false, mappedBy = "fkAccid")
+    private Customer fkCid;
     
     // make this onetoone
+    /*
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkAccid")
     private Collection<Customer> customerCollection;
-
+    */
+    
     public Account() {
     }
 
@@ -114,6 +114,7 @@ public class Account implements Serializable {
         this.acctype = acctype;
     }
 
+    /*
     public Collection<Customer> getCustomerCollection() {
         return customerCollection;
     }
@@ -121,7 +122,18 @@ public class Account implements Serializable {
     public void setCustomerCollection(Collection<Customer> customerCollection) {
         this.customerCollection = customerCollection;
     }
+    */
 
+    public Customer getFkCid() {
+        return fkCid;
+    }
+
+    public void setFkCid(Customer fkCid) {
+        this.fkCid = fkCid;
+    }
+
+    
+    
     @Override
     public int hashCode() {
         int hash = 0;

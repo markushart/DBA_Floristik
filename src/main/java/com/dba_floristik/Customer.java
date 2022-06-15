@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -82,10 +83,16 @@ public class Customer implements Serializable {
     private Collection<Adress> adressCollection;
     @OneToMany(mappedBy = "fkCid")
     private Collection<Order1> order1Collection;
+
+    @JoinColumn(name = "FK_ACCID", referencedColumnName = "ACCID")
+    @OneToOne(optional = false)
+    private Account fkAccid;
+
+    /*
     @JoinColumn(name = "FK_ACCID", referencedColumnName = "ACCID")
     @ManyToOne(optional = false)
     private Account fkAccid;
-
+     */
     public Customer() {
     }
 
@@ -207,5 +214,5 @@ public class Customer implements Serializable {
     public String toString() {
         return "com.dba_floristik.Customer[ cid=" + cid + " ]";
     }
-    
+
 }

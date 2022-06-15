@@ -18,6 +18,7 @@ com\dba_floristik\Supplier.class
 controller\ServicesBean.class
 com\dba_floristik\Invoice.class
 controller\RegisterBean.class
+util\DataBean.class
 com\dba_floristik\Customer.class
 com\dba_floristik\Service.class
 model\ProductListItem.class

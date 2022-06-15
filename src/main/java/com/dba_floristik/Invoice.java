@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -42,7 +43,8 @@ public class Invoice implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date invdate;
     @JoinColumn(name = "FK_OID", referencedColumnName = "OID")
-    @ManyToOne(optional = false)
+    
+    @OneToOne(optional = false)
     private Order1 fkOid;
 
     public Invoice() {

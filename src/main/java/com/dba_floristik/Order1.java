@@ -19,6 +19,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -67,8 +68,9 @@ public class Order1 implements Serializable {
     @JoinColumn(name = "FK_CID", referencedColumnName = "CID")
     @ManyToOne
     private Customer fkCid;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "fkOid")
-    private Collection<Orderdetailproduct> orderdetailproductCollection;
+    
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "fkOid")
+    private Orderdetailproduct fkOid;
 
     public Order1() {
     }
@@ -146,12 +148,12 @@ public class Order1 implements Serializable {
         this.fkCid = fkCid;
     }
 
-    public Collection<Orderdetailproduct> getOrderdetailproductCollection() {
-        return orderdetailproductCollection;
+    public Orderdetailproduct getFkOid() {
+        return fkOid;
     }
 
-    public void setOrderdetailproductCollection(Collection<Orderdetailproduct> orderdetailproductCollection) {
-        this.orderdetailproductCollection = orderdetailproductCollection;
+    public void setFkOid(Orderdetailproduct fkOid) {
+        this.fkOid = fkOid;
     }
 
     @Override
