@@ -103,21 +103,11 @@ public class ShoppingCartBean implements Serializable {
                     fm = new FacesMessage(FacesMessage.SEVERITY_WARN,
                             "Unzulässiger Liefertag", "Bitte innerhalb der nächsten " + MAXORDERPERIOD + " Tage bestellen.");
                 } else {
-                    
-                    // get Customer for account
-                    /*
-                    ArrayList<Customer> c = new ArrayList<>(this.lbean.getCurrAccount().getCustomerCollection());
-                    if (c.isEmpty()) {
-                        LOGGER.log(Level.WARNING, "customer collection of account {0} was empty!",
-                                lbean.getCurrAccount().getAccname());
-                        return;
-                    }
-                    */
 
                     Customer c = lbean.getCurrAccount().getFkCid();
                     
                     // persist the users order to the database
-                    boolean ok = db.persistShoppingCart(c, this.productListItems, this.serviceListItems);
+                    boolean ok = db.persistShoppingCart(c, this.productListItems, this.serviceListItems, new Date());
 
                     if (ok) {
                         fm = new FacesMessage(FacesMessage.SEVERITY_INFO,

@@ -366,9 +366,10 @@ public class DataBean implements Serializable {
      * @param plist
      * @param slist
      * @param c
+     * @param delivery
      * @return
      */
-    public boolean persistShoppingCart(Customer c, ArrayList<ProductListItem> plist, ArrayList<ServiceListItem> slist) {
+    public boolean persistShoppingCart(Customer c, ArrayList<ProductListItem> plist, ArrayList<ServiceListItem> slist, Date delivery) {
 
         /**
          * *****************************************************
@@ -386,6 +387,9 @@ public class DataBean implements Serializable {
         // new order for order1
         Order1 o = new Order1(0, new Date());
         o.setFkCid(c);
+        o.setOdelivdate(delivery);
+        o.setOstatus("Offen");
+        o.setBcomment("");
         em.persist(o);
 
         // new invoice

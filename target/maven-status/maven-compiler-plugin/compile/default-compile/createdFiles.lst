@@ -5,7 +5,6 @@ com\dba_floristik\JavaEE8Resource.class
 controller\UserBean.class
 com\dba_floristik\Orderdetailservice.class
 converter\PasswordConverter.class
-controller\ShoppingCartBean.class
 controller\ProductsBean.class
 com\dba_floristik\Product.class
 model\UserRole.class
@@ -15,7 +14,6 @@ controller\LoginBean.class
 com\dba_floristik\Supplier.class
 controller\ServicesBean.class
 controller\RegisterBean.class
-util\DataBean.class
 com\dba_floristik\Customer.class
 com\dba_floristik\Service.class
 model\ProductListItem.class
