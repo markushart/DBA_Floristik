@@ -47,7 +47,18 @@
                 <p:inputText
                     id="lKategorie"
                     value="#{productsBean.selectedProductObject.fkPcatid}"/>
+                <p:commandButton 
+                        id="BTNMERGE"  
+                        value="Aktualisieren" 
+                        action="#{productsBean.editProduct()}" 
+                        oncomplete="PF('ProductEditDialog').hide()"/>
                     
+                    <p:commandButton 
+                        id="BTNDECLINE" 
+                        value="Zurück"  
+                        immediate="true"
+                        onclick="PF('ProductEditDialog').hide()" 
+                        />     
                             
             </p:panelGrid>
                 

@@ -32,8 +32,18 @@
                 </p:toolbar>
             </h:form>
             <h:form id="productForm">
-                <p:dataTable value="#{productsBean.productListItems}" var="pi">
-
+                <p:dataTable 
+                    value="#{productsBean.productListItems}" 
+                    var="pi"
+                    rowKey="#{pi.product.prid}"
+                    selectionMode="single">
+                    
+                    <p:ajax 
+                                    event="rowSelect"  
+                                    update="productEditForm"
+                                    listener="#{productsBean.selectProduct}"
+                                    oncomplete="PF('ProductEditDialog').show()"/>
+                    
                     <p:column headerText="Produktbezeichnung">
                         <h:outputLabel value="#{pi.product.prname}"/>
                     </p:column>
@@ -68,9 +78,7 @@
                         </h:commandButton>
                     </p:column>
                 </p:dataTable>
-                <div class="table-wrapper">
-                    
-                </div>
+                
             </h:form>
             <ui:include src="editProduct.xhtml"/>
         </ui:define>

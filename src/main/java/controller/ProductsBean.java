@@ -97,6 +97,19 @@ public class ProductsBean implements Serializable {
         this.cartBean = cartBean;
     }
 
+    /**
+     * Ajax-listener="#{productBean.selectProduct}" in displayProduct
+     *
+     * @param ev
+     */
+    public void selectProduct(SelectEvent ev) {
+        ProductListItem selectedProductListItemObject =(ProductListItem) ev.getObject();
+        
+        //this.selectedProductObject = (Product) ev.getObject();
+        
+        this.selectedProductObject =selectedProductListItemObject.getProduct();
+    }
+    
     public Product getSelectedProductObject() {
         return selectedProductObject;
     }
