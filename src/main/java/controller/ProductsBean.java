@@ -8,15 +8,18 @@ import com.dba_floristik.Product;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import model.ProductListItem;
+import org.primefaces.event.SelectEvent;
 import util.DataBean;
 
 /**
@@ -41,6 +44,9 @@ public class ProductsBean implements Serializable {
 
     @Inject
     private ShoppingCartBean cartBean;
+    
+    @Inject
+    private Product selectedProductObject;
 
     /**
      * Creates a new instance of ProductsBean
@@ -61,6 +67,8 @@ public class ProductsBean implements Serializable {
             ProductListItem pi = new ProductListItem(p, 1);
             productListItems.add(pi);
         }
+        
+        selectedProductObject = new Product();
     }
 
     /**
@@ -87,6 +95,37 @@ public class ProductsBean implements Serializable {
 
     public void setCartBean(ShoppingCartBean cartBean) {
         this.cartBean = cartBean;
+    }
+
+    public Product getSelectedProductObject() {
+        return selectedProductObject;
+    }
+
+    public void setSelectedProductObject(Product selectedProductObject) {
+        this.selectedProductObject = selectedProductObject;
+    }
+    
+    public void editProduct(){
+        int index = 0;
+        for(Product p : db.getProductObjectList()){
+            if (Objects.equals(p.getPrid(), selectedProductObject.getPrid())){
+                db.getProductObjectList().set(index, this.selectedProductObject);
+                break;
+            }
+            index++;
+        }
+        index = 0;
+        /*
+        for (Product p : this.productListItems){
+            if (Objects.equals(p.getPrid(), this.selectedProductObject.getPrid())){
+              // this.filteredUserObjectList.set(index, this.selectedUserObject); 
+            }
+            index++;
+        }
+        */
+        FacesMessage fm = new FacesMessage("Editieren beendet!");
+        fm.setSeverity(FacesMessage.SEVERITY_INFO);
+        FacesContext.getCurrentInstance().addMessage(null, fm);
     }
 
 }
