@@ -134,6 +134,9 @@
                                          value="#{registerBean.uname}"
                                          label="username"
                                          required="true">
+                                <f:validateRequired/>
+                                <f:validateRegex pattern="^(?i:\w[\w-]{3,}$)"/>
+                                
                             </p:inputText>
                             <h:message
                                 id="unamemsg"
@@ -147,7 +150,8 @@
                             <h:outputText value="Passwort*"/>
                             <h:inputSecret id="regpwd"
                                            value="#{registerBean.password}"
-                                           redisplay="false">
+                                           redisplay="false"
+                                           validatorMessage="laksdjalfj">
                                 <f:validateRequired/>
                                 <f:validateRegex pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$"/>
                                 <f:ajax render="pwdmsg" 
