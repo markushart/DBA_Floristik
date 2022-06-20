@@ -13,61 +13,62 @@
             modal="true"
             resizable="false" 
             appendTo="@(body)" 
-            header="Editiere Produktinformationen" />
-            
-        <h:form id="productEditForm" prependId="false">
-            <p:panelGrid columns="2" >
-                <p:outputLabel 
-                    for="PRID"
-                    value="Produkt-ID:"/>
-                <p:outputLabel id="PRID"
-                               value="#{productsBean.selectedProductObject.prid}"/>
-                
-                <p:outputLabel for="lName" value="Benutzername: "/>
-                <p:inputText
-                    id="lName"
-                    value="#{productsBean.selectedProductObject.prname}"
-                    required="true"
-                    requiredMessage="Benutzername erforderlich!"
-                    validatorMessage="Min. 3 Zeichen!">
-                    <f:validateLength minimum="3"/>
-                </p:inputText>
-                
-                <p:outputLabel for="lAnzahl" value="Anzahl im Lager: "/>
-                <p:inputText
-                    id="lAnzahl"
-                    value="#{productsBean.selectedProductObject.pramount}"/>
-                
-                <p:outputLabel for="lPreis" value="Preis: "/>
-                <p:inputText
-                    id="lPreis"
-                    value="#{productsBean.selectedProductObject.ppricenetto}"/>
-                
-                <p:outputLabel for="lKategorie" value="Produktkategorie: "/>
-                <p:inputText
-                    id="lKategorie"
-                    value="#{productsBean.selectedProductObject.fkPcatid}"/>
-                <p:commandButton 
+            header="Editiere Produktinformationen" 
+            rendered="#{!loginBean.isAdmin}"> 
+
+            <h:form id="productEditForm" prependId="false">
+                <p:panelGrid columns="2" >
+                    <p:outputLabel 
+                        for="PRID"
+                        value="Produkt-ID:"/>
+                    <p:outputLabel id="PRID"
+                                   value="#{productsBean.selectedProductObject.prid}"/>
+
+                    <p:outputLabel for="lName" value="Benutzername: "/>
+                    <p:inputText
+                        id="lName"
+                        value="#{productsBean.selectedProductObject.prname}"
+                        required="true"
+                        requiredMessage="Benutzername erforderlich!"
+                        validatorMessage="Min. 3 Zeichen!">
+                        <f:validateLength minimum="3"/>
+                    </p:inputText>
+
+                    <p:outputLabel for="lAnzahl" value="Anzahl im Lager: "/>
+                    <p:inputText
+                        id="lAnzahl"
+                        value="#{productsBean.selectedProductObject.pramount}"/>
+
+                    <p:outputLabel for="lPreis" value="Preis: "/>
+                    <p:inputText
+                        id="lPreis"
+                        value="#{productsBean.selectedProductObject.ppricenetto}"/>
+
+                    <p:outputLabel for="lKategorie" value="Produktkategorie: "/>
+                    <p:inputText
+                        id="lKategorie"
+                        value="#{productsBean.selectedProductObject.fkPcatid}"/>
+                    <p:commandButton 
                         id="BTNMERGE"  
                         value="Aktualisieren" 
-                        action="#{productsBean.editProduct()}" 
+                        action="#{dataBean.updateProduct}" 
                         oncomplete="PF('ProductEditDialog').hide()"/>
-                    
+
                     <p:commandButton 
                         id="BTNDECLINE" 
                         value="Zurück"  
                         immediate="true"
                         onclick="PF('ProductEditDialog').hide()" 
-                        />     
-                            
-            </p:panelGrid>
-                
-        </h:form>
-                
-                
-              
-                
-                
-        
+                        />
+                    <p:commandButton 
+                        id="BTNDELETE" 
+                        value="Löschen"  
+                        immediate="true"
+                        action="#{productsBean.deleteProduct}" 
+                        onclick="PF('ProductEditDialog').hide()" 
+                        />
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
     </ui:composition>
 </html>

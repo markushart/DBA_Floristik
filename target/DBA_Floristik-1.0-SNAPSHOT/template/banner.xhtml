@@ -10,13 +10,13 @@
                 <h:commandLink value="Willkommen" action="welcome.xhtml"/>
             </li>
             <li style="display:inline-block">
-                <h:commandLink value="Login" action="login.xhtml"/>
+                <h:commandLink value="Login" action="login.xhtml" rendered="#{!loginBean.loggedIn}"/>
             </li>
             <li style="display:inline-block">
-                <h:commandLink value="Logout" action="logout.xhtml"/>
+                <h:commandLink value="Logout" action="logout.xhtml" rendered="#{loginBean.loggedIn}"/>
             </li>
             <li style="display:inline-block">
-                <h:commandLink value="Registrieren" action="register.xhtml"/>
+                <h:commandLink value="Registrieren" action="register.xhtml" rendered="#{!loginBean.loggedIn}"/>
             </li>
             <li style="display:inline-block">
                 <h:commandLink value="Produkte" action="products.xhtml"/>
@@ -25,7 +25,7 @@
                 <h:commandLink value="Services" action="services.xhtml"/>
             </li>
             <li style="display:inline-block">
-                <h:commandLink value="ServicesAdmin" action="servicesAdmin.xhtml"/>
+                <h:commandLink value="ServicesAdmin" action="servicesAdmin.xhtml" rendered="false"/>
             </li>
             <li style="display:inline-block">
                 <h:commandLink value="Warenkorb" action="shoppingcart.xhtml"/>

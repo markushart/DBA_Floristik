@@ -119,10 +119,12 @@ public class ProductsBean implements Serializable {
     }
     
     public void editProduct(){
+        
         int index = 0;
         for(Product p : db.getProductObjectList()){
             if (Objects.equals(p.getPrid(), selectedProductObject.getPrid())){
                 db.getProductObjectList().set(index, this.selectedProductObject);
+                
                 break;
             }
             index++;
@@ -139,6 +141,10 @@ public class ProductsBean implements Serializable {
         FacesMessage fm = new FacesMessage("Editieren beendet!");
         fm.setSeverity(FacesMessage.SEVERITY_INFO);
         FacesContext.getCurrentInstance().addMessage(null, fm);
+    }
+    
+    public void deleteProduct(){
+        
     }
 
 }

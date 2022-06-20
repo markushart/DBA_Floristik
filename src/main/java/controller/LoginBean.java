@@ -40,6 +40,7 @@ public class LoginBean implements Serializable {
     private DataBean db;
 
     private boolean loggedIn = false;
+    private boolean isAdmin = false;
     // private Customer customer;
 
     /**
@@ -77,7 +78,15 @@ public class LoginBean implements Serializable {
             if (acc.getAccpwd().equals(this.password)) {
                 this.currAccount = acc;
                 loggedIn = true;
+                
             }
+            
+            if (acc.getAcctype().equals("Admin")) {
+                System.out.println("Ist Administrator");
+                isAdmin = true;
+                
+            }
+            
         }
 
         context = FacesContext.getCurrentInstance();
@@ -212,5 +221,15 @@ public class LoginBean implements Serializable {
     public void setLoggedIn(boolean loggedIn) {
         this.loggedIn = loggedIn;
     }
+
+    public boolean isIsAdmin() {
+        return isAdmin;
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
+    }
+    
+    
 
 }

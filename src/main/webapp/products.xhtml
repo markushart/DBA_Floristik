@@ -21,7 +21,7 @@
             </style>
             <h2>Produktübersicht</h2>
             <h:form>
-                <p:toolbar rendered="#{loginBean.loggedIn}">
+                <p:toolbar rendered="#{loginBean.isAdmin}">
                     <p:toolbarGroup>
                         <p:outputLabel value="Neue Produktbezeichnung"/>
                         <p:inputText/>
