@@ -72,7 +72,9 @@
                             <p:inputText id="cphone" 
                                          value="#{registerBean.cphone}"
                                          label="cphone"
-                                         required="false">
+                                         required="true"
+                                         requiredMessage="Bitte angeben!"
+                                         validator="#{registerBean.phoneValidator}">
                             </p:inputText>
                             <h:message
                                 id="cphonemsg"
