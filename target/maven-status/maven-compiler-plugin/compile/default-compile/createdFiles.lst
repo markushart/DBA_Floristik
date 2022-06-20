@@ -12,6 +12,7 @@ com\dba_floristik\Product.class
 model\UserRole.class
 com\dba_floristik\Order1.class
 model\User.class
+org\validator\PasswordValidator.class
 converter\EuroConverter.class
 controller\LoginBean.class
 com\dba_floristik\Supplier.class
