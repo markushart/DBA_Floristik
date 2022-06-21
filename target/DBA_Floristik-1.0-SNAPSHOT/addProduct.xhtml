@@ -8,64 +8,53 @@
       xmlns:p="http://primefaces.org/ui">
     <ui:composition>
         <p:dialog
-            id="productEditDlg"
-            widgetVar="ProductEditDialog"
+            id="productAddDlg"
+            widgetVar="ProductAddDialog"
             modal="true"
             resizable="false" 
             appendTo="@(body)" 
-            header="Editiere Produktinformationen" 
+            header="Füge Produkt hinzu" 
             rendered="#{!loginBean.isAdmin}"> 
 
-            <h:form id="productEditForm" prependId="false">
+            <h:form id="productAddForm" prependId="false">
                 <p:panelGrid columns="2" >
-                    <p:outputLabel 
-                        for="PRID"
-                        value="Produkt-ID:"/>
-                    <p:outputLabel id="PRID"
-                                   value="#{productsBean.selectedProductObject.prid}"/>
-
-                    <p:outputLabel for="lName" value="Produktname: "/>
+                    
+                    <p:outputLabel for="lAddName" value="Produktname: "/>
                     <p:inputText
-                        id="lName"
+                        id="lAddName"
                         value="#{productsBean.selectedProductObject.prname}"
                         required="true"
                         >
                         <f:validateLength minimum="3"/>
                     </p:inputText>
 
-                    <p:outputLabel for="lAnzahl" value="Anzahl im Lager: "/>
+                    <p:outputLabel for="lAddAnzahl" value="Anzahl im Lager: "/>
                     <p:inputText
-                        id="lAnzahl"
+                        id="lAddAnzahl"
                         value="#{productsBean.selectedProductObject.pramount}"/>
 
-                    <p:outputLabel for="lPreis" value="Preis: "/>
+                    <p:outputLabel for="lAddPreis" value="Preis: "/>
                     <p:inputText
-                        id="lPreis"
+                        id="lAddPreis"
                         value="#{productsBean.selectedProductObject.ppricenetto}"/>
 
-                    <p:outputLabel for="lKategorie" value="Produktkategorie: "/>
+                    <p:outputLabel for="lAddKategorie" value="Produktkategorie: "/>
                     <p:inputText
-                        id="lKategorie"
+                        id="lAddKategorie"
                         value="#{productsBean.selectedProductObject.fkPcatid}"/>
                     <p:commandButton 
-                        id="BTNMERGE"  
-                        value="Aktualisieren" 
+                        id="BTNADD"  
+                        value="Hinzufügen" 
                         action="#{dataBean.updateProduct}" 
-                        oncomplete="PF('ProductEditDialog').hide()"/>
+                        oncomplete="PF('ProductAddDialog').hide()"/>
 
                     <p:commandButton 
-                        id="BTNDECLINE" 
+                        id="BTNDECLINEAdd" 
                         value="Zurück"  
                         immediate="true"
-                        onclick="PF('ProductEditDialog').hide()" 
+                        onclick="PF('ProductAddDialog').hide()" 
                         />
-                    <p:commandButton 
-                        id="BTNDELETE" 
-                        value="Löschen"  
-                        immediate="true"
-                        action="#{productsBean.deleteProduct}" 
-                        onclick="PF('ProductEditDialog').hide()" 
-                        />
+                    
                 </p:panelGrid>
             </h:form>
         </p:dialog>

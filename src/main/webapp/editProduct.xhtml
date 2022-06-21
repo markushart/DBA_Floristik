@@ -24,13 +24,12 @@
                     <p:outputLabel id="PRID"
                                    value="#{productsBean.selectedProductObject.prid}"/>
 
-                    <p:outputLabel for="lName" value="Benutzername: "/>
+                    <p:outputLabel for="lName" value="Produktname: "/>
                     <p:inputText
                         id="lName"
                         value="#{productsBean.selectedProductObject.prname}"
                         required="true"
-                        requiredMessage="Benutzername erforderlich!"
-                        validatorMessage="Min. 3 Zeichen!">
+                        >
                         <f:validateLength minimum="3"/>
                     </p:inputText>
 

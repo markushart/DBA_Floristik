@@ -78,9 +78,16 @@
                         </h:commandButton>
                     </p:column>
                 </p:dataTable>
-                
+                <p:commandButton 
+                        id="BTNADD" 
+                        value="Produkt hinzufügen"  
+                        immediate="true"
+                        
+                        onclick="PF('ProductAddDialog').show()" 
+                        />
             </h:form>
             <ui:include src="editProduct.xhtml"/>
+            <ui:include src="addProduct.xhtml"/>
         </ui:define>
     </ui:composition>
 </html>
