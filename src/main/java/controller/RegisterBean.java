@@ -31,6 +31,8 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import util.DataBean;
+import java.util.regex.*;
+import static java.util.regex.Pattern.matches;
 
 /**
  *
@@ -194,7 +196,34 @@ public class RegisterBean implements Serializable {
             context.addMessage(uic.getClientId(), fm);
         }
     }
-
+    
+    /**
+     *
+     * @param ev
+     */
+    public void phoneAjaxListener(AjaxBehaviorEvent ev) {
+        FacesMessage fm;
+        if (!context.isValidationFailed()) {
+            fm = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "Erfolg", ": Nummer formal korrekt!");
+            UIComponent uic = UIComponent.getCurrentComponent(context);
+            context.addMessage(uic.getClientId(), fm);
+        }
+    }
+    
+    /**
+     *
+     * @param ev
+     */
+    public void unameAjaxListener(AjaxBehaviorEvent ev) {
+        FacesMessage fm;
+        if (!context.isValidationFailed()) {
+            fm = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "Erfolg", ": Login formal korrekt!");
+            UIComponent uic = UIComponent.getCurrentComponent(context);
+            context.addMessage(uic.getClientId(), fm);
+        }
+    }
     /**
      * Validator-Methode
      *
@@ -208,11 +237,13 @@ public class RegisterBean implements Serializable {
             UIComponent uic,
             Object obj)
             throws ValidatorException {
-
+        String regexPhone = "^[0-9]{0,4}\\s?[0-9]{5,7}\\s?$";
         String phoneString = obj.toString();
         FacesMessage fm;
-
-        if (phoneString.length() < 7 ) {
+        boolean matches = matches(regexPhone,phoneString);
+        
+        if (!matches ) {
+        //if(!Pattern.matches(regexPhone,phoneString)){
             fm = new FacesMessage("Hinweis: Nummer überprüfen!");
             throw new ValidatorException(fm);
         } else {
@@ -220,7 +251,7 @@ public class RegisterBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(uic.getClientId(), fm);
         }
     }
-
+    
     /**
      * Get the value of lname
      *

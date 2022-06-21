@@ -75,6 +75,9 @@
                                          required="true"
                                          requiredMessage="Bitte angeben!"
                                          validator="#{registerBean.phoneValidator}">
+                                <f:ajax render="cphonemsg" 
+                                        event="keyup"
+                                        listener="#{registerBean.phoneAjaxListener}"/>
                             </p:inputText>
                             <h:message
                                 id="cphonemsg"
@@ -139,6 +142,9 @@
                                          validatorMessage="Benutzername überprüfen">
                                 <f:validateRequired/>
                                 <f:validateRegex pattern="^(?i:\w[\w-]{2,}$)"/>
+                                <f:ajax render="unamemsg" 
+                                        event="keyup"
+                                        listener="#{registerBean.unameAjaxListener}"/>
                                 
                             </p:inputText>
                             <h:message

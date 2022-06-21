@@ -16,7 +16,6 @@ public class PasswordValidator implements Validator{
     @Override
     public void validate(FacesContext fc, UIComponent uic, Object obj) 
             throws ValidatorException {
-        System.out.println("pwdValidator aufgerufen");
         String pwd = obj.toString();
         FacesMessage fm;
         
