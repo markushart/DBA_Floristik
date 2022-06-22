@@ -14,6 +14,7 @@ import com.dba_floristik.Orderdetailservice;
 import com.dba_floristik.Productcategory;
 import com.dba_floristik.Product;
 import com.dba_floristik.Service;
+import com.dba_floristik.Supplier;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -166,7 +167,7 @@ public class DataBean implements Serializable {
         try {
             TypedQuery<Product> query = em.createNamedQuery("Product.findAll", Product.class);
             this.productObjectList = query.getResultList();
-            this.size = this.getServiceObjectList().size();
+            this.size = this.getProductObjectList().size();
             LOGGER.log(Level.INFO, "Es wurden {0} Produkt(e) in der DB gefunden.", size);
             for (Product p : productObjectList) {
                 LOGGER.log(Level.INFO, p.toString());
@@ -284,9 +285,13 @@ public class DataBean implements Serializable {
         }
         return p;
     }
+@SuppressWarnings("empty-statement")
+    public boolean updateService(Service s) throws javax.transaction.RollbackException {
+        return true;
+    }
 
-    @SuppressWarnings("empty-statement")
-    public boolean updateProduct(Product p) throws javax.transaction.RollbackException {
+@SuppressWarnings("empty-statement")
+public boolean updateProduct(Product p) throws javax.transaction.RollbackException {
         boolean ok = true;
 //Erfragen des korrekten ID-Schlüssels für das zu ändernde Produkt
         Product product = findProductByName(p.getPrname());
@@ -354,6 +359,50 @@ public class DataBean implements Serializable {
              */
             ok = true;
             LOGGER.info("Registrieren ok (Customer mit Account)");
+        } catch (IllegalStateException | SecurityException | ConstraintViolationException ex) {
+            ok = false;
+            throw ex;
+        }
+        return ok;
+    }
+    
+        /**
+     * Registrierung eines neuen Kunden mit zugehörigem Account Verwendung in:
+     * RegisterBean.java
+     *
+     * @param newProduct
+     * @param newfkPcatid
+     * @param newfkSupID
+     * @return
+     */
+    public boolean persistProduct(Product newProduct, Productcategory newfkPcatid, Supplier newfkSupID)throws ConstraintViolationException {// newAccount, Collection<Adress> newAdressCollection) throws ConstraintViolationException {
+        boolean ok;
+
+        try {
+            EntityManager em = emf.createEntityManager();//Payara-spezifisch
+            em.joinTransaction();
+            em.persist(newProduct); //zuerst Kunden-Account speichern
+            
+            newProduct.setFkPcatid(newfkPcatid);
+            newProduct.setFkSupid(newfkSupID);
+            em.persist(newProduct); //Kunden speichern
+            /* Adressen persistieren 
+            for (Adress add : newAdressCollection) {
+                add.setFkCid(newCustomer);
+                em.persist(add);
+            }*/
+
+            // update collections
+            /*
+            ArrayList<Customer> cc = new ArrayList<>(1);
+            cc.add(newCustomer);
+            newAccount.setCustomerCollection(cc);
+            newCustomer.setAdressCollection(newAdressCollection);
+            em.persist(newAccount);
+            em.persist(newCustomer);
+             */
+            ok = true;
+            LOGGER.info("Produkt hinzugefügt ok ");
         } catch (IllegalStateException | SecurityException | ConstraintViolationException ex) {
             ok = false;
             throw ex;

@@ -11,12 +11,17 @@ import com.dba_floristik.Product;
  * @author marku
  */
 public class ProductListItem {
-
+    
+           
     private Product product;
 
     private int orderAmount;
 
     private double priceForAmount;
+    
+    public ProductListItem() {
+        
+    }
 
     public ProductListItem(Product product, int orderAmount) {
         this.product = product;

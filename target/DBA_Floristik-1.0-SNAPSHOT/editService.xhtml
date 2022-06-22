@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <ui:composition>
+        <p:dialog
+            id="serviceEditDlg"
+            widgetVar="ServiceEditDialog"
+            modal="true"
+            resizable="false" 
+            appendTo="@(body)" 
+            header="Editiere Serviceinformationen" 
+            rendered="#{!loginBean.isAdmin}"> 
+
+            <h:form id="serviceEditForm" prependId="false">
+                <p:panelGrid columns="2" >
+                    <p:outputLabel 
+                        for="PRID"
+                        value="Service-ID:"/>
+                    <p:outputLabel id="PRID"
+                                   value="#{servicesBean.selectedServiceObject.servid}"/>
+
+                    <p:outputLabel for="lServName" value="Servicename: "/>
+                    <p:inputText
+                        id="lServName"
+                        value="#{servicesBean.selectedServiceObject.servname}"
+                        required="true"
+                        >
+                        <f:validateLength minimum="3"/>
+                    </p:inputText>
+
+           
+
+                    <p:outputLabel for="lServPreis" value="Preis: "/>
+                    <p:inputText
+                        id="lServPreis"
+                        value="#{servicesBean.selectedServiceObject.servprice}"/>
+
+                  
+                    <p:commandButton 
+                        id="BTNMERGEServ"  
+                        value="Aktualisieren" 
+                        action="#{dataBean.updateService}" 
+                        oncomplete="PF('ServiceEditDialog').hide()"/>
+
+                    <p:commandButton 
+                        id="BTNDECLINEServ" 
+                        value="Zurück"  
+                        immediate="true"
+                        onclick="PF('ServiceEditDialog').hide()" 
+                        />
+                    <p:commandButton 
+                        id="BTNDELETEServ" 
+                        value="Löschen"  
+                        immediate="true"
+                        action="#{productsBean.deleteProduct}" 
+                        onclick="PF('ServiceEditDialog').hide()" 
+                        />
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+    </ui:composition>
+</html>

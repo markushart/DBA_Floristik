@@ -38,14 +38,11 @@
                         id="lAddPreis"
                         value="#{productsBean.selectedProductObject.ppricenetto}"/>
 
-                    <p:outputLabel for="lAddKategorie" value="Produktkategorie: "/>
-                    <p:inputText
-                        id="lAddKategorie"
-                        value="#{productsBean.selectedProductObject.fkPcatid}"/>
+                    
                     <p:commandButton 
                         id="BTNADD"  
                         value="Hinzufügen" 
-                        action="#{dataBean.updateProduct}" 
+                        action="#{productsBean.addProduct}" 
                         oncomplete="PF('ProductAddDialog').hide()"/>
 
                     <p:commandButton 

@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.http.HttpSession;
 import model.ServiceListItem;
+import org.primefaces.event.SelectEvent;
 import util.DataBean;
 
 /**
@@ -29,12 +30,15 @@ import util.DataBean;
 public class ServicesBean {
 
     private static final Logger LOGGER
-            = Logger.getLogger(ProductsBean.class.getName());
+            = Logger.getLogger(ServicesBean.class.getName());
 
     private ArrayList<ServiceListItem> serviceListItems;
 
     @Inject
     private DataBean db;
+    
+    @Inject
+    private Service selectedServiceObject;
 
     /**
      * Creates a new instance of ServicesBean
@@ -47,7 +51,7 @@ public class ServicesBean {
 
         HttpSession session
                 = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-        LOGGER.log(Level.INFO, "Products: Session ID: {0}", session.getId());
+        LOGGER.log(Level.INFO, "Services: Session ID: {0}", session.getId());
 
         serviceListItems = new ArrayList<>();
         
@@ -58,6 +62,7 @@ public class ServicesBean {
             ServiceListItem item = new ServiceListItem(s);
             serviceListItems.add(item);
         }
+        selectedServiceObject = new Service();
     }
 
     /**
@@ -94,6 +99,27 @@ public class ServicesBean {
      */
     public void setServiceListItems(ArrayList<ServiceListItem> services) {
         this.serviceListItems = services;
+    }
+    
+    /**
+     * Ajax-listener="#{ServiceBean.selectService}" in displayService
+     *
+     * @param ev
+     */
+    public void selectService(SelectEvent ev) {
+        ServiceListItem selectedServiceListItemObject =(ServiceListItem) ev.getObject();
+        
+        //this.selectedProductObject = (Product) ev.getObject();
+        
+        this.selectedServiceObject =selectedServiceListItemObject.getService();
+    }
+    
+    public Service getSelectedServiceObject() {
+        return selectedServiceObject;
+    }
+
+    public void setSelectedServiceObject(Service selectedServiceObject) {
+        this.selectedServiceObject = selectedServiceObject;
     }
 
 }

@@ -43,14 +43,11 @@
                         id="lPreis"
                         value="#{productsBean.selectedProductObject.ppricenetto}"/>
 
-                    <p:outputLabel for="lKategorie" value="Produktkategorie: "/>
-                    <p:inputText
-                        id="lKategorie"
-                        value="#{productsBean.selectedProductObject.fkPcatid}"/>
+                    
                     <p:commandButton 
                         id="BTNMERGE"  
                         value="Aktualisieren" 
-                        action="#{dataBean.updateProduct}" 
+                        action="#{productsBean.editProduct}" 
                         oncomplete="PF('ProductEditDialog').hide()"/>
 
                     <p:commandButton 
