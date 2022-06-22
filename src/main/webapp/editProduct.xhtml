@@ -15,8 +15,8 @@
             appendTo="@(body)" 
             header="Editiere Produktinformationen" 
             rendered="#{!loginBean.isAdmin}"> 
-            
-            <h:form id="productEditForm" prependId="false" >
+
+            <h:form id="productEditForm">
                 <p:panelGrid columns="2" >
                     <p:outputLabel 
                         for="PRID"
@@ -43,12 +43,13 @@
                         id="lPreis"
                         value="#{productsBean.selectedProductObject.ppricenetto}"/>
 
-                    
+
                     <p:commandButton 
                         id="BTNMERGE"  
                         value="Aktualisieren" 
                         action="#{productsBean.editProduct()}"
-                        oncomplete="PF('ProductEditDialog').hide()"/>
+                        oncomplete="PF('ProductEditDialog').hide()">
+                    </p:commandButton>
 
                     <p:commandButton 
                         id="BTNDECLINE" 
@@ -64,6 +65,7 @@
                         onclick="PF('ProductEditDialog').hide()" 
                         />
                 </p:panelGrid>
+                <p:ajax event="click" update=":productForm"/>
             </h:form>
         </p:dialog>
     </ui:composition>

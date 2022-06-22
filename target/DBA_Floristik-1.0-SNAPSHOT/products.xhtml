@@ -20,6 +20,7 @@
                 }
             </style>
             <h2>Produktübersicht</h2>
+
             <h:form>
                 <p:toolbar rendered="#{loginBean.isAdmin}">
                     <p:toolbarGroup>
@@ -37,13 +38,13 @@
                     var="pi"
                     rowKey="#{pi.product.prid}"
                     selectionMode="single">
-                    
+
                     <p:ajax 
-                                    event="rowSelect"  
-                                    update="productEditForm"
-                                    listener="#{productsBean.selectProduct}"
-                                    oncomplete="PF('ProductEditDialog').show()"/>
-                    
+                        event="rowSelect"  
+                        update="productEditForm"
+                        listener="#{productsBean.selectProduct}"
+                        oncomplete="PF('ProductEditDialog').show()"/>
+
                     <p:column headerText="Produktbezeichnung">
                         <h:outputLabel value="#{pi.product.prname}"/>
                     </p:column>
@@ -52,9 +53,9 @@
                         <p:spinner value="#{pi.orderAmount}" 
                                    stepFactor="1" min="1">
                             <p:ajax 
-                                    update="itemWholePrice"
-                                    event="valueChange"
-                                    />
+                                update="itemWholePrice"
+                                event="valueChange"
+                                />
                         </p:spinner>
                     </p:column>
 
@@ -79,14 +80,16 @@
                     </p:column>
                 </p:dataTable>
                 <p:commandButton 
-                        id="BTNADD" 
-                        value="Produkt hinzufügen"  
-                        immediate="true"
-                        
-                        onclick="PF('ProductAddDialog').show()" 
-                        />
+                    id="BTNADD" 
+                    value="Produkt hinzufügen"  
+                    immediate="true"
+
+                    onclick="PF('ProductAddDialog').show()" 
+                    />
             </h:form>
-            <ui:include src="editProduct.xhtml"/>
+            <ui:insert>
+                <ui:include src="editProduct.xhtml"/>
+            </ui:insert>
             <ui:include src="addProduct.xhtml"/>
         </ui:define>
     </ui:composition>

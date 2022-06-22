@@ -298,6 +298,7 @@ public class DataBean implements Serializable {
         try {
             em.joinTransaction();
             em.merge(p);
+            this.productObjectList.add(p);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             return false;

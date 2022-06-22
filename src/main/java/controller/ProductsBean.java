@@ -202,6 +202,13 @@ public class ProductsBean implements Serializable {
             fm.setSummary("Product was not updated!");
         }
 
+        // update product list
+        for (ProductListItem pi : productListItems) {
+            if (pi.getProduct().getPrid().equals(selectedProductObject.getPrid())) {
+                pi.setProduct(selectedProductObject);
+            }
+        }
+
         FacesContext.getCurrentInstance().addMessage(null, fm);
     }
 
