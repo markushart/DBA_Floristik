@@ -11,16 +11,13 @@ import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.inject.Inject;
-import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolationException;
 import javax.validation.constraints.NotNull;
 import model.ProductListItem;
@@ -28,41 +25,37 @@ import org.primefaces.event.SelectEvent;
 import util.DataBean;
 
 /**
- * Name:            ProductBean
- * Aufgabe:         Klasse für interaktion mit Produktwebsite
- * Version:         1.0
- * Letzte Änderung: 01.05.2022
- * Realisierung     Markus Hartlage
+ * Name: ProductBean Aufgabe: Klasse für interaktion mit Produktwebsite Version:
+ * 1.0 Letzte Änderung: 01.05.2022 Realisierung Markus Hartlage
  */
 @Named(value = "productsBean")
-@RequestScoped
+@SessionScoped
 public class ProductsBean implements Serializable {
 
     private static final Logger LOGGER
             = Logger.getLogger(ProductsBean.class.getName());
 
-    
     private ArrayList<ProductListItem> productListItems;
-    
+
     @Inject
     private DataBean db;
 
     @Inject
     private ShoppingCartBean cartBean;
-    
+
     @Inject
     private Product selectedProductObject;
 
     private List<Product> products;
-    
+
     @NotNull
     private String prname;
     private int pramount;
     private float ppricenetto;
-    
+
     private boolean not_in_Products;
     private FacesContext context;
-    
+
     /**
      * Creates a new instance of ProductsBean
      */
@@ -75,17 +68,17 @@ public class ProductsBean implements Serializable {
         //HttpSession session
         //        = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         //LOGGER.log(Level.INFO, "Products: Session ID: {0}", session.getId());
-
         productListItems = new ArrayList<>();
-        
-        for(Product p : db.getProductObjectList()){
+
+        for (Product p : db.getProductObjectList()) {
             ProductListItem pi = new ProductListItem(p, 1);
             productListItems.add(pi);
         }
         not_in_Products = false;
-        selectedProductObject = new Product();
         products = db.getProductObjectList();
-        
+        LOGGER.log(Level.INFO, "init");
+
+        // selectedProductObject = new Product();
     }
 
     /**
@@ -176,13 +169,16 @@ public class ProductsBean implements Serializable {
      * @param ev
      */
     public void selectProduct(SelectEvent ev) {
-        ProductListItem selectedProductListItemObject =(ProductListItem) ev.getObject();
-        
+        ProductListItem selectedProductListItemObject = (ProductListItem) ev.getObject();
+
         //this.selectedProductObject = (Product) ev.getObject();
-        
-        this.selectedProductObject =selectedProductListItemObject.getProduct();
+        Product p = selectedProductListItemObject.getProduct();
+
+        // copy product into selected Porduct Object
+        this.selectedProductObject = p;
+        LOGGER.log(Level.INFO, "setter");
     }
-    
+
     public Product getSelectedProductObject() {
         return selectedProductObject;
     }
@@ -190,33 +186,26 @@ public class ProductsBean implements Serializable {
     public void setSelectedProductObject(Product selectedProductObject) {
         this.selectedProductObject = selectedProductObject;
     }
-    
-    public void editProduct(){
-        
-        int index = 0;
-        for(Product p : db.getProductObjectList()){
-            if (Objects.equals(p.getPrid(), selectedProductObject.getPrid())){
-                db.getProductObjectList().set(index, this.selectedProductObject);
-                
-                break;
-            }
-            index++;
+
+    public void editProduct() {
+        LOGGER.log(Level.INFO, "edit");
+
+        LOGGER.log(Level.INFO, "selected p id was: {0}, {1}, {2}", new Object[]{selectedProductObject.getPrid(), selectedProductObject.getPrname(), selectedProductObject.getPramount()});
+
+        FacesMessage fm = new FacesMessage();
+
+        if (db.updateProduct(this.selectedProductObject)) {
+            fm.setSeverity(FacesMessage.SEVERITY_INFO);
+            fm.setSummary("Product was updated!");
+        } else {
+            fm.setSeverity(FacesMessage.SEVERITY_WARN);
+            fm.setSummary("Product was not updated!");
         }
-        index = 0;
-        /*
-        for (Product p : this.productListItems){
-            if (Objects.equals(p.getPrid(), this.selectedProductObject.getPrid())){
-              // this.filteredUserObjectList.set(index, this.selectedUserObject); 
-            }
-            index++;
-        }
-        */
-        FacesMessage fm = new FacesMessage("Editieren beendet!");
-        fm.setSeverity(FacesMessage.SEVERITY_INFO);
+
         FacesContext.getCurrentInstance().addMessage(null, fm);
     }
-    
-    public String addProduct(){
+
+    public String addProduct() {
         FacesMessage fm;
         not_in_Products = true;
         if (products == null) {
@@ -228,9 +217,9 @@ public class ProductsBean implements Serializable {
             if (not_in_Products) {
                 // IDs werden automatisch vergeben
                 Product p = new Product(0, this.prname, this.pramount, this.ppricenetto);
-                
+
                 LOGGER.log(Level.INFO, "Prid: {0}", p.getPrid());
-                
+
                 //Adress add = new Adress(c.getCid(), this.street, this.city, this.fedState, this.citycode, this.country, new Date());
 //                Collection<Adress> add_coll = new ArrayList<>();
 //                add_coll.add(add);
@@ -247,12 +236,12 @@ public class ProductsBean implements Serializable {
             context.addMessage(null, fm);
             return null;
         }
-         if (!not_in_Products) {
+        if (!not_in_Products) {
             fm = new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlschlag",
                     ": Fehlschlag beim Produkt hinzufügen.");
             context.addMessage(null, fm);
-            return null;}
-        else {
+            return null;
+        } else {
 
             fm = new FacesMessage(FacesMessage.SEVERITY_INFO, "Erfolg",
                     ": Produkt hinzufügen erfolgreich!");
@@ -260,8 +249,9 @@ public class ProductsBean implements Serializable {
             return "products.xhtml";
         }
     }
-    public void deleteProduct(){
-        
+
+    public void deleteProduct() {
+
     }
 
 }

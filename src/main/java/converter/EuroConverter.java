@@ -4,7 +4,6 @@
  */
 package converter;
 
-import static java.lang.Math.round;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.component.UIComponent;

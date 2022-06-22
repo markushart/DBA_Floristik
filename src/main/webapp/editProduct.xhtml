@@ -15,14 +15,14 @@
             appendTo="@(body)" 
             header="Editiere Produktinformationen" 
             rendered="#{!loginBean.isAdmin}"> 
-
-            <h:form id="productEditForm" prependId="false">
+            
+            <h:form id="productEditForm" prependId="false" >
                 <p:panelGrid columns="2" >
                     <p:outputLabel 
                         for="PRID"
                         value="Produkt-ID:"/>
-                    <p:outputLabel id="PRID"
-                                   value="#{productsBean.selectedProductObject.prid}"/>
+                    <h:outputText id="PRID"
+                                  value="#{productsBean.selectedProductObject.prid}"/>
 
                     <p:outputLabel for="lName" value="Produktname: "/>
                     <p:inputText
@@ -47,7 +47,7 @@
                     <p:commandButton 
                         id="BTNMERGE"  
                         value="Aktualisieren" 
-                        action="#{productsBean.editProduct}" 
+                        action="#{productsBean.editProduct()}"
                         oncomplete="PF('ProductEditDialog').hide()"/>
 
                     <p:commandButton 

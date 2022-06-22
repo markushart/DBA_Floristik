@@ -285,43 +285,25 @@ public class DataBean implements Serializable {
         }
         return p;
     }
-@SuppressWarnings("empty-statement")
+
+    @SuppressWarnings("empty-statement")
     public boolean updateService(Service s) throws javax.transaction.RollbackException {
         return true;
     }
 
-@SuppressWarnings("empty-statement")
-public boolean updateProduct(Product p) throws javax.transaction.RollbackException {
-        boolean ok = true;
-//Erfragen des korrekten ID-Schlüssels für das zu ändernde Produkt
-        Product product = findProductByName(p.getPrname());
-        p.setPrname(product.getPrname());
+    // @SuppressWarnings("empty-statement")
+    public boolean updateProduct(Product p){
+
         EntityManager em = emf.createEntityManager();
         try {
-//Payara-spezifisch
-            final Context icontext = new InitialContext();
-            ut = (UserTransaction) (icontext).lookup("java:comp/UserTransaction");
-//(Normale) Transaktion: Erforderlich für INSERT,UPDATE,DELETE-Ops
-            ut.begin();
             em.joinTransaction();
             em.merge(p);
-            ut.commit();
-            ok = true;
-        } catch (IllegalStateException | SecurityException ex) {
-            try {
-                LOGGER.log(Level.SEVERE, null, ex);
-                ut.rollback();
-            } catch (IllegalStateException | SecurityException
-                    | SystemException ex1) {
-                LOGGER.log(Level.SEVERE, null, ex1);
-            }
-            ok = false;
-        } catch (NotSupportedException | SystemException
-                | RollbackException | HeuristicMixedException
-                | HeuristicRollbackException | NamingException ex) {
+        } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
+            return false;
         }
-        return ok;
+
+        return true;
     }
 
     /**
@@ -365,8 +347,8 @@ public boolean updateProduct(Product p) throws javax.transaction.RollbackExcepti
         }
         return ok;
     }
-    
-        /**
+
+    /**
      * Registrierung eines neuen Kunden mit zugehörigem Account Verwendung in:
      * RegisterBean.java
      *
@@ -375,14 +357,14 @@ public boolean updateProduct(Product p) throws javax.transaction.RollbackExcepti
      * @param newfkSupID
      * @return
      */
-    public boolean persistProduct(Product newProduct, Productcategory newfkPcatid, Supplier newfkSupID)throws ConstraintViolationException {// newAccount, Collection<Adress> newAdressCollection) throws ConstraintViolationException {
+    public boolean persistProduct(Product newProduct, Productcategory newfkPcatid, Supplier newfkSupID) throws ConstraintViolationException {// newAccount, Collection<Adress> newAdressCollection) throws ConstraintViolationException {
         boolean ok;
 
         try {
             EntityManager em = emf.createEntityManager();//Payara-spezifisch
             em.joinTransaction();
             em.persist(newProduct); //zuerst Kunden-Account speichern
-            
+
             newProduct.setFkPcatid(newfkPcatid);
             newProduct.setFkSupid(newfkSupID);
             em.persist(newProduct); //Kunden speichern
@@ -409,7 +391,7 @@ public boolean updateProduct(Product p) throws javax.transaction.RollbackExcepti
         }
         return ok;
     }
-    
+
     /**
      *
      * @param plist
@@ -465,8 +447,8 @@ public boolean updateProduct(Product p) throws javax.transaction.RollbackExcepti
             }
 
             // update the database storage amount
-            p.setPramount(p.getPramount() - odp.getOdpamount());  
-            
+            p.setPramount(p.getPramount() - odp.getOdpamount());
+
             Collection<Orderdetailproduct> opc = p.getOrderdetailproductCollection();
             // make sure collection is not null
             if (opc == null) {
