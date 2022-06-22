@@ -53,6 +53,9 @@ public class ProductsBean implements Serializable {
     private int pramount;
     private float ppricenetto;
 
+    @Inject
+    private LoginBean lb;
+    
     private boolean not_in_Products;
     private FacesContext context;
 
@@ -261,4 +264,7 @@ public class ProductsBean implements Serializable {
 
     }
 
+    public boolean renderProductEditDialog(){
+        return lb.isIsAdmin() && lb.isLoggedIn();
+    }
 }

@@ -77,8 +77,8 @@ public class LoginBean implements Serializable {
 
             if (acc.getAccpwd().equals(this.password)) {
                 this.currAccount = acc;
+                isAdmin = currAccount.getAcctype().equals("Admin");
                 loggedIn = true;
-                
             }
             
             if (acc.getAcctype().equals("Admin")) {

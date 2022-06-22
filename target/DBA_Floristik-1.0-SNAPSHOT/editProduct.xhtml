@@ -14,7 +14,7 @@
             resizable="false" 
             appendTo="@(body)" 
             header="Editiere Produktinformationen" 
-            rendered="#{!loginBean.isAdmin}"> 
+            rendered="#{productsBean.renderProductEditDialog()}"> 
 
             <h:form id="productEditForm">
                 <p:panelGrid columns="2" >
@@ -46,7 +46,7 @@
 
                     <p:commandButton 
                         id="BTNMERGE"  
-                        value="Aktualisieren" 
+                        value="AkStualisieren" 
                         action="#{productsBean.editProduct()}"
                         oncomplete="PF('ProductEditDialog').hide()">
                     </p:commandButton>
@@ -65,7 +65,9 @@
                         onclick="PF('ProductEditDialog').hide()" 
                         />
                 </p:panelGrid>
+                
                 <p:ajax event="click" update=":productForm"/>
+                
             </h:form>
         </p:dialog>
     </ui:composition>
