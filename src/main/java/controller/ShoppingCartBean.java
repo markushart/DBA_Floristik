@@ -30,7 +30,8 @@ import util.DataBean;
 
 /**
  * Name: ShoppingCartBean Aufgabe: Klasse für Interaktion mit dem Warenkorb
- * Version: 1.0 Letzte Änderung: 01.05.2022 Realisierung Markus Hartlage
+ * Version: 2.0 Letzte Änderung: 24.06.2022 Realisierung Markus Hartlage und
+ * Sascha Nickel
  */
 @Named(value = "shoppingCartBean")
 @SessionScoped
@@ -105,7 +106,7 @@ public class ShoppingCartBean implements Serializable {
                 } else {
 
                     Customer c = lbean.getCurrAccount().getFkCid();
-                    
+
                     // persist the users order to the database
                     boolean ok = db.persistShoppingCart(c, this.productListItems, this.serviceListItems, new Date());
 

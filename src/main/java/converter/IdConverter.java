@@ -11,8 +11,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 
 /**
- *
- * @author marku
+ * Name:            IdConverter
+ * Aufgabe:         Umwandlung von Usernamen in "ID"-Darstellung
+ * Version:         2.0
+ * Letzte Änderung: 24.06.2022
+ * Realisierung     Markus Hartlage und Sascha Nickel
  */
 @Named(value = "idConverter")
 @RequestScoped

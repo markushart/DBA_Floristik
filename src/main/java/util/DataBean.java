@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,21 +28,16 @@ import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnit;
-import javax.persistence.Query;
-import javax.persistence.RollbackException;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpSession;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
-import javax.transaction.Status;
+import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.Transactional;
 import javax.transaction.UserTransaction;
@@ -51,12 +45,15 @@ import javax.validation.ConstraintViolationException;
 import model.ProductListItem;
 import model.ServiceListItem;
 import model.User;
-import model.UserRole;
+
+
 
 /**
- * Name: DataBean Aufgabe: Klasse für Interaktion mit Datenbank / dummy Daten
- * Version: 1.1 Letzte Änderung: 01.06.2022 Realisierung Markus Hartlage /
- * Sascha Nickel
+ * Name:            DataBean
+ * Aufgabe:         Klasse für Interaktion mit Datenbank
+ * Version:         2.0
+ * Letzte Änderung: 24.06.2022
+ * Realisierung     Markus Hartlage und Sascha Nickel
  */
 @Named(value = "dataBean")
 @SessionScoped
@@ -286,19 +283,68 @@ public class DataBean implements Serializable {
         return p;
     }
 
-    @SuppressWarnings("empty-statement")
-    public boolean updateService(Service s) throws javax.transaction.RollbackException {
+    //@SuppressWarnings("empty-statement")
+    public boolean updateService(Service s) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.joinTransaction();
+            LOGGER.info("#############");
+            LOGGER.info(s.getServname());
+            LOGGER.info(s.getServid().toString());
+            LOGGER.info("#############");
+            em.merge(s);
+            this.serviceObjectList.add(s);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            return false;
+        }
+
         return true;
     }
 
     // @SuppressWarnings("empty-statement")
-    public boolean updateProduct(Product p){
+    public boolean updateProduct(Product p) {
 
         EntityManager em = emf.createEntityManager();
         try {
             em.joinTransaction();
             em.merge(p);
             this.productObjectList.add(p);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean removeProduct(Product p) {
+
+        EntityManager em = emf.createEntityManager();
+        try {
+            //ut.begin();
+            em.joinTransaction();
+            Product current = em.merge(p);
+            em.remove(current);
+            em.flush();
+            //ut.commit();
+            this.productObjectList.remove(p);
+        } catch (Exception ex) {
+            //try {ut.rollback();}catch(Exception e) {}
+            LOGGER.log(Level.SEVERE, null, ex);
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean removeService(Service s) {
+
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.joinTransaction();
+            em.remove(s);
+            this.serviceObjectList.remove(s);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
             return false;
@@ -573,6 +619,48 @@ public class DataBean implements Serializable {
      */
     public ArrayList<Service> getServiceList() {
         return serviceList;
+    }
+
+    public boolean addProduct(Product p) {
+        EntityManager em = emf.createEntityManager();
+        try {
+//            ut.begin();
+            em.joinTransaction();
+            em.persist(p);
+            em.flush();
+//            ut.commit();
+        } catch (Exception ex) {
+//            try{ ut.rollback(); } catch (Exception e) {}
+            LOGGER.severe(ex.toString());
+            return false;
+        }
+        return true;
+    }
+
+    public Supplier getSupplierByID(Integer id) {
+        EntityManager em = emf.createEntityManager();
+        Supplier sup = null;
+        try {
+            TypedQuery<Supplier> query = em.createNamedQuery("Supplier.findBySupid", Supplier.class);
+            query.setParameter("supid", id);
+            sup = query.getSingleResult();
+        } catch (Exception ex) {
+            LOGGER.severe(ex.toString());
+        }
+        return sup;
+    }
+
+    public Productcategory getProductCategorybyID(Integer id) {
+        Productcategory pcat = null;
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Productcategory> query = em.createNamedQuery("Productcategory.findByPcatid", Productcategory.class);
+            query.setParameter("pcatid", id);
+            pcat = query.getSingleResult();
+        } catch (Exception ex) {
+            LOGGER.severe(ex.toString());
+        }
+        return pcat;
     }
 
 }

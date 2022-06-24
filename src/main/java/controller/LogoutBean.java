@@ -15,8 +15,11 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 /**
- *
- * @author marku
+ * Name:            LogoutBean
+ * Aufgabe:         Repräsentierung Backend für Logout
+ * Version:         2.0
+ * Letzte Änderung: 24.06.2022
+ * Realisierung     Markus Hartlage und Sascha Nickel
  */
 @Named(value = "logoutBean")
 @SessionScoped
@@ -42,7 +45,11 @@ public class LogoutBean implements Serializable {
      */
     public LogoutBean() {
     }
-
+/**
+     * Loggt User aus
+     *
+     *
+     */
     public void logout() {
         context = FacesContext.getCurrentInstance();
         context.getExternalContext().invalidateSession();

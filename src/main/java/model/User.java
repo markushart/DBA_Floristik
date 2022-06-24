@@ -8,12 +8,15 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
+
+
 /**
- * Name:            ProductBean
- * Aufgabe:         Klasse für Abbildung eines Benutzers
- * Version:         1.0
- * Letzte Änderung: 28.04.2022
- * Realisierung     Markus Hartlage
+ * Name:            User
+ * Aufgabe:         Klasse für das Objekt User
+ * Version:         2.0
+ * Letzte Änderung: 24.06.2022
+ * Realisierung     Markus Hartlage und Sascha Nickel
  */
 public class User {
     

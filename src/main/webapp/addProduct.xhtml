@@ -13,46 +13,56 @@
             modal="true"
             resizable="false" 
             appendTo="@(body)" 
-            header="Füge Produkt hinzu" 
-            rendered="#{!loginBean.isAdmin}"> 
+            header="Füge Produkt hinzu"> 
 
             <h:form id="productAddForm" prependId="false">
                 <p:panelGrid columns="2" >
-                    
+
                     <p:outputLabel for="lAddName" value="Produktname: "/>
                     <p:inputText
                         id="lAddName"
-                        value="#{productsBean.selectedProductObject.prname}"
-                        required="true"
+                        value="#{productsBean.newProduct.prname}"
                         >
-                        <f:validateLength minimum="3"/>
                     </p:inputText>
 
                     <p:outputLabel for="lAddAnzahl" value="Anzahl im Lager: "/>
                     <p:inputText
                         id="lAddAnzahl"
-                        value="#{productsBean.selectedProductObject.pramount}"/>
+                        value="#{productsBean.newProduct.pramount}"/>
 
                     <p:outputLabel for="lAddPreis" value="Preis: "/>
                     <p:inputText
                         id="lAddPreis"
-                        value="#{productsBean.selectedProductObject.ppricenetto}"/>
+                        value="#{productsBean.newProduct.ppricenetto}"/>
 
-                    
+                    <p:outputLabel for="lAddCategory" value="Kategorie: "/>
+                    <p:inputText
+                        id="lAddCategory"
+                        value="#{productsBean.pcatid}"/>
+
+                    <p:outputLabel for="lAddSupplier" value="Lieferant: "/>
+                    <p:inputText
+                        id="lAddSupplier"
+                        value="#{productsBean.supid}"/>
+
                     <p:commandButton 
                         id="BTNADD"  
                         value="Hinzufügen" 
                         action="#{productsBean.addProduct}" 
-                        oncomplete="PF('ProductAddDialog').hide()"/>
+                        oncomplete="PF('ProductAddDialog').hide()"
+                        update=":productForm"/>
 
                     <p:commandButton 
                         id="BTNDECLINEAdd" 
                         value="Zurück"  
                         immediate="true"
                         onclick="PF('ProductAddDialog').hide()" 
+                        update=":productForm"
                         />
-                    
+
                 </p:panelGrid>
+                
+                <p:ajax event="click" update=":productForm"/>
             </h:form>
         </p:dialog>
     </ui:composition>

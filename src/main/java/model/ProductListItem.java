@@ -5,10 +5,14 @@
 package model;
 
 import com.dba_floristik.Product;
+import javax.persistence.EntityManager;
 
 /**
- *
- * @author marku
+ * Name:            ProductListItem
+ * Aufgabe:         Vereinfachung des Datenaustausch mit ShoppingCart
+ * Version:         2.0
+ * Letzte Änderung: 24.06.2022
+ * Realisierung     Markus Hartlage und Sascha Nickel
  */
 public class ProductListItem {
     
@@ -37,6 +41,8 @@ public class ProductListItem {
         priceForAmount = orderAmount * product.getPpricenetto();
         this.product = product;
     }
+    
+  
 
     public int getOrderAmount() {
         return orderAmount;

@@ -10,14 +10,20 @@
         <ui:define name="content">
             <h2>Serviceübersicht</h2>
             <h:form id="serviceForm">
-                <p:toolbar rendered="#{loginBean.loggedIn}">
-                    <f:facet name="addNew">
 
-                    </f:facet>
-                </p:toolbar>
-                <p:dataTable value="#{servicesBean.serviceListItems}" var="si">
 
-                    
+                <p:dataTable 
+                    value="#{servicesBean.serviceListItems}" 
+                    var="si"
+                    rowKey="#{si.service.servid}"
+                    selectionMode="single">
+
+                    <p:ajax 
+                        event="rowSelect"  
+                        update="serviceEditForm"
+                        listener="#{servicesBean.selectService}"
+                        oncomplete="PF('ServiceEditDialog').show()"/>
+
                     <p:column headerText="Servicebezeichnung">
                         <h:outputLabel value="#{si.service.servname}"/>
                     </p:column>
@@ -41,8 +47,18 @@
                         </h:commandButton>
                     </p:column>
                 </p:dataTable>
+                <p:commandButton 
+                    id="BTNServADD" 
+                    value="Service hinzufügen"  
+                    immediate="true"
 
+                    onclick="PF('ServiceAddDialog').show()" 
+                    />
             </h:form>
+            <ui:insert>
+                <ui:include src="editService.xhtml"/>
+            </ui:insert>
+            <ui:include src="addService.xhtml"/>
         </ui:define>
     </ui:composition>
 </html>

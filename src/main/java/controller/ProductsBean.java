@@ -25,8 +25,9 @@ import org.primefaces.event.SelectEvent;
 import util.DataBean;
 
 /**
- * Name: ProductBean Aufgabe: Klasse für interaktion mit Produktwebsite Version:
- * 1.0 Letzte Änderung: 01.05.2022 Realisierung Markus Hartlage
+ * Name: ProductsBean Aufgabe: Klasse für interaktion mit Produktwebsite
+ * Version: 2.0 Letzte Änderung: 24.06.2022 Realisierung Markus Hartlage und
+ * Sascha Nickel
  */
 @Named(value = "productsBean")
 @SessionScoped
@@ -46,16 +47,19 @@ public class ProductsBean implements Serializable {
     @Inject
     private Product selectedProductObject;
 
+    private Product newProduct;
+
     private List<Product> products;
 
-    @NotNull
     private String prname;
     private int pramount;
     private float ppricenetto;
+    private String supid;
+    private String pcatid;
 
     @Inject
     private LoginBean lb;
-    
+
     private boolean not_in_Products;
     private FacesContext context;
 
@@ -72,7 +76,7 @@ public class ProductsBean implements Serializable {
         //        = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
         //LOGGER.log(Level.INFO, "Products: Session ID: {0}", session.getId());
         productListItems = new ArrayList<>();
-
+        newProduct = new Product();
         for (Product p : db.getProductObjectList()) {
             ProductListItem pi = new ProductListItem(p, 1);
             productListItems.add(pi);
@@ -102,12 +106,36 @@ public class ProductsBean implements Serializable {
         this.productListItems = products;
     }
 
+    public String getSupid() {
+        return supid;
+    }
+
+    public String getPcatid() {
+        return pcatid;
+    }
+
+    public void setPcatid(String pcatid) {
+        this.pcatid = pcatid;
+    }
+
+    public void setSupid(String supid) {
+        this.supid = supid;
+    }
+
     public ShoppingCartBean getCartBean() {
         return cartBean;
     }
 
     public void setCartBean(ShoppingCartBean cartBean) {
         this.cartBean = cartBean;
+    }
+
+    public Product getNewProduct() {
+        return newProduct;
+    }
+
+    public void setNewProduct(Product newProduct) {
+        this.newProduct = newProduct;
     }
 
     public DataBean getDb() {
@@ -190,6 +218,11 @@ public class ProductsBean implements Serializable {
         this.selectedProductObject = selectedProductObject;
     }
 
+    /**
+     * Verändert das ausgewählte Product
+     *
+     *
+     */
     public void editProduct() {
         LOGGER.log(Level.INFO, "edit");
 
@@ -215,56 +248,80 @@ public class ProductsBean implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, fm);
     }
 
-    public String addProduct() {
-        FacesMessage fm;
-        not_in_Products = true;
-        if (products == null) {
-            LOGGER.log(Level.WARNING, "Productlist was null!");
-            return null;
-        }
-        System.out.println("''''''''''HIERÄÄÄÄÄ");
-        try {
-            if (not_in_Products) {
-                // IDs werden automatisch vergeben
-                Product p = new Product(0, this.prname, this.pramount, this.ppricenetto);
+    /**
+     * Fügt ein Produkt hinzu
+     *
+     *
+     */
+    public void addProduct() {
+        Supplier sup = db.getSupplierByID(Integer.parseInt(supid));
+        Productcategory pcat = db.getProductCategorybyID(Integer.parseInt(supid));
+        newProduct.setFkPcatid(pcat);
+        newProduct.setFkSupid(sup);
+        boolean success = db.addProduct(newProduct);
 
-                LOGGER.log(Level.INFO, "Prid: {0}", p.getPrid());
-
-                //Adress add = new Adress(c.getCid(), this.street, this.city, this.fedState, this.citycode, this.country, new Date());
-//                Collection<Adress> add_coll = new ArrayList<>();
-//                add_coll.add(add);
-                Productcategory PcatDummy = new Productcategory(0, "Supplierdummy");
-                Supplier SupplierDummy = new Supplier(0, "SupplierDummy", "SupplierDummy",
-                        "SupplierDummy", "SupplierDummy", "SupplierDummy");
-                not_in_Products = this.db.persistProduct(p, PcatDummy, SupplierDummy);
-//                c.setAdressCollection(add_coll);
-            }
-        } catch (ConstraintViolationException ex) {
-            // 
-            fm = new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlschlag",
-                    ": Eine der Eingaben entsprach nicht den Eingabebeschränkungen.");
-            context.addMessage(null, fm);
-            return null;
+        FacesMessage fm = new FacesMessage();
+        if (success) {
+            fm.setSeverity(FacesMessage.SEVERITY_INFO);
+            fm.setSummary("Product was added!");
         }
-        if (!not_in_Products) {
-            fm = new FacesMessage(FacesMessage.SEVERITY_WARN, "Fehlschlag",
-                    ": Fehlschlag beim Produkt hinzufügen.");
-            context.addMessage(null, fm);
-            return null;
-        } else {
+        fm.setSeverity(FacesMessage.SEVERITY_WARN);
+        fm.setSummary("Product was not updated!");
+        FacesContext.getCurrentInstance().addMessage(null, fm);
 
-            fm = new FacesMessage(FacesMessage.SEVERITY_INFO, "Erfolg",
-                    ": Produkt hinzufügen erfolgreich!");
-            context.addMessage(null, fm);
-            return "products.xhtml";
+        productListItems = new ArrayList<>();
+        for (Product p : db.getProductObjectList()) {
+            ProductListItem pi = new ProductListItem(p, 1);
+            productListItems.add(pi);
         }
+        products = db.getProductObjectList();
+
+        System.out.println(productListItems.get(productListItems.size() - 1).getProduct().getPrname());
     }
 
+    /**
+     * Löscht ein Produkt
+     *
+     *
+     */
     public void deleteProduct() {
+        LOGGER.log(Level.INFO, "delete");
+
+        LOGGER.log(Level.INFO, "selected p id was: {0}, {1}, {2}", new Object[]{selectedProductObject.getPrid(), selectedProductObject.getPrname(), selectedProductObject.getPramount()});
+
+        boolean success = false;
+        // remove product list
+
+        for (int i = 0; i < productListItems.size(); i++) {
+            if (productListItems.get(i).getProduct().getPrid().equals(selectedProductObject.getPrid())) {
+                success = db.removeProduct(productListItems.get(i).getProduct());
+                productListItems.remove(i);
+                break;
+            }
+        }
+
+        FacesMessage fm = new FacesMessage();
+
+        if (success) {
+            fm.setSeverity(FacesMessage.SEVERITY_INFO);
+            fm.setSummary("Product was deleted!");
+        } else {
+            fm.setSeverity(FacesMessage.SEVERITY_WARN);
+            fm.setSummary("Product was not deleted!");
+        }
+
+        FacesContext.getCurrentInstance().addMessage(null, fm);
 
     }
 
-    public boolean renderProductEditDialog(){
+    /**
+     * Prüft die Anmeldedaten und loggt User ggf.ein
+     *
+     *
+     * @return 
+     */
+    public boolean renderProductEditDialog() {
+
         return lb.isIsAdmin() && lb.isLoggedIn();
     }
 }

@@ -8,10 +8,14 @@ import com.dba_floristik.Service;
 import java.io.Serializable;
 import java.util.Date;
 
+
+
 /**
- * Name: Service Aufgabe: Klasse für das Objekt Service bzw. für
- * Dienstleistungen Version: 1.0 Letzte Änderung: 01.05.2022 Realisierung Markus
- * Hartlage
+ * Name:            ServiceListItem
+ * Aufgabe:         Vereinfachung des Datenaustausch mit ShoppingCart
+ * Version:         2.0
+ * Letzte Änderung: 24.06.2022
+ * Realisierung     Markus Hartlage und Sascha Nickel
  */
 public class ServiceListItem implements Serializable {
 

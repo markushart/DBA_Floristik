@@ -35,8 +35,9 @@ import java.util.regex.*;
 import static java.util.regex.Pattern.matches;
 
 /**
- *
- * @author marku
+ * Name: RegisterBean Aufgabe: Repräsentierung Backend für das Registrieren
+ * Version: 2.0 Letzte Änderung: 24.06.2022 Realisierung Markus Hartlage und
+ * Sascha Nickel
  */
 @Named(value = "registerBean")
 @RequestScoped
@@ -117,6 +118,12 @@ public class RegisterBean implements Serializable {
         // LOGGER.log(Level.INFO, "new registerBean {0}", users);
     }
 
+    /**
+     * Regestriert User bzw. prüft die Regestrierungsdaten
+     *
+     *
+     * @return 
+     */
     public String process() {
         FacesMessage fm;
         not_registered = true;
@@ -183,7 +190,8 @@ public class RegisterBean implements Serializable {
         }
     }
 
-    /**
+     /**
+     * Ajax-listener für Passwörter
      *
      * @param ev
      */
@@ -196,8 +204,9 @@ public class RegisterBean implements Serializable {
             context.addMessage(uic.getClientId(), fm);
         }
     }
-    
+
     /**
+     * Ajax-listener für Nummer
      *
      * @param ev
      */
@@ -210,8 +219,9 @@ public class RegisterBean implements Serializable {
             context.addMessage(uic.getClientId(), fm);
         }
     }
-    
+
     /**
+     * Ajax-listener für Name
      *
      * @param ev
      */
@@ -224,6 +234,7 @@ public class RegisterBean implements Serializable {
             context.addMessage(uic.getClientId(), fm);
         }
     }
+
     /**
      * Validator-Methode
      *
@@ -240,10 +251,10 @@ public class RegisterBean implements Serializable {
         String regexPhone = "^[0-9]{0,4}\\s?[0-9]{5,7}\\s?$";
         String phoneString = obj.toString();
         FacesMessage fm;
-        boolean matches = matches(regexPhone,phoneString);
-        
-        if (!matches ) {
-        //if(!Pattern.matches(regexPhone,phoneString)){
+        boolean matches = matches(regexPhone, phoneString);
+
+        if (!matches) {
+            //if(!Pattern.matches(regexPhone,phoneString)){
             fm = new FacesMessage("Hinweis: Nummer überprüfen!");
             throw new ValidatorException(fm);
         } else {
@@ -251,7 +262,7 @@ public class RegisterBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(uic.getClientId(), fm);
         }
     }
-    
+
     /**
      * Get the value of lname
      *

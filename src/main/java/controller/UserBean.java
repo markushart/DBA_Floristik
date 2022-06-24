@@ -9,8 +9,11 @@ import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
 
 /**
- *
- * @author marku
+ * Name:            UserBean
+ * Aufgabe:         Repräsentierung Backend für User //Wird nicht benötigt
+ * Version:         2.0
+ * Letzte Änderung: 24.06.2022
+ * Realisierung     Markus Hartlage und Sascha Nickel
  */
 @Named(value = "userBean")
 @SessionScoped

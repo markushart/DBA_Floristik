@@ -15,8 +15,11 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 
 /**
- *
- * @author marku
+ * Name:            PasswordConverter
+ * Aufgabe:         Umwandlung von Passwörtern in Hashwerte
+ * Version:         2.0
+ * Letzte Änderung: 24.06.2022
+ * Realisierung     Markus Hartlage und Sascha Nickel
  */
 @Named(value = "passwordConverter")
 @RequestScoped

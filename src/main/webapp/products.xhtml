@@ -21,17 +21,7 @@
             </style>
             <h2>Produktübersicht</h2>
 
-            <h:form>
-                <p:toolbar rendered="#{loginBean.isAdmin}">
-                    <p:toolbarGroup>
-                        <p:outputLabel value="Neue Produktbezeichnung"/>
-                        <p:inputText/>
-                        <p:outputLabel value="Preis"/>
-                        <p:inputNumber/>
-                        <p:commandButton type="button" value="Anlegen"/>                        
-                    </p:toolbarGroup>
-                </p:toolbar>
-            </h:form>
+           
             <h:form id="productForm">
                 <p:dataTable 
                     value="#{productsBean.productListItems}" 
@@ -83,7 +73,7 @@
                     id="BTNADD" 
                     value="Produkt hinzufügen"  
                     immediate="true"
-
+                    rendered="#{!loginBean.isAdmin}"
                     onclick="PF('ProductAddDialog').show()" 
                     />
             </h:form>

@@ -20,8 +20,11 @@ import javax.servlet.http.HttpSession;
 import util.DataBean;
 
 /**
- *
- * @author marku
+ * Name:            LoginBean
+ * Aufgabe:         Repräsentierung Backend für Login
+ * Version:         2.0
+ * Letzte Änderung: 24.06.2022
+ * Realisierung     Markus Hartlage und Sascha Nickel
  */
 @Named(value = "loginBean")
 @SessionScoped
@@ -61,6 +64,11 @@ public class LoginBean implements Serializable {
         Customers = db.getCustomerObjectList();
     }
 
+    /**
+     * Prüft die Anmeldedaten und loggt User ggf. ein
+     *
+     *
+     */
     public void login() {
         FacesMessage fm;
         // LOGGER.log(Level.INFO, "Eingabe uname: {0} passwort: {1}", new Object[]{this.uname, this.password});
